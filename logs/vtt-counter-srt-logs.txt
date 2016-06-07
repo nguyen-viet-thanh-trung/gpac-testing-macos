@@ -1,0 +1,25 @@
+*** vtt-counter-srt logs (GPAC version 0.6.2-DEV-revUNKNOWN-HEAD ) - test date 07/06/2016 10:34:38 ***
+
+
+*** Subtest "vtt-to-mp4": executing "MP4Box -noprog -for-test  -mem-track -add /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/webvtt/counter.srt -new /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/test.mp4" ***
+[32mTimed Text (SRT) import - text track 400 x 60, font Serif (size 18)
+[0mSaving /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/test.mp4: 0.500 secs Interleaving
+
+
+*** Subtest "vtt-info": executing "MP4Box -noprog -for-test  -mem-track -info 1 /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/test.mp4" ***
+Track # 1 Info - TrackID 1 - TimeScale 1000
+Media Duration 00:10:00.000 - Indicated Duration 00:10:00.000
+Media Info: Language "Undetermined (und)" - Type "text:tx3g" - 601 samples
+Handler name: MediaHandler
+Unknown Text Stream
+ Size 400 x 60 - Translation X=0 Y=0 - Layer 0
+	RFC6381 Codec Parameters: tx3g
+	All samples are sync
+
+Computed info from media:
+	Total size 18494 bytes - Total samples duration 600000 ms
+	Average rate 246 bps - Max Rate 696 bps
+	Chunk durations: min 0 ms - max 2000 ms - average 1000 ms
+	Chunk sizes (bytes): min 2 - max 58 - average 30
+
+

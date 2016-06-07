@@ -1,0 +1,15 @@
+ <test name="laser-stz_rect_parsing" result="OK" date="07/06/2016 10:28:49">
+
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44482560" cpu_percent="13%" cpu_elapsed_time="0:00.55" cpu_user_time="0.01" cpu_kernel_time="0.05" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track  -mp4 /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/laser/stz_rect_parsing.xml</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44515328" cpu_percent="16%" cpu_elapsed_time="0:00.37" cpu_user_time="0.01" cpu_kernel_time="0.04" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track  -saf /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/laser/stz_rect_parsing.xml</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43778048" cpu_percent="10%" cpu_elapsed_time="0:00.48" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -lsr /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/laser/stz_rect_parsing.mp4 -out test1.lsr</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44335104" cpu_percent="11%" cpu_elapsed_time="0:00.45" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -lsr /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/laser/stz_rect_parsing.saf -out test2.lsr</command_line>
+  </stat>
+ </test>

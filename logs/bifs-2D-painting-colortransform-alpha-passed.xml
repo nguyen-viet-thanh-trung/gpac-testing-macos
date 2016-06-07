@@ -1,0 +1,30 @@
+ <test name="bifs-2D-painting-colortransform-alpha" result="OK" date="07/06/2016 10:18:28">
+
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="45400064" cpu_percent="5%" cpu_elapsed_time="0:00.91" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -mp4 /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-painting-colortransform-alpha.bt</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44171264" cpu_percent="10%" cpu_elapsed_time="0:00.46" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -xmt /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-painting-colortransform-alpha.bt</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44777472" cpu_percent="2%" cpu_elapsed_time="0:01.77" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -bt /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-painting-colortransform-alpha.mp4 -out test2.bt</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44810240" cpu_percent="2%" cpu_elapsed_time="0:02.07" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -xmt /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-painting-colortransform-alpha.mp4 -out test.xmt</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44367872" cpu_percent="2%" cpu_elapsed_time="0:01.67" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -stat /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-painting-colortransform-alpha.mp4 -std</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44400640" cpu_percent="2%" cpu_elapsed_time="0:02.32" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -stats /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-painting-colortransform-alpha.mp4 -std</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44433408" cpu_percent="2%" cpu_elapsed_time="0:02.24" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -statx /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-painting-colortransform-alpha.mp4 -std</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44318720" cpu_percent="1%" cpu_elapsed_time="0:02.41" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -bt /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-painting-colortransform-alpha.xmt -out test1.bt</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="45662208" cpu_percent="2%" cpu_elapsed_time="0:02.37" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -mp4 /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-painting-colortransform-alpha.xmt -out /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-painting-colortransform-alpha.mp4.tmp</command_line>
+  </stat>
+ </test>

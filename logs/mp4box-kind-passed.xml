@@ -1,0 +1,180 @@
+ <test name="mp4box-kind" result="OK" date="07/06/2016 10:32:29">
+
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43057152" cpu_percent="25%" cpu_elapsed_time="0:00.21" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind all=myKindScheme /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/file.mp4 -out /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43040768" cpu_percent="15%" cpu_elapsed_time="0:00.32" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind-rem all=myKindScheme /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43024384" cpu_percent="13%" cpu_elapsed_time="0:00.34" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind all=urn:gpac:kindScheme=myKindValue /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/file.mp4 -out /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="42991616" cpu_percent="11%" cpu_elapsed_time="0:00.42" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind-rem all=urn:gpac:kindScheme=myKindValue  /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43057152" cpu_percent="20%" cpu_elapsed_time="0:00.22" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind all=myFirstKindScheme /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/file.mp4 -out /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43040768" cpu_percent="13%" cpu_elapsed_time="0:00.36" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind all=mySecondKindScheme /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43008000" cpu_percent="17%" cpu_elapsed_time="0:00.27" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind-rem all=myFirstKindScheme /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43008000" cpu_percent="20%" cpu_elapsed_time="0:00.24" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind-rem all=mySecondKindScheme /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43040768" cpu_percent="22%" cpu_elapsed_time="0:00.19" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind all=myFirstKindScheme /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/file.mp4 -out /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43073536" cpu_percent="21%" cpu_elapsed_time="0:00.22" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind all=myFirstKindScheme /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43073536" cpu_percent="18%" cpu_elapsed_time="0:00.28" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind all=myFirstKindScheme=myKindValue /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/file.mp4 -out /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43008000" cpu_percent="24%" cpu_elapsed_time="0:00.19" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind-rem all=myKindScheme /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43073536" cpu_percent="24%" cpu_elapsed_time="0:00.25" cpu_user_time="0.02" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind all=myFirstKindScheme=myKindValue /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43073536" cpu_percent="21%" cpu_elapsed_time="0:00.20" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind myKindScheme /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/file.mp4 -out /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43040768" cpu_percent="21%" cpu_elapsed_time="0:00.23" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind-rem myKindScheme /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43073536" cpu_percent="15%" cpu_elapsed_time="0:00.33" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind-rem myKindScheme /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43057152" cpu_percent="17%" cpu_elapsed_time="0:00.25" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind myKindScheme=myKindValue /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/file.mp4 -out /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43040768" cpu_percent="21%" cpu_elapsed_time="0:00.22" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind-rem myKindScheme=myKindValue /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43040768" cpu_percent="22%" cpu_elapsed_time="0:00.19" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind myKindScheme=myKindValue2 /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/file.mp4 -out /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43057152" cpu_percent="18%" cpu_elapsed_time="0:00.26" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind myKindScheme=myKindValue /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43040768" cpu_percent="16%" cpu_elapsed_time="0:00.29" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind myKindScheme /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43057152" cpu_percent="23%" cpu_elapsed_time="0:00.20" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind-rem myKindScheme=myKindValue /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43040768" cpu_percent="16%" cpu_elapsed_time="0:00.30" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind-rem all=myKindScheme /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43024384" cpu_percent="18%" cpu_elapsed_time="0:00.26" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind-rem myKindScheme /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43089920" cpu_percent="20%" cpu_elapsed_time="0:00.26" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind urn:gpac:kindScheme=myKindValue /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/file.mp4 -out /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43024384" cpu_percent="21%" cpu_elapsed_time="0:00.21" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind-rem urn:gpac:kindScheme=myKindValue  /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43040768" cpu_percent="17%" cpu_elapsed_time="0:00.25" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind myFirstKindScheme /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/file.mp4 -out /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43040768" cpu_percent="24%" cpu_elapsed_time="0:00.19" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind mySecondKindScheme /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43040768" cpu_percent="19%" cpu_elapsed_time="0:00.29" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind-rem myFirstKindScheme /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43024384" cpu_percent="28%" cpu_elapsed_time="0:00.20" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind-rem mySecondKindScheme /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43106304" cpu_percent="23%" cpu_elapsed_time="0:00.20" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind myFirstKindScheme /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/file.mp4 -out /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43106304" cpu_percent="25%" cpu_elapsed_time="0:00.20" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind myFirstKindScheme /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43040768" cpu_percent="27%" cpu_elapsed_time="0:00.17" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind myFirstKindScheme=myKindValue /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/file.mp4 -out /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43040768" cpu_percent="20%" cpu_elapsed_time="0:00.22" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind all=myKindScheme=myKindValue /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/file.mp4 -out /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43024384" cpu_percent="14%" cpu_elapsed_time="0:00.40" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind myFirstKindScheme=myKindValue /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43106304" cpu_percent="8%" cpu_elapsed_time="0:00.67" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind 1=myKindScheme /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/file.mp4 -out /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43040768" cpu_percent="15%" cpu_elapsed_time="0:00.34" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind-rem 1=myKindScheme /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43024384" cpu_percent="18%" cpu_elapsed_time="0:00.26" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind 1=myKindScheme=myKindValue /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/file.mp4 -out /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="42991616" cpu_percent="25%" cpu_elapsed_time="0:00.20" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind-rem 1=myKindScheme=myKindValue /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43057152" cpu_percent="22%" cpu_elapsed_time="0:00.22" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind 1=myKindScheme /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/file.mp4 -out /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43040768" cpu_percent="15%" cpu_elapsed_time="0:00.34" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind 1=mySecondKindScheme /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43057152" cpu_percent="30%" cpu_elapsed_time="0:00.17" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind-rem 1=myKindScheme /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="42975232" cpu_percent="18%" cpu_elapsed_time="0:00.29" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind-rem 1=mySecondKindScheme /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43024384" cpu_percent="26%" cpu_elapsed_time="0:00.18" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind 1=mySecondKindScheme /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/file.mp4 -out /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43040768" cpu_percent="26%" cpu_elapsed_time="0:00.18" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind-rem all=myKindScheme=myKindValue /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43024384" cpu_percent="18%" cpu_elapsed_time="0:00.28" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind 2=mySecondKindScheme /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43040768" cpu_percent="27%" cpu_elapsed_time="0:00.18" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind-rem 1=mySecondKindScheme /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="42991616" cpu_percent="20%" cpu_elapsed_time="0:00.26" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind-rem 2=mySecondKindScheme /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43941888" cpu_percent="28%" cpu_elapsed_time="0:00.18" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -add /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4 /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out2.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43859968" cpu_percent="22%" cpu_elapsed_time="0:00.23" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -add /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/file.mp4#1:kind=myKindScheme -new /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43859968" cpu_percent="27%" cpu_elapsed_time="0:00.19" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -add /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/file.mp4#1:kind=myKindScheme=myKindValue -new /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43859968" cpu_percent="27%" cpu_elapsed_time="0:00.18" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -add /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/file.mp4#1:kind=urn:gpac:kindScheme=myKindValue -new /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43810816" cpu_percent="25%" cpu_elapsed_time="0:00.20" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -add /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/file.mp4#1:kind=myKindScheme=myKindValue:kind=myKindScheme=myKindValue2 -new /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43859968" cpu_percent="17%" cpu_elapsed_time="0:00.29" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -add /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/file.mp4#1:kind=myKindScheme=myKindValue:kind=myKindScheme2=myKindValue2 -new /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43827200" cpu_percent="23%" cpu_elapsed_time="0:00.27" cpu_user_time="0.02" cpu_kernel_time="0.04" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -add /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/file.mp4#1:kind=myKindScheme=myKindValue:kind=myKindScheme=myKindValue -new /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43106304" cpu_percent="20%" cpu_elapsed_time="0:00.22" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind all=myKindScheme=myKindValue2 /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/file.mp4 -out /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43089920" cpu_percent="16%" cpu_elapsed_time="0:00.30" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind all=myKindScheme=myKindValue /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43040768" cpu_percent="10%" cpu_elapsed_time="0:00.46" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind all=myKindScheme /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43057152" cpu_percent="16%" cpu_elapsed_time="0:00.30" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -kind-rem all=myKindScheme=myKindValue /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/out.mp4</command_line>
+  </stat>
+ </test>

@@ -1,0 +1,30 @@
+ <test name="bifs-cachetexture_nocache" result="OK" date="07/06/2016 10:23:16">
+
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="45121536" cpu_percent="22%" cpu_elapsed_time="0:00.22" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -mp4 /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-cachetexture_nocache.bt</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44007424" cpu_percent="8%" cpu_elapsed_time="0:00.65" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -xmt /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-cachetexture_nocache.bt</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44662784" cpu_percent="2%" cpu_elapsed_time="0:02.27" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -bt /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-cachetexture_nocache.mp4 -out test2.bt</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44679168" cpu_percent="3%" cpu_elapsed_time="0:01.51" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -xmt /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-cachetexture_nocache.mp4 -out test.xmt</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44220416" cpu_percent="2%" cpu_elapsed_time="0:02.31" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -stat /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-cachetexture_nocache.mp4 -std</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44204032" cpu_percent="2%" cpu_elapsed_time="0:02.31" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -stats /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-cachetexture_nocache.mp4 -std</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44302336" cpu_percent="3%" cpu_elapsed_time="0:01.67" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -statx /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-cachetexture_nocache.mp4 -std</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43991040" cpu_percent="2%" cpu_elapsed_time="0:02.19" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -bt /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-cachetexture_nocache.xmt -out test1.bt</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="45285376" cpu_percent="2%" cpu_elapsed_time="0:02.24" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -mp4 /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-cachetexture_nocache.xmt -out /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-cachetexture_nocache.mp4.tmp</command_line>
+  </stat>
+ </test>

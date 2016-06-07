@@ -1,0 +1,1347 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - modules/isom_in/read.c</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">modules/isom_in</a> - read.c<span style="font-size: 80%;"> (source / <a href="read.c.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">31</td>
+            <td class="headerCovTableEntry">728</td>
+            <td class="headerCovTableEntryLo">4.3 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2016-06-07 10:36:32</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntry">24</td>
+            <td class="headerCovTableEntryLo">12.5 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*</a>
+<span class="lineNum">       2 </span>            :  *                      GPAC - Multimedia Framework C SDK
+<span class="lineNum">       3 </span>            :  *
+<span class="lineNum">       4 </span>            :  *                      Authors: Jean Le Feuvre
+<span class="lineNum">       5 </span>            :  *                      Copyright (c) Telecom ParisTech 2000-2012
+<span class="lineNum">       6 </span>            :  *                                      All rights reserved
+<span class="lineNum">       7 </span>            :  *
+<span class="lineNum">       8 </span>            :  *  This file is part of GPAC / IsoMedia reader module
+<span class="lineNum">       9 </span>            :  *
+<span class="lineNum">      10 </span>            :  *  GPAC is free software; you can redistribute it and/or modify
+<span class="lineNum">      11 </span>            :  *  it under the terms of the GNU Lesser General Public License as published by
+<span class="lineNum">      12 </span>            :  *  the Free Software Foundation; either version 2, or (at your option)
+<span class="lineNum">      13 </span>            :  *  any later version.
+<span class="lineNum">      14 </span>            :  *
+<span class="lineNum">      15 </span>            :  *  GPAC is distributed in the hope that it will be useful,
+<span class="lineNum">      16 </span>            :  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+<span class="lineNum">      17 </span>            :  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+<span class="lineNum">      18 </span>            :  *  GNU Lesser General Public License for more details.
+<span class="lineNum">      19 </span>            :  *
+<span class="lineNum">      20 </span>            :  *  You should have received a copy of the GNU Lesser General Public
+<span class="lineNum">      21 </span>            :  *  License along with this library; see the file COPYING.  If not, write to
+<span class="lineNum">      22 </span>            :  *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+<span class="lineNum">      23 </span>            :  *
+<span class="lineNum">      24 </span>            :  */
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : #include &quot;isom_in.h&quot;
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span>            : #ifndef GPAC_DISABLE_ISOM
+<span class="lineNum">      29 </span>            : 
+<a name="30"><span class="lineNum">      30 </span>            : #include &lt;gpac/ismacryp.h&gt;</a>
+<span class="lineNum">      31 </span>            : 
+<span class="lineNum">      32 </span>            : ISOMChannel *isor_get_channel(ISOMReader *reader, LPNETCHANNEL channel)
+<span class="lineNum">      33 </span>            : {
+<span class="lineNum">      34 </span><span class="lineNoCov">          0 :         u32 i=0;</span>
+<span class="lineNum">      35 </span>            :         ISOMChannel *ch;
+<span class="lineNum">      36 </span><span class="lineNoCov">          0 :         while ((ch = (ISOMChannel *)gf_list_enum(reader-&gt;channels, &amp;i))) {</span>
+<span class="lineNum">      37 </span><span class="lineNoCov">          0 :                 if (ch-&gt;channel == channel) return ch;</span>
+<span class="lineNum">      38 </span>            :         }
+<span class="lineNum">      39 </span><span class="lineNoCov">          0 :         return NULL;</span>
+<a name="40"><span class="lineNum">      40 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">      41 </span>            : 
+<span class="lineNum">      42 </span>            : static void isor_delete_channel(ISOMReader *reader, ISOMChannel *ch)
+<span class="lineNum">      43 </span>            : {
+<span class="lineNum">      44 </span><span class="lineNoCov">          0 :         u32 i=0;</span>
+<span class="lineNum">      45 </span>            :         ISOMChannel *ch2;
+<span class="lineNum">      46 </span><span class="lineNoCov">          0 :         while ((ch2 = (ISOMChannel *)gf_list_enum(reader-&gt;channels, &amp;i))) {</span>
+<span class="lineNum">      47 </span><span class="lineNoCov">          0 :                 if (ch2 == ch) {</span>
+<span class="lineNum">      48 </span><span class="lineNoCov">          0 :                         isor_reset_reader(ch);</span>
+<span class="lineNum">      49 </span><span class="lineNoCov">          0 :                         gf_free(ch);</span>
+<span class="lineNum">      50 </span><span class="lineNoCov">          0 :                         gf_list_rem(reader-&gt;channels, i-1);</span>
+<span class="lineNum">      51 </span><span class="lineNoCov">          0 :                         return;</span>
+<span class="lineNum">      52 </span>            :                 }
+<span class="lineNum">      53 </span>            :         }
+<a name="54"><span class="lineNum">      54 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">      55 </span>            : 
+<span class="lineNum">      56 </span>            : static GFINLINE Bool isor_is_local(const char *url)
+<span class="lineNum">      57 </span>            : {
+<span class="lineNum">      58 </span><span class="lineNoCov">          0 :         if (!strnicmp(url, &quot;file://&quot;, 7)) return GF_TRUE;</span>
+<span class="lineNum">      59 </span><span class="lineNoCov">          0 :         if (!strnicmp(url, &quot;gmem://&quot;, 7)) return GF_TRUE;</span>
+<span class="lineNum">      60 </span><span class="lineNoCov">          0 :         if (strstr(url, &quot;://&quot;)) return GF_FALSE;</span>
+<span class="lineNum">      61 </span>            :         /*the rest is local (mounted on FS)*/
+<span class="lineNum">      62 </span><span class="lineNoCov">          0 :         return GF_TRUE;</span>
+<span class="lineNum">      63 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">      64 </span>            : 
+<span class="lineNum">      65 </span>            : static const char * ISOR_MIME_TYPES[] = {
+<span class="lineNum">      66 </span>            :         /* First one is specific because we probe */
+<span class="lineNum">      67 </span>            :         &quot;application/x-isomedia&quot;, &quot;*&quot;, &quot;IsoMedia Files&quot;,
+<span class="lineNum">      68 </span>            :         &quot;video/mp4&quot;, &quot;mp4 mpg4&quot;, &quot;MPEG-4 Movies&quot;,
+<span class="lineNum">      69 </span>            :         &quot;audio/mp4&quot;, &quot;m4a mp4 mpg4&quot;, &quot;MPEG-4 Music&quot;,
+<span class="lineNum">      70 </span>            :         &quot;application/mp4&quot;, &quot;m4i mp4 mpg4&quot;, &quot;MPEG-4 Applications&quot;,
+<span class="lineNum">      71 </span>            :         &quot;video/3gpp&quot;, &quot;3gp 3gpp&quot;, &quot;3GPP/MMS Movies&quot;,
+<span class="lineNum">      72 </span>            :         &quot;audio/3gpp&quot;, &quot;3gp 3gpp&quot;, &quot;3GPP/MMS Music&quot;,
+<span class="lineNum">      73 </span>            :         &quot;video/3gpp2&quot;, &quot;3g2 3gp2&quot;, &quot;3GPP2/MMS Movies&quot;,
+<span class="lineNum">      74 </span>            :         &quot;audio/3gpp2&quot;, &quot;3g2 3gp2&quot;, &quot;3GPP2/MMS Music&quot;,
+<span class="lineNum">      75 </span>            :         &quot;video/iso.segment&quot;, &quot;iso&quot;, &quot;ISOBMF Fragments&quot;,
+<span class="lineNum">      76 </span>            :         &quot;audio/iso.segment&quot;, &quot;iso&quot;, &quot;ISOBMF Fragments&quot;,
+<span class="lineNum">      77 </span>            :         NULL
+<a name="78"><span class="lineNum">      78 </span>            : };</a>
+<span class="lineNum">      79 </span>            : 
+<span class="lineNum">      80 </span>            : u32 ISOR_RegisterMimeTypes(const GF_InputService *plug) {
+<span class="lineNum">      81 </span>            :         u32 i;
+<span class="lineNum">      82 </span><span class="lineCov">         22 :         for (i = 0 ; ISOR_MIME_TYPES[i]; i+=3)</span>
+<span class="lineNum">      83 </span><span class="lineCov">         10 :                 gf_service_register_mime(plug, ISOR_MIME_TYPES[i], ISOR_MIME_TYPES[i+1], ISOR_MIME_TYPES[i+2]);</span>
+<span class="lineNum">      84 </span><span class="lineCov">          1 :         return i/3;</span>
+<a name="85"><span class="lineNum">      85 </span>            : }</a>
+<span class="lineNum">      86 </span>            : 
+<span class="lineNum">      87 </span>            : Bool ISOR_CanHandleURL(GF_InputService *plug, const char *url)
+<span class="lineNum">      88 </span>            : {
+<span class="lineNum">      89 </span>            :         char *ext;
+<span class="lineNum">      90 </span><span class="lineNoCov">          0 :         if (!strnicmp(url, &quot;rtsp://&quot;, 7)) return GF_FALSE;</span>
+<span class="lineNum">      91 </span><span class="lineNoCov">          0 :         ext = (char *)strrchr(url, '.');</span>
+<span class="lineNum">      92 </span>            :         {
+<span class="lineNum">      93 </span>            :                 u32 i;
+<span class="lineNum">      94 </span>            :                 /* We don't start at 0 since first one is specific */
+<span class="lineNum">      95 </span><span class="lineNoCov">          0 :                 for (i = 3 ; ISOR_MIME_TYPES[i]; i+=3)</span>
+<span class="lineNum">      96 </span><span class="lineNoCov">          0 :                         if (gf_service_check_mime_register(plug, ISOR_MIME_TYPES[i], ISOR_MIME_TYPES[i+1], ISOR_MIME_TYPES[i+2], ext))</span>
+<span class="lineNum">      97 </span><span class="lineNoCov">          0 :                                 return GF_TRUE;</span>
+<span class="lineNum">      98 </span>            :         }
+<span class="lineNum">      99 </span>            : 
+<span class="lineNum">     100 </span><span class="lineNoCov">          0 :         if (ext &amp;&amp; gf_isom_probe_file(url)) {</span>
+<span class="lineNum">     101 </span><span class="lineNoCov">          0 :                 gf_service_check_mime_register(plug, ISOR_MIME_TYPES[0], ext+1, ISOR_MIME_TYPES[2], ext);</span>
+<span class="lineNum">     102 </span><span class="lineNoCov">          0 :                 return GF_TRUE;</span>
+<span class="lineNum">     103 </span>            :         }
+<span class="lineNum">     104 </span><span class="lineNoCov">          0 :         return GF_FALSE;</span>
+<a name="105"><span class="lineNum">     105 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     106 </span>            : 
+<span class="lineNum">     107 </span>            : void send_proxy_command(ISOMReader *read, Bool is_disconnect, Bool is_add_media, GF_Err e, GF_Descriptor *desc, LPNETCHANNEL channel)
+<span class="lineNum">     108 </span>            : {
+<span class="lineNum">     109 </span><span class="lineNoCov">          0 :         GF_NetworkCommand command;</span>
+<span class="lineNum">     110 </span><span class="lineNoCov">          0 :         command.command_type = GF_NET_SERVICE_STATUS_PROXY;</span>
+<span class="lineNum">     111 </span><span class="lineNoCov">          0 :         command.status.e = e;</span>
+<span class="lineNum">     112 </span><span class="lineNoCov">          0 :         command.status.channel = channel;</span>
+<span class="lineNum">     113 </span><span class="lineNoCov">          0 :         command.status.is_disconnect = is_disconnect;</span>
+<span class="lineNum">     114 </span><span class="lineNoCov">          0 :         command.status.is_add_media = is_add_media;</span>
+<span class="lineNum">     115 </span><span class="lineNoCov">          0 :         command.status.desc = desc;</span>
+<span class="lineNum">     116 </span><span class="lineNoCov">          0 :         read-&gt;input-&gt;query_proxy(read-&gt;input, &amp;command);</span>
+<a name="117"><span class="lineNum">     117 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     118 </span>            : 
+<span class="lineNum">     119 </span>            : void isor_check_buffer_level(ISOMReader *read)
+<span class="lineNum">     120 </span>            : {
+<span class="lineNum">     121 </span>            :         Double dld_time_remaining, mov_rate;
+<span class="lineNum">     122 </span><span class="lineNoCov">          0 :         GF_NetworkCommand com;</span>
+<span class="lineNum">     123 </span>            :         u32 i, total, done, Bps;
+<span class="lineNum">     124 </span>            :         u64 dur;
+<span class="lineNum">     125 </span>            :         GF_NetIOStatus status;
+<span class="lineNum">     126 </span>            :         Bool do_buffer = GF_FALSE;
+<span class="lineNum">     127 </span><span class="lineNoCov">          0 :         if (!read-&gt;dnload) return;</span>
+<span class="lineNum">     128 </span><span class="lineNoCov">          0 :         if (!read-&gt;mov) return;</span>
+<span class="lineNum">     129 </span>            : 
+<span class="lineNum">     130 </span><span class="lineNoCov">          0 :         gf_dm_sess_get_stats(read-&gt;dnload, NULL, NULL, &amp;total, &amp;done, &amp;Bps, &amp;status);</span>
+<span class="lineNum">     131 </span><span class="lineNoCov">          0 :         if (!Bps) return;</span>
+<span class="lineNum">     132 </span>            : 
+<span class="lineNum">     133 </span>            : 
+<span class="lineNum">     134 </span><span class="lineNoCov">          0 :         gf_mx_p(read-&gt;segment_mutex);</span>
+<span class="lineNum">     135 </span>            : 
+<span class="lineNum">     136 </span><span class="lineNoCov">          0 :         dld_time_remaining = total-done;</span>
+<span class="lineNum">     137 </span><span class="lineNoCov">          0 :         dld_time_remaining /= Bps;</span>
+<span class="lineNum">     138 </span>            : 
+<span class="lineNum">     139 </span><span class="lineNoCov">          0 :         mov_rate = total;</span>
+<span class="lineNum">     140 </span><span class="lineNoCov">          0 :         if (read-&gt;frag_type) {</span>
+<span class="lineNum">     141 </span><span class="lineNoCov">          0 :                 u64 bytesMissing=0;</span>
+<span class="lineNum">     142 </span><span class="lineNoCov">          0 :                 gf_isom_refresh_fragmented(read-&gt;mov, &amp;bytesMissing, NULL);</span>
+<span class="lineNum">     143 </span><span class="lineNoCov">          0 :                 mov_rate = (Double) (done + bytesMissing);</span>
+<span class="lineNum">     144 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     145 </span><span class="lineNoCov">          0 :         dur = gf_isom_get_duration(read-&gt;mov);</span>
+<span class="lineNum">     146 </span><span class="lineNoCov">          0 :         if (dur) {</span>
+<span class="lineNum">     147 </span><span class="lineNoCov">          0 :                 mov_rate /= dur;</span>
+<span class="lineNum">     148 </span><span class="lineNoCov">          0 :                 mov_rate *= gf_isom_get_timescale(read-&gt;mov);</span>
+<span class="lineNum">     149 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     150 </span>            : 
+<span class="lineNum">     151 </span><span class="lineNoCov">          0 :         for (i=0; i&lt;gf_list_count(read-&gt;channels); i++) {</span>
+<span class="lineNum">     152 </span><span class="lineNoCov">          0 :                 ISOMChannel *ch = gf_list_get(read-&gt;channels, i);</span>
+<span class="lineNum">     153 </span><span class="lineNoCov">          0 :                 Double time_remain_ch = (Double) gf_isom_get_media_duration(read-&gt;mov, ch-&gt;track);</span>
+<span class="lineNum">     154 </span>            :                 u32 buffer_level=0;
+<span class="lineNum">     155 </span><span class="lineNoCov">          0 :                 if (total==done) {</span>
+<span class="lineNum">     156 </span>            :                         time_remain_ch = 0;
+<span class="lineNum">     157 </span>            :                         do_buffer = GF_FALSE;
+<span class="lineNum">     158 </span><span class="lineNoCov">          0 :                 } else if (ch-&gt;last_state == GF_EOS) {</span>
+<span class="lineNum">     159 </span>            :                         time_remain_ch = 0;
+<span class="lineNum">     160 </span>            :                         do_buffer = GF_TRUE;
+<span class="lineNum">     161 </span><span class="lineNoCov">          0 :                 } else {</span>
+<span class="lineNum">     162 </span>            :                         u64 data_offset;
+<span class="lineNum">     163 </span><span class="lineNoCov">          0 :                         u32 di, sn = ch-&gt;sample_num ? ch-&gt;sample_num : 1;</span>
+<span class="lineNum">     164 </span><span class="lineNoCov">          0 :                         GF_ISOSample *samp = gf_isom_get_sample_info(read-&gt;mov, ch-&gt;track, sn, &amp;di, &amp;data_offset);</span>
+<span class="lineNum">     165 </span><span class="lineNoCov">          0 :                         if (!samp) {</span>
+<span class="lineNum">     166 </span>            :                                 continue;
+<span class="lineNum">     167 </span>            :                         }
+<span class="lineNum">     168 </span>            : 
+<span class="lineNum">     169 </span><span class="lineNoCov">          0 :                         data_offset += samp-&gt;dataLength;</span>
+<span class="lineNum">     170 </span>            : 
+<span class="lineNum">     171 </span>            : #if 1
+<span class="lineNum">     172 </span>            :                         //we don't have enough data
+<span class="lineNum">     173 </span><span class="lineNoCov">          0 :                         if (((data_offset + ch-&gt;buffer_min * mov_rate/1000 &gt; done))) {</span>
+<span class="lineNum">     174 </span>            :                                 do_buffer = GF_TRUE;
+<span class="lineNum">     175 </span><span class="lineNoCov">          0 :                         }</span>
+<span class="lineNum">     176 </span>            :                         //we have enough buffer
+<span class="lineNum">     177 </span><span class="lineNoCov">          0 :                         else if ((data_offset + ch-&gt;buffer_max * mov_rate/1000 &lt;= done)) {</span>
+<span class="lineNum">     178 </span>            :                                 do_buffer = GF_FALSE;
+<span class="lineNum">     179 </span><span class="lineNoCov">          0 :                         } else {</span>
+<span class="lineNum">     180 </span><span class="lineNoCov">          0 :                                 do_buffer = ch-&gt;buffering;</span>
+<span class="lineNum">     181 </span>            :                         }
+<span class="lineNum">     182 </span><span class="lineNoCov">          0 :                         buffer_level = (u32) ( (done - data_offset) / mov_rate * 1000);</span>
+<span class="lineNum">     183 </span>            : #else
+<span class="lineNum">     184 </span>            :                         //we only send buffer on/off based on remainging playback time in channel
+<span class="lineNum">     185 </span>            :                         time_remain_ch -= (samp-&gt;DTS + samp-&gt;CTS_Offset);
+<span class="lineNum">     186 </span>            :                         if (time_remain_ch&lt;0) time_remain_ch=0;
+<span class="lineNum">     187 </span>            : 
+<span class="lineNum">     188 </span>            :                         time_remain_ch /= ch-&gt;time_scale;
+<span class="lineNum">     189 </span>            :                         if (time_remain_ch &amp;&amp; (time_remain_ch &lt; dld_time_remaining)) {
+<span class="lineNum">     190 </span>            :                                 do_buffer = GF_TRUE;
+<span class="lineNum">     191 </span>            :                                 if (!read-&gt;remain_at_buffering_start || (read-&gt;remain_at_buffering_start &lt; dld_time_remaining)) {
+<span class="lineNum">     192 </span>            :                                         buffer_level = 0;
+<span class="lineNum">     193 </span>            :                                         read-&gt;remain_at_buffering_start = dld_time_remaining;
+<span class="lineNum">     194 </span>            :                                 } else {
+<span class="lineNum">     195 </span>            :                                         buffer_level = (u32) (100 * (read-&gt;remain_at_buffering_start - dld_time_remaining) / (read-&gt;remain_at_buffering_start - time_remain_ch) );
+<span class="lineNum">     196 </span>            :                                 }
+<span class="lineNum">     197 </span>            :                         } else {
+<span class="lineNum">     198 </span>            :                                 do_buffer = GF_FALSE;
+<span class="lineNum">     199 </span>            :                         }
+<span class="lineNum">     200 </span>            : #endif
+<span class="lineNum">     201 </span>            : 
+<span class="lineNum">     202 </span><span class="lineNoCov">          0 :                         gf_isom_sample_del(&amp;samp);</span>
+<span class="lineNum">     203 </span>            :                 }
+<span class="lineNum">     204 </span>            : 
+<span class="lineNum">     205 </span><span class="lineNoCov">          0 :                 if (do_buffer != ch-&gt;buffering) {</span>
+<span class="lineNum">     206 </span><span class="lineNoCov">          0 :                         GF_LOG(GF_LOG_INFO, GF_LOG_NETWORK, (&quot;[IsoMedia] Buffering %s at %d: %g sec still to download and %g sec still to play on track %d (movie rate %g - download rate %g kbps)\n&quot;, do_buffer ? &quot;on&quot; : &quot;off&quot;, gf_sys_clock(), dld_time_remaining , time_remain_ch, ch-&gt;track_id, mov_rate*8/1000, Bps*8.0/1000));</span>
+<span class="lineNum">     207 </span>            : 
+<span class="lineNum">     208 </span><span class="lineNoCov">          0 :                         memset(&amp;com, 0, sizeof(GF_NetworkCommand));</span>
+<span class="lineNum">     209 </span><span class="lineNoCov">          0 :                         com.command_type = do_buffer ? GF_NET_CHAN_PAUSE : GF_NET_CHAN_RESUME;</span>
+<span class="lineNum">     210 </span><span class="lineNoCov">          0 :                         com.buffer.on_channel = ch-&gt;channel;</span>
+<span class="lineNum">     211 </span><span class="lineNoCov">          0 :                         com.buffer.min = ch-&gt;buffer_min;</span>
+<span class="lineNum">     212 </span><span class="lineNoCov">          0 :                         com.buffer.max = ch-&gt;buffer_max;</span>
+<span class="lineNum">     213 </span><span class="lineNoCov">          0 :                         gf_service_command(read-&gt;service, &amp;com, GF_OK);</span>
+<span class="lineNum">     214 </span><span class="lineNoCov">          0 :                         ch-&gt;buffering = do_buffer;</span>
+<span class="lineNum">     215 </span><span class="lineNoCov">          0 :                         read-&gt;buffering = do_buffer;</span>
+<span class="lineNum">     216 </span><span class="lineNoCov">          0 :                 } else if (ch-&gt;buffering) {</span>
+<span class="lineNum">     217 </span><span class="lineNoCov">          0 :                         memset(&amp;com, 0, sizeof(GF_NetworkCommand));</span>
+<span class="lineNum">     218 </span><span class="lineNoCov">          0 :                         com.command_type = GF_NET_CHAN_BUFFER;</span>
+<span class="lineNum">     219 </span><span class="lineNoCov">          0 :                         com.buffer.on_channel = ch-&gt;channel;</span>
+<span class="lineNum">     220 </span><span class="lineNoCov">          0 :                         com.buffer.min = ch-&gt;buffer_min;</span>
+<span class="lineNum">     221 </span><span class="lineNoCov">          0 :                         com.buffer.max = ch-&gt;buffer_max;</span>
+<span class="lineNum">     222 </span><span class="lineNoCov">          0 :                         com.buffer.occupancy = buffer_level;</span>
+<span class="lineNum">     223 </span><span class="lineNoCov">          0 :                         gf_service_command(read-&gt;service, &amp;com, GF_OK);</span>
+<span class="lineNum">     224 </span><span class="lineNoCov">          0 :                 }</span>
+<span class="lineNum">     225 </span>            :         }
+<span class="lineNum">     226 </span><span class="lineNoCov">          0 :         gf_mx_v(read-&gt;segment_mutex);</span>
+<a name="227"><span class="lineNum">     227 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     228 </span>            : 
+<span class="lineNum">     229 </span>            : void isor_net_io(void *cbk, GF_NETIO_Parameter *param)
+<span class="lineNum">     230 </span>            : {
+<span class="lineNum">     231 </span>            :         GF_Err e;
+<span class="lineNum">     232 </span>            :         u32 size = 0;
+<span class="lineNum">     233 </span>            :         char *local_name;
+<span class="lineNum">     234 </span><span class="lineNoCov">          0 :         ISOMReader *read = (ISOMReader *) cbk;</span>
+<span class="lineNum">     235 </span>            : 
+<span class="lineNum">     236 </span>            :         /*handle service message*/
+<span class="lineNum">     237 </span><span class="lineNoCov">          0 :         if (!read-&gt;buffering)</span>
+<span class="lineNum">     238 </span><span class="lineNoCov">          0 :                 gf_service_download_update_stats(read-&gt;dnload);</span>
+<span class="lineNum">     239 </span>            : 
+<span class="lineNum">     240 </span><span class="lineNoCov">          0 :         if (param-&gt;msg_type==GF_NETIO_DATA_TRANSFERED) {</span>
+<span class="lineNum">     241 </span>            :                 e = GF_EOS;
+<span class="lineNum">     242 </span><span class="lineNoCov">          0 :         } else if (param-&gt;msg_type==GF_NETIO_DATA_EXCHANGE) {</span>
+<span class="lineNum">     243 </span>            :                 e = GF_OK;
+<span class="lineNum">     244 </span><span class="lineNoCov">          0 :                 size = param-&gt;size;</span>
+<span class="lineNum">     245 </span><span class="lineNoCov">          0 :         } else {</span>
+<span class="lineNum">     246 </span><span class="lineNoCov">          0 :                 e = param-&gt;error;</span>
+<span class="lineNum">     247 </span>            :         }
+<span class="lineNum">     248 </span>            : 
+<span class="lineNum">     249 </span><span class="lineNoCov">          0 :         if (e&lt;GF_OK) {</span>
+<span class="lineNum">     250 </span>            :                 /*error opening service*/
+<span class="lineNum">     251 </span><span class="lineNoCov">          0 :                 if (!read-&gt;mov) {</span>
+<span class="lineNum">     252 </span>            :                         /* if there is an intermediate between this module and the terminal, report to it */
+<span class="lineNum">     253 </span><span class="lineNoCov">          0 :                         if (read-&gt;input-&gt;query_proxy &amp;&amp; read-&gt;input-&gt;proxy_udta &amp;&amp; read-&gt;input-&gt;proxy_type) {</span>
+<span class="lineNum">     254 </span><span class="lineNoCov">          0 :                                 send_proxy_command(read, GF_FALSE, GF_FALSE, e, NULL, NULL);</span>
+<span class="lineNum">     255 </span><span class="lineNoCov">          0 :                         } else {</span>
+<span class="lineNum">     256 </span><span class="lineNoCov">          0 :                                 gf_service_connect_ack(read-&gt;service, NULL, e);</span>
+<span class="lineNum">     257 </span>            :                         }
+<span class="lineNum">     258 </span>            :                 }
+<span class="lineNum">     259 </span>            :                 return;
+<span class="lineNum">     260 </span>            :         }
+<span class="lineNum">     261 </span>            : 
+<span class="lineNum">     262 </span>            :         /*open file if not done yet (bad interleaving)*/
+<span class="lineNum">     263 </span><span class="lineNoCov">          0 :         if (e==GF_EOS) {</span>
+<span class="lineNum">     264 </span>            :                 const char *local_name;
+<span class="lineNum">     265 </span><span class="lineNoCov">          0 :                 if (read-&gt;mov) return;</span>
+<span class="lineNum">     266 </span><span class="lineNoCov">          0 :                 local_name = gf_dm_sess_get_cache_name(read-&gt;dnload);</span>
+<span class="lineNum">     267 </span><span class="lineNoCov">          0 :                 if (!local_name) {</span>
+<span class="lineNum">     268 </span><span class="lineNoCov">          0 :                         if (read-&gt;input-&gt;query_proxy &amp;&amp; read-&gt;input-&gt;proxy_udta &amp;&amp; read-&gt;input-&gt;proxy_type) {</span>
+<span class="lineNum">     269 </span><span class="lineNoCov">          0 :                                 send_proxy_command(read, GF_FALSE, GF_FALSE, GF_SERVICE_ERROR, NULL, NULL);</span>
+<span class="lineNum">     270 </span><span class="lineNoCov">          0 :                         } else {</span>
+<span class="lineNum">     271 </span><span class="lineNoCov">          0 :                                 gf_service_connect_ack(read-&gt;service, NULL, GF_SERVICE_ERROR);</span>
+<span class="lineNum">     272 </span>            :                         }
+<span class="lineNum">     273 </span>            :                         return;
+<span class="lineNum">     274 </span>            :                 }
+<span class="lineNum">     275 </span><span class="lineNoCov">          0 :                 read-&gt;mov = gf_isom_open(local_name, GF_ISOM_OPEN_READ, NULL);</span>
+<span class="lineNum">     276 </span><span class="lineNoCov">          0 :                 if (!read-&gt;mov) gf_isom_last_error(NULL);</span>
+<span class="lineNum">     277 </span><span class="lineNoCov">          0 :                 else read-&gt;time_scale = gf_isom_get_timescale(read-&gt;mov);</span>
+<span class="lineNum">     278 </span><span class="lineNoCov">          0 :                 read-&gt;frag_type = gf_isom_is_fragmented(read-&gt;mov) ? 1 : 0;</span>
+<span class="lineNum">     279 </span><span class="lineNoCov">          0 :                 if (read-&gt;input-&gt;query_proxy &amp;&amp; read-&gt;input-&gt;proxy_udta &amp;&amp; read-&gt;input-&gt;proxy_type) {</span>
+<span class="lineNum">     280 </span><span class="lineNoCov">          0 :                         send_proxy_command(read, GF_FALSE, GF_FALSE, GF_OK, NULL, NULL);</span>
+<span class="lineNum">     281 </span><span class="lineNoCov">          0 :                 } else {</span>
+<span class="lineNum">     282 </span><span class="lineNoCov">          0 :                         gf_service_connect_ack(read-&gt;service, NULL, GF_OK);</span>
+<span class="lineNum">     283 </span>            :                 }
+<span class="lineNum">     284 </span><span class="lineNoCov">          0 :                 if (read-&gt;no_service_desc) isor_declare_objects(read);</span>
+<span class="lineNum">     285 </span>            :         }
+<span class="lineNum">     286 </span>            : 
+<span class="lineNum">     287 </span><span class="lineNoCov">          0 :         if (!size) return;</span>
+<span class="lineNum">     288 </span>            : 
+<span class="lineNum">     289 </span>            :         /*service is opened, nothing to do*/
+<span class="lineNum">     290 </span><span class="lineNoCov">          0 :         if (read-&gt;mov) {</span>
+<span class="lineNum">     291 </span><span class="lineNoCov">          0 :                 isor_check_buffer_level(read);</span>
+<span class="lineNum">     292 </span>            : 
+<span class="lineNum">     293 </span>            :                 /*end of chunk*/
+<span class="lineNum">     294 </span><span class="lineNoCov">          0 :                 if (read-&gt;frag_type &amp;&amp; (param-&gt;reply==1) ) {</span>
+<span class="lineNum">     295 </span><span class="lineNoCov">          0 :                         u64 bytesMissing = 0;</span>
+<span class="lineNum">     296 </span><span class="lineNoCov">          0 :                         gf_mx_p(read-&gt;segment_mutex);</span>
+<span class="lineNum">     297 </span><span class="lineNoCov">          0 :                         gf_isom_refresh_fragmented(read-&gt;mov, &amp;bytesMissing, NULL);</span>
+<span class="lineNum">     298 </span><span class="lineNoCov">          0 :                         gf_mx_v(read-&gt;segment_mutex);</span>
+<span class="lineNum">     299 </span><span class="lineNoCov">          0 :                 }</span>
+<span class="lineNum">     300 </span>            :                 return;
+<span class="lineNum">     301 </span>            :         }
+<span class="lineNum">     302 </span>            : 
+<span class="lineNum">     303 </span>            :         /*try to open the service*/
+<span class="lineNum">     304 </span><span class="lineNoCov">          0 :         local_name = (char *)gf_dm_sess_get_cache_name(read-&gt;dnload);</span>
+<span class="lineNum">     305 </span><span class="lineNoCov">          0 :         if (!local_name) {</span>
+<span class="lineNum">     306 </span><span class="lineNoCov">          0 :                 if (read-&gt;input-&gt;query_proxy &amp;&amp; read-&gt;input-&gt;proxy_udta &amp;&amp; read-&gt;input-&gt;proxy_type) {</span>
+<span class="lineNum">     307 </span><span class="lineNoCov">          0 :                         send_proxy_command(read, GF_FALSE, GF_FALSE, GF_SERVICE_ERROR, NULL, NULL);</span>
+<span class="lineNum">     308 </span><span class="lineNoCov">          0 :                 } else {</span>
+<span class="lineNum">     309 </span><span class="lineNoCov">          0 :                         gf_service_connect_ack(read-&gt;service, NULL, GF_SERVICE_ERROR);</span>
+<span class="lineNum">     310 </span>            :                 }
+<span class="lineNum">     311 </span>            :                 return;
+<span class="lineNum">     312 </span>            :         }
+<span class="lineNum">     313 </span>            : 
+<span class="lineNum">     314 </span>            :         /*not enogh data yet*/
+<span class="lineNum">     315 </span><span class="lineNoCov">          0 :         if (read-&gt;missing_bytes &amp;&amp; (read-&gt;missing_bytes &gt; size) ) {</span>
+<span class="lineNum">     316 </span><span class="lineNoCov">          0 :                 read-&gt;missing_bytes -= size;</span>
+<span class="lineNum">     317 </span><span class="lineNoCov">          0 :                 return;</span>
+<span class="lineNum">     318 </span>            :         }
+<span class="lineNum">     319 </span>            : 
+<span class="lineNum">     320 </span><span class="lineNoCov">          0 :         e = gf_isom_open_progressive(local_name, 0, 0, &amp;read-&gt;mov, &amp;read-&gt;missing_bytes);</span>
+<span class="lineNum">     321 </span><span class="lineNoCov">          0 :         switch (e) {</span>
+<span class="lineNum">     322 </span>            :         case GF_ISOM_INCOMPLETE_FILE:
+<span class="lineNum">     323 </span>            :                 return;
+<span class="lineNum">     324 </span>            :         case GF_OK:
+<span class="lineNum">     325 </span>            :                 break;
+<span class="lineNum">     326 </span>            :         default:
+<span class="lineNum">     327 </span><span class="lineNoCov">          0 :                 if (read-&gt;input-&gt;query_proxy &amp;&amp; read-&gt;input-&gt;proxy_udta &amp;&amp; read-&gt;input-&gt;proxy_type) {</span>
+<span class="lineNum">     328 </span><span class="lineNoCov">          0 :                         send_proxy_command(read, GF_FALSE, GF_FALSE, e, NULL, NULL);</span>
+<span class="lineNum">     329 </span><span class="lineNoCov">          0 :                 } else {</span>
+<span class="lineNum">     330 </span><span class="lineNoCov">          0 :                         gf_service_connect_ack(read-&gt;service, NULL, e);</span>
+<span class="lineNum">     331 </span>            :                 }
+<span class="lineNum">     332 </span>            :                 return;
+<span class="lineNum">     333 </span>            :         }
+<span class="lineNum">     334 </span><span class="lineNoCov">          0 :         read-&gt;frag_type = gf_isom_is_fragmented(read-&gt;mov) ? 1 : 0;</span>
+<span class="lineNum">     335 </span>            : 
+<span class="lineNum">     336 </span>            :         /*ok let's go, we can setup the decoders */
+<span class="lineNum">     337 </span><span class="lineNoCov">          0 :         read-&gt;time_scale = gf_isom_get_timescale(read-&gt;mov);</span>
+<span class="lineNum">     338 </span><span class="lineNoCov">          0 :         if (read-&gt;input-&gt;query_proxy &amp;&amp; read-&gt;input-&gt;proxy_udta &amp;&amp; read-&gt;input-&gt;proxy_type) {</span>
+<span class="lineNum">     339 </span><span class="lineNoCov">          0 :                 send_proxy_command(read, GF_FALSE, GF_FALSE, GF_OK, NULL, NULL);</span>
+<span class="lineNum">     340 </span><span class="lineNoCov">          0 :         } else {</span>
+<span class="lineNum">     341 </span><span class="lineNoCov">          0 :                 gf_service_connect_ack(read-&gt;service, NULL, GF_OK);</span>
+<span class="lineNum">     342 </span>            :         }
+<span class="lineNum">     343 </span>            : 
+<span class="lineNum">     344 </span><span class="lineNoCov">          0 :         if (read-&gt;no_service_desc) isor_declare_objects(read);</span>
+<span class="lineNum">     345 </span><span class="lineNoCov">          0 : }</span>
+<a name="346"><span class="lineNum">     346 </span>            : </a>
+<span class="lineNum">     347 </span>            : 
+<span class="lineNum">     348 </span>            : void isor_setup_download(GF_InputService *plug, const char *url)
+<span class="lineNum">     349 </span>            : {
+<span class="lineNum">     350 </span><span class="lineNoCov">          0 :         ISOMReader *read = (ISOMReader *) plug-&gt;priv;</span>
+<span class="lineNum">     351 </span><span class="lineNoCov">          0 :         read-&gt;dnload = gf_service_download_new(read-&gt;service, url, 0, isor_net_io, read);</span>
+<span class="lineNum">     352 </span><span class="lineNoCov">          0 :         if (!read-&gt;dnload) {</span>
+<span class="lineNum">     353 </span><span class="lineNoCov">          0 :                 if (read-&gt;input-&gt;query_proxy &amp;&amp; read-&gt;input-&gt;proxy_udta &amp;&amp; read-&gt;input-&gt;proxy_type) {</span>
+<span class="lineNum">     354 </span><span class="lineNoCov">          0 :                         send_proxy_command(read, GF_FALSE, GF_FALSE, GF_NOT_SUPPORTED, NULL, NULL);</span>
+<span class="lineNum">     355 </span><span class="lineNoCov">          0 :                 } else {</span>
+<span class="lineNum">     356 </span><span class="lineNoCov">          0 :                         gf_service_connect_ack(read-&gt;service, NULL, GF_NOT_SUPPORTED);</span>
+<span class="lineNum">     357 </span>            :                 }
+<span class="lineNum">     358 </span>            :         } else {
+<span class="lineNum">     359 </span>            :                 /*start our download (threaded)*/
+<span class="lineNum">     360 </span><span class="lineNoCov">          0 :                 gf_dm_sess_process(read-&gt;dnload);</span>
+<span class="lineNum">     361 </span>            :         }
+<span class="lineNum">     362 </span>            :         /*service confirm is done once IOD can be fetched*/
+<a name="363"><span class="lineNum">     363 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     364 </span>            : 
+<span class="lineNum">     365 </span>            : GF_Err ISOR_ConnectService(GF_InputService *plug, GF_ClientService *serv, const char *url)
+<span class="lineNum">     366 </span>            : {
+<span class="lineNum">     367 </span><span class="lineNoCov">          0 :         char szURL[2048];</span>
+<span class="lineNum">     368 </span>            :         char *tmp;
+<span class="lineNum">     369 </span>            :         ISOMReader *read;
+<span class="lineNum">     370 </span><span class="lineNoCov">          0 :         if (!plug || !plug-&gt;priv || !serv) return GF_SERVICE_ERROR;</span>
+<span class="lineNum">     371 </span><span class="lineNoCov">          0 :         read = (ISOMReader *) plug-&gt;priv;</span>
+<span class="lineNum">     372 </span>            : 
+<span class="lineNum">     373 </span><span class="lineNoCov">          0 :         read-&gt;input = plug;</span>
+<span class="lineNum">     374 </span><span class="lineNoCov">          0 :         read-&gt;service = serv;</span>
+<span class="lineNum">     375 </span>            : 
+<span class="lineNum">     376 </span><span class="lineNoCov">          0 :         if (read-&gt;dnload) gf_service_download_del(read-&gt;dnload);</span>
+<span class="lineNum">     377 </span><span class="lineNoCov">          0 :         read-&gt;dnload = NULL;</span>
+<span class="lineNum">     378 </span>            : 
+<span class="lineNum">     379 </span><span class="lineNoCov">          0 :         if (!url) return GF_URL_ERROR;</span>
+<span class="lineNum">     380 </span>            : 
+<span class="lineNum">     381 </span><span class="lineNoCov">          0 :         strcpy(szURL, url);</span>
+<span class="lineNum">     382 </span><span class="lineNoCov">          0 :         tmp = strrchr(szURL, '.');</span>
+<span class="lineNum">     383 </span><span class="lineNoCov">          0 :         if (tmp) {</span>
+<span class="lineNum">     384 </span><span class="lineNoCov">          0 :                 tmp = strchr(tmp, '#');</span>
+<span class="lineNum">     385 </span><span class="lineNoCov">          0 :                 if (tmp) {</span>
+<span class="lineNum">     386 </span><span class="lineNoCov">          0 :                         if (!strnicmp(tmp, &quot;#trackID=&quot;, 9)) {</span>
+<span class="lineNum">     387 </span><span class="lineNoCov">          0 :                                 read-&gt;play_only_track_id = atoi(tmp+9);</span>
+<span class="lineNum">     388 </span><span class="lineNoCov">          0 :                         } else {</span>
+<span class="lineNum">     389 </span><span class="lineNoCov">          0 :                                 read-&gt;play_only_track_id = atoi(tmp+1);</span>
+<span class="lineNum">     390 </span>            :                         }
+<span class="lineNum">     391 </span><span class="lineNoCov">          0 :                         tmp[0] = 0;</span>
+<span class="lineNum">     392 </span><span class="lineNoCov">          0 :                 }</span>
+<span class="lineNum">     393 </span>            :         }
+<span class="lineNum">     394 </span>            : 
+<span class="lineNum">     395 </span><span class="lineNoCov">          0 :         if (isor_is_local(szURL)) {</span>
+<span class="lineNum">     396 </span>            :                 GF_Err e;
+<span class="lineNum">     397 </span>            :                 u64 start_range, end_range;
+<span class="lineNum">     398 </span>            :                 start_range = end_range = 0;
+<span class="lineNum">     399 </span><span class="lineNoCov">          0 :                 if (plug-&gt;query_proxy) {</span>
+<span class="lineNum">     400 </span><span class="lineNoCov">          0 :                         GF_NetworkCommand param;</span>
+<span class="lineNum">     401 </span><span class="lineNoCov">          0 :                         param.command_type = GF_NET_SERVICE_QUERY_INIT_RANGE;</span>
+<span class="lineNum">     402 </span><span class="lineNoCov">          0 :                         if (read-&gt;input-&gt;query_proxy(read-&gt;input, &amp;param)==GF_OK) {</span>
+<span class="lineNum">     403 </span><span class="lineNoCov">          0 :                                 start_range = param.url_query.start_range;</span>
+<span class="lineNum">     404 </span><span class="lineNoCov">          0 :                                 end_range = param.url_query.end_range;</span>
+<span class="lineNum">     405 </span><span class="lineNoCov">          0 :                         }</span>
+<span class="lineNum">     406 </span><span class="lineNoCov">          0 :                 }</span>
+<span class="lineNum">     407 </span><span class="lineNoCov">          0 :                 e = gf_isom_open_progressive(szURL, start_range, end_range, &amp;read-&gt;mov, &amp;read-&gt;missing_bytes);</span>
+<span class="lineNum">     408 </span><span class="lineNoCov">          0 :                 if (e != GF_OK) {</span>
+<span class="lineNum">     409 </span><span class="lineNoCov">          0 :                         GF_LOG(GF_LOG_ERROR, GF_LOG_NETWORK, (&quot;[IsoMedia] : error while opening %s, error=%s\n&quot;, szURL, gf_error_to_string(e)));</span>
+<span class="lineNum">     410 </span><span class="lineNoCov">          0 :                         if (read-&gt;input-&gt;query_proxy &amp;&amp; read-&gt;input-&gt;proxy_udta &amp;&amp; read-&gt;input-&gt;proxy_type) {</span>
+<span class="lineNum">     411 </span><span class="lineNoCov">          0 :                                 send_proxy_command(read, 0, 0, e, NULL, NULL);</span>
+<span class="lineNum">     412 </span><span class="lineNoCov">          0 :                         } else {</span>
+<span class="lineNum">     413 </span><span class="lineNoCov">          0 :                                 gf_service_connect_ack(read-&gt;service, NULL, e);</span>
+<span class="lineNum">     414 </span>            :                         }
+<span class="lineNum">     415 </span><span class="lineNoCov">          0 :                         return GF_OK;</span>
+<span class="lineNum">     416 </span>            :                 }
+<span class="lineNum">     417 </span><span class="lineNoCov">          0 :                 read-&gt;frag_type = gf_isom_is_fragmented(read-&gt;mov) ? 1 : 0;</span>
+<span class="lineNum">     418 </span><span class="lineNoCov">          0 :                 read-&gt;seg_opened = 2;</span>
+<span class="lineNum">     419 </span>            : 
+<span class="lineNum">     420 </span><span class="lineNoCov">          0 :                 read-&gt;time_scale = gf_isom_get_timescale(read-&gt;mov);</span>
+<span class="lineNum">     421 </span>            :                 /*reply to user*/
+<span class="lineNum">     422 </span><span class="lineNoCov">          0 :                 if (read-&gt;input-&gt;query_proxy &amp;&amp; read-&gt;input-&gt;proxy_udta &amp;&amp; read-&gt;input-&gt;proxy_type) {</span>
+<span class="lineNum">     423 </span><span class="lineNoCov">          0 :                         send_proxy_command(read, GF_FALSE, GF_FALSE, GF_OK, NULL, NULL);</span>
+<span class="lineNum">     424 </span><span class="lineNoCov">          0 :                 } else {</span>
+<span class="lineNum">     425 </span><span class="lineNoCov">          0 :                         gf_service_connect_ack(read-&gt;service, NULL, GF_OK);</span>
+<span class="lineNum">     426 </span>            :                 }
+<span class="lineNum">     427 </span>            : 
+<span class="lineNum">     428 </span><span class="lineNoCov">          0 :                 if (read-&gt;no_service_desc) isor_declare_objects(read);</span>
+<span class="lineNum">     429 </span>            : 
+<span class="lineNum">     430 </span>            :         } else {
+<span class="lineNum">     431 </span>            :                 /*setup downloader*/
+<span class="lineNum">     432 </span><span class="lineNoCov">          0 :                 isor_setup_download(plug, szURL);</span>
+<span class="lineNum">     433 </span>            :         }
+<span class="lineNum">     434 </span><span class="lineNoCov">          0 :         return GF_OK;</span>
+<a name="435"><span class="lineNum">     435 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     436 </span>            : 
+<span class="lineNum">     437 </span>            : GF_Err ISOR_CloseService(GF_InputService *plug)
+<span class="lineNum">     438 </span>            : {
+<span class="lineNum">     439 </span>            :         GF_Err reply;
+<span class="lineNum">     440 </span>            :         ISOMReader *read;
+<span class="lineNum">     441 </span><span class="lineNoCov">          0 :         if (!plug || !plug-&gt;priv) return GF_SERVICE_ERROR;</span>
+<span class="lineNum">     442 </span><span class="lineNoCov">          0 :         read = (ISOMReader *) plug-&gt;priv;</span>
+<span class="lineNum">     443 </span>            :         reply = GF_OK;
+<span class="lineNum">     444 </span>            : 
+<span class="lineNum">     445 </span><span class="lineNoCov">          0 :         read-&gt;disconnected = GF_TRUE;</span>
+<span class="lineNum">     446 </span>            : 
+<span class="lineNum">     447 </span><span class="lineNoCov">          0 :         while (gf_list_count(read-&gt;channels)) {</span>
+<span class="lineNum">     448 </span><span class="lineNoCov">          0 :                 ISOMChannel *ch = (ISOMChannel *)gf_list_get(read-&gt;channels, 0);</span>
+<span class="lineNum">     449 </span><span class="lineNoCov">          0 :                 gf_list_rem(read-&gt;channels, 0);</span>
+<span class="lineNum">     450 </span><span class="lineNoCov">          0 :                 isor_delete_channel(read, ch);</span>
+<span class="lineNum">     451 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     452 </span>            : 
+<span class="lineNum">     453 </span><span class="lineNoCov">          0 :         if (read-&gt;dnload) gf_service_download_del(read-&gt;dnload);</span>
+<span class="lineNum">     454 </span><span class="lineNoCov">          0 :         read-&gt;dnload = NULL;</span>
+<span class="lineNum">     455 </span>            : 
+<span class="lineNum">     456 </span><span class="lineNoCov">          0 :         if (read-&gt;mov) gf_isom_close(read-&gt;mov);</span>
+<span class="lineNum">     457 </span><span class="lineNoCov">          0 :         read-&gt;mov = NULL;</span>
+<span class="lineNum">     458 </span>            : 
+<span class="lineNum">     459 </span><span class="lineNoCov">          0 :         if (read-&gt;input-&gt;query_proxy &amp;&amp; read-&gt;input-&gt;proxy_udta &amp;&amp; read-&gt;input-&gt;proxy_type) {</span>
+<span class="lineNum">     460 </span><span class="lineNoCov">          0 :                 send_proxy_command(read, GF_TRUE, GF_FALSE, reply, NULL, NULL);</span>
+<span class="lineNum">     461 </span><span class="lineNoCov">          0 :         } else {</span>
+<span class="lineNum">     462 </span><span class="lineNoCov">          0 :                 gf_service_disconnect_ack(read-&gt;service, NULL, reply);</span>
+<span class="lineNum">     463 </span>            :         }
+<span class="lineNum">     464 </span><span class="lineNoCov">          0 :         return GF_OK;</span>
+<a name="465"><span class="lineNum">     465 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     466 </span>            : 
+<span class="lineNum">     467 </span>            : static Bool check_mpeg4_systems(GF_InputService *plug, GF_ISOFile *mov)
+<span class="lineNum">     468 </span>            : {
+<span class="lineNum">     469 </span>            :         char *opt, *bname, *br, *next;
+<span class="lineNum">     470 </span>            :         u32 i, count, brand;
+<span class="lineNum">     471 </span>            :         Bool has_mpeg4;
+<span class="lineNum">     472 </span>            :         GF_Err e;
+<span class="lineNum">     473 </span><span class="lineNoCov">          0 :         e = gf_isom_get_brand_info(mov, &amp;brand, &amp;i, &amp;count);</span>
+<span class="lineNum">     474 </span>            :         /*no brand == MP4 v1*/
+<span class="lineNum">     475 </span><span class="lineNoCov">          0 :         if (e || !brand) return GF_TRUE;</span>
+<span class="lineNum">     476 </span>            : 
+<span class="lineNum">     477 </span>            :         has_mpeg4 = GF_FALSE;
+<span class="lineNum">     478 </span><span class="lineNoCov">          0 :         if ((brand==GF_ISOM_BRAND_MP41) || (brand==GF_ISOM_BRAND_MP42)) has_mpeg4 = GF_TRUE;</span>
+<span class="lineNum">     479 </span>            : 
+<span class="lineNum">     480 </span><span class="lineNoCov">          0 :         opt = (char*) gf_modules_get_option((GF_BaseInterface *)plug, &quot;ISOReader&quot;, &quot;IgnoreMPEG-4ForBrands&quot;);</span>
+<span class="lineNum">     481 </span><span class="lineNoCov">          0 :         if (!opt) {</span>
+<span class="lineNum">     482 </span><span class="lineNoCov">          0 :                 gf_modules_set_option((GF_BaseInterface *)plug, &quot;ISOReader&quot;, &quot;IgnoreMPEG-4ForBrands&quot;, &quot;nd*&quot;);</span>
+<span class="lineNum">     483 </span><span class="lineNoCov">          0 :                 opt = (char*) gf_modules_get_option((GF_BaseInterface *)plug, &quot;ISOReader&quot;, &quot;IgnoreMPEG-4ForBrands&quot;);</span>
+<span class="lineNum">     484 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     485 </span>            : 
+<span class="lineNum">     486 </span><span class="lineNoCov">          0 :         for (i=0; i&lt;count; i++) {</span>
+<span class="lineNum">     487 </span><span class="lineNoCov">          0 :                 e = gf_isom_get_alternate_brand(mov, i+1, &amp;brand);</span>
+<span class="lineNum">     488 </span><span class="lineNoCov">          0 :                 if (e) return GF_FALSE;</span>
+<span class="lineNum">     489 </span><span class="lineNoCov">          0 :                 if ((brand==GF_ISOM_BRAND_MP41) || (brand==GF_ISOM_BRAND_MP42)) {</span>
+<span class="lineNum">     490 </span>            :                         has_mpeg4 = GF_TRUE;
+<span class="lineNum">     491 </span><span class="lineNoCov">          0 :                         continue;</span>
+<span class="lineNum">     492 </span>            :                 }
+<span class="lineNum">     493 </span><span class="lineNoCov">          0 :                 bname = (char*)gf_4cc_to_str(brand);</span>
+<span class="lineNum">     494 </span>            :                 br = opt;
+<span class="lineNum">     495 </span><span class="lineNoCov">          0 :                 while (br) {</span>
+<span class="lineNum">     496 </span>            :                         Bool ignore = GF_FALSE;
+<span class="lineNum">     497 </span>            :                         u32 orig_len, len;
+<span class="lineNum">     498 </span><span class="lineNoCov">          0 :                         next = strchr(br, ' ');</span>
+<span class="lineNum">     499 </span><span class="lineNoCov">          0 :                         if (next) next[0] = 0;</span>
+<span class="lineNum">     500 </span><span class="lineNoCov">          0 :                         len = orig_len = (u32) strlen(br);</span>
+<span class="lineNum">     501 </span>            : 
+<span class="lineNum">     502 </span><span class="lineNoCov">          0 :                         while (len) {</span>
+<span class="lineNum">     503 </span><span class="lineNoCov">          0 :                                 if (br[len-1]=='*') {</span>
+<span class="lineNum">     504 </span><span class="lineNoCov">          0 :                                         br[len-1]=0;</span>
+<span class="lineNum">     505 </span><span class="lineNoCov">          0 :                                         len--;</span>
+<span class="lineNum">     506 </span>            :                                 } else {
+<span class="lineNum">     507 </span>            :                                         break;
+<span class="lineNum">     508 </span>            :                                 }
+<span class="lineNum">     509 </span><span class="lineNoCov">          0 :                         }</span>
+<span class="lineNum">     510 </span>            :                         /*ignor all brands*/
+<span class="lineNum">     511 </span><span class="lineNoCov">          0 :                         if (!len) ignore = GF_TRUE;</span>
+<span class="lineNum">     512 </span><span class="lineNoCov">          0 :                         else if (!strncmp(bname, br, len)) ignore = GF_TRUE;</span>
+<span class="lineNum">     513 </span>            : 
+<span class="lineNum">     514 </span><span class="lineNoCov">          0 :                         while (len&lt;orig_len) {</span>
+<span class="lineNum">     515 </span><span class="lineNoCov">          0 :                                 br[len] = '*';</span>
+<span class="lineNum">     516 </span><span class="lineNoCov">          0 :                                 len++;</span>
+<span class="lineNum">     517 </span><span class="lineNoCov">          0 :                         }</span>
+<span class="lineNum">     518 </span><span class="lineNoCov">          0 :                         if (next) {</span>
+<span class="lineNum">     519 </span><span class="lineNoCov">          0 :                                 next[0] = ' ';</span>
+<span class="lineNum">     520 </span><span class="lineNoCov">          0 :                                 br = next + 1;</span>
+<span class="lineNum">     521 </span><span class="lineNoCov">          0 :                         } else {</span>
+<span class="lineNum">     522 </span>            :                                 br = NULL;
+<span class="lineNum">     523 </span>            :                         }
+<span class="lineNum">     524 </span><span class="lineNoCov">          0 :                         if (ignore) return GF_FALSE;</span>
+<span class="lineNum">     525 </span>            :                 }
+<span class="lineNum">     526 </span>            :         }
+<span class="lineNum">     527 </span><span class="lineNoCov">          0 :         return has_mpeg4;</span>
+<a name="528"><span class="lineNum">     528 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     529 </span>            : 
+<span class="lineNum">     530 </span>            : static u32 get_track_id(GF_ISOFile *mov, u32 media_type, u32 idx)
+<span class="lineNum">     531 </span>            : {
+<span class="lineNum">     532 </span>            :         u32 i, count, cur;
+<span class="lineNum">     533 </span>            :         cur=0;
+<span class="lineNum">     534 </span><span class="lineNoCov">          0 :         count = gf_isom_get_track_count(mov);</span>
+<span class="lineNum">     535 </span><span class="lineNoCov">          0 :         for (i=0; i&lt;count; i++) {</span>
+<span class="lineNum">     536 </span><span class="lineNoCov">          0 :                 if (gf_isom_get_media_type(mov, i+1) != media_type) continue;</span>
+<span class="lineNum">     537 </span><span class="lineNoCov">          0 :                 if (!idx) return gf_isom_get_track_id(mov, i+1);</span>
+<span class="lineNum">     538 </span><span class="lineNoCov">          0 :                 cur++;</span>
+<span class="lineNum">     539 </span><span class="lineNoCov">          0 :                 if (cur==idx) return gf_isom_get_track_id(mov, i+1);</span>
+<span class="lineNum">     540 </span>            :         }
+<span class="lineNum">     541 </span><span class="lineNoCov">          0 :         return GF_FALSE;</span>
+<span class="lineNum">     542 </span><span class="lineNoCov">          0 : }</span>
+<a name="543"><span class="lineNum">     543 </span>            : </a>
+<span class="lineNum">     544 </span>            : /*fixme, this doesn't work properly with respect to @expect_type*/
+<span class="lineNum">     545 </span>            : static GF_Descriptor *ISOR_GetServiceDesc(GF_InputService *plug, u32 expect_type, const char *sub_url)
+<span class="lineNum">     546 </span>            : {
+<span class="lineNum">     547 </span>            :         u32 count, nb_st, i, trackID;
+<span class="lineNum">     548 </span>            :         GF_ESD *esd;
+<span class="lineNum">     549 </span>            :         ISOMReader *read;
+<span class="lineNum">     550 </span>            :         GF_InitialObjectDescriptor *iod;
+<span class="lineNum">     551 </span><span class="lineNoCov">          0 :         if (!plug || !plug-&gt;priv) return NULL;</span>
+<span class="lineNum">     552 </span><span class="lineNoCov">          0 :         read = (ISOMReader *) plug-&gt;priv;</span>
+<span class="lineNum">     553 </span><span class="lineNoCov">          0 :         if (!read-&gt;mov) return NULL;</span>
+<span class="lineNum">     554 </span>            : 
+<span class="lineNum">     555 </span>            :         /*no matter what always read text as TTUs*/
+<span class="lineNum">     556 </span><span class="lineNoCov">          0 :         gf_isom_text_set_streaming_mode(read-&gt;mov, 1);</span>
+<span class="lineNum">     557 </span>            : 
+<span class="lineNum">     558 </span><span class="lineNoCov">          0 :         if (!sub_url) {</span>
+<span class="lineNum">     559 </span><span class="lineNoCov">          0 :                 trackID = read-&gt;play_only_track_id;</span>
+<span class="lineNum">     560 </span><span class="lineNoCov">          0 :                 read-&gt;play_only_track_id = 0;</span>
+<span class="lineNum">     561 </span><span class="lineNoCov">          0 :         } else {</span>
+<span class="lineNum">     562 </span><span class="lineNoCov">          0 :                 char *ext = (char *)strrchr(sub_url, '#');</span>
+<span class="lineNum">     563 </span><span class="lineNoCov">          0 :                 if (!ext) {</span>
+<span class="lineNum">     564 </span>            :                         trackID = 0;
+<span class="lineNum">     565 </span><span class="lineNoCov">          0 :                 } else {</span>
+<span class="lineNum">     566 </span><span class="lineNoCov">          0 :                         if (!strnicmp(ext, &quot;#trackID=&quot;, 9)) trackID = atoi(ext+9);</span>
+<span class="lineNum">     567 </span><span class="lineNoCov">          0 :                         else if (!stricmp(ext, &quot;#video&quot;)) trackID = get_track_id(read-&gt;mov, GF_ISOM_MEDIA_VISUAL, 0);</span>
+<span class="lineNum">     568 </span><span class="lineNoCov">          0 :                         else if (!strnicmp(ext, &quot;#video&quot;, 6)) {</span>
+<span class="lineNum">     569 </span><span class="lineNoCov">          0 :                                 trackID = atoi(ext+6);</span>
+<span class="lineNum">     570 </span><span class="lineNoCov">          0 :                                 trackID = get_track_id(read-&gt;mov, GF_ISOM_MEDIA_VISUAL, trackID);</span>
+<span class="lineNum">     571 </span><span class="lineNoCov">          0 :                         }</span>
+<span class="lineNum">     572 </span><span class="lineNoCov">          0 :                         else if (!stricmp(ext, &quot;#audio&quot;)) trackID = get_track_id(read-&gt;mov, GF_ISOM_MEDIA_AUDIO, 0);</span>
+<span class="lineNum">     573 </span><span class="lineNoCov">          0 :                         else if (!strnicmp(ext, &quot;#audio&quot;, 6)) {</span>
+<span class="lineNum">     574 </span><span class="lineNoCov">          0 :                                 trackID = atoi(ext+6);</span>
+<span class="lineNum">     575 </span><span class="lineNoCov">          0 :                                 trackID = get_track_id(read-&gt;mov, GF_ISOM_MEDIA_AUDIO, trackID);</span>
+<span class="lineNum">     576 </span><span class="lineNoCov">          0 :                         }</span>
+<span class="lineNum">     577 </span><span class="lineNoCov">          0 :                         else trackID = atoi(ext+1);</span>
+<span class="lineNum">     578 </span>            : 
+<span class="lineNum">     579 </span>            :                         /*if trackID is 0, assume this is a fragment identifier*/
+<span class="lineNum">     580 </span>            :                 }
+<span class="lineNum">     581 </span>            :         }
+<span class="lineNum">     582 </span>            : 
+<span class="lineNum">     583 </span><span class="lineNoCov">          0 :         if (!trackID &amp;&amp; (expect_type!=GF_MEDIA_OBJECT_SCENE) &amp;&amp; (expect_type!=GF_MEDIA_OBJECT_UNDEF)) {</span>
+<span class="lineNum">     584 </span><span class="lineNoCov">          0 :                 for (i=0; i&lt;gf_isom_get_track_count(read-&gt;mov); i++) {</span>
+<span class="lineNum">     585 </span><span class="lineNoCov">          0 :                         u32 type = gf_isom_get_media_type(read-&gt;mov, i+1);</span>
+<span class="lineNum">     586 </span><span class="lineNoCov">          0 :                         if (</span>
+<span class="lineNum">     587 </span>            :                             ((type==GF_ISOM_MEDIA_VISUAL) &amp;&amp; (expect_type==GF_MEDIA_OBJECT_VIDEO))
+<span class="lineNum">     588 </span>            :                             || ((type==GF_ISOM_MEDIA_AUDIO) &amp;&amp; (expect_type==GF_MEDIA_OBJECT_AUDIO)) ) {
+<span class="lineNum">     589 </span><span class="lineNoCov">          0 :                                 trackID = gf_isom_get_track_id(read-&gt;mov, i+1);</span>
+<span class="lineNum">     590 </span><span class="lineNoCov">          0 :                                 break;</span>
+<span class="lineNum">     591 </span>            :                         }
+<span class="lineNum">     592 </span>            : 
+<span class="lineNum">     593 </span>            :                 }
+<span class="lineNum">     594 </span>            :         }
+<span class="lineNum">     595 </span><span class="lineNoCov">          0 :         if (trackID &amp;&amp; (expect_type!=GF_MEDIA_OBJECT_SCENE) ) {</span>
+<span class="lineNum">     596 </span><span class="lineNoCov">          0 :                 u32 track = gf_isom_get_track_by_id(read-&gt;mov, trackID);</span>
+<span class="lineNum">     597 </span><span class="lineNoCov">          0 :                 if (!track) return NULL;</span>
+<span class="lineNum">     598 </span><span class="lineNoCov">          0 :                 esd = gf_media_map_esd(read-&gt;mov, track);</span>
+<span class="lineNum">     599 </span><span class="lineNoCov">          0 :                 esd-&gt;OCRESID = 0;</span>
+<span class="lineNum">     600 </span><span class="lineNoCov">          0 :                 iod = (GF_InitialObjectDescriptor *) gf_isom_get_root_od(read-&gt;mov);</span>
+<span class="lineNum">     601 </span><span class="lineNoCov">          0 :                 if (!iod) {</span>
+<span class="lineNum">     602 </span><span class="lineNoCov">          0 :                         iod = (GF_InitialObjectDescriptor *) gf_odf_desc_new(GF_ODF_IOD_TAG);</span>
+<span class="lineNum">     603 </span><span class="lineNoCov">          0 :                         iod-&gt;OD_profileAndLevel = iod-&gt;audio_profileAndLevel = iod-&gt;graphics_profileAndLevel = iod-&gt;scene_profileAndLevel = iod-&gt;visual_profileAndLevel = 0xFE;</span>
+<span class="lineNum">     604 </span><span class="lineNoCov">          0 :                 } else {</span>
+<span class="lineNum">     605 </span><span class="lineNoCov">          0 :                         while (gf_list_count(iod-&gt;ESDescriptors)) {</span>
+<span class="lineNum">     606 </span><span class="lineNoCov">          0 :                                 GF_ESD *old = (GF_ESD *)gf_list_get(iod-&gt;ESDescriptors, 0);</span>
+<span class="lineNum">     607 </span><span class="lineNoCov">          0 :                                 gf_odf_desc_del((GF_Descriptor *) old);</span>
+<span class="lineNum">     608 </span><span class="lineNoCov">          0 :                                 gf_list_rem(iod-&gt;ESDescriptors, 0);</span>
+<span class="lineNum">     609 </span><span class="lineNoCov">          0 :                         }</span>
+<span class="lineNum">     610 </span>            :                 }
+<span class="lineNum">     611 </span><span class="lineNoCov">          0 :                 gf_list_add(iod-&gt;ESDescriptors, esd);</span>
+<span class="lineNum">     612 </span><span class="lineNoCov">          0 :                 isor_emulate_chapters(read-&gt;mov, iod);</span>
+<span class="lineNum">     613 </span><span class="lineNoCov">          0 :                 return (GF_Descriptor *) iod;</span>
+<span class="lineNum">     614 </span>            :         }
+<span class="lineNum">     615 </span>            : 
+<span class="lineNum">     616 </span>            :         iod = NULL;
+<span class="lineNum">     617 </span><span class="lineNoCov">          0 :         if (check_mpeg4_systems(plug, read-&gt;mov)) {</span>
+<span class="lineNum">     618 </span><span class="lineNoCov">          0 :                 iod = (GF_InitialObjectDescriptor *) gf_isom_get_root_od(read-&gt;mov);</span>
+<span class="lineNum">     619 </span><span class="lineNoCov">          0 :                 if (!iod) {</span>
+<span class="lineNum">     620 </span>            : #ifndef GPAC_DISABLE_LOG
+<span class="lineNum">     621 </span><span class="lineNoCov">          0 :                         GF_Err e = gf_isom_last_error(read-&gt;mov);</span>
+<span class="lineNum">     622 </span><span class="lineNoCov">          0 :                         if (e) {</span>
+<span class="lineNum">     623 </span><span class="lineNoCov">          0 :                                 GF_LOG(GF_LOG_ERROR, GF_LOG_NETWORK, (&quot;[IsoMedia] Cannot fetch MPEG-4 IOD (error %s) - generating one\n&quot;, gf_error_to_string(e) ));</span>
+<span class="lineNum">     624 </span>            :                         } else {
+<span class="lineNum">     625 </span><span class="lineNoCov">          0 :                                 GF_LOG(GF_LOG_DEBUG, GF_LOG_NETWORK, (&quot;[IsoMedia] No MPEG-4 IOD found in file - generating one\n&quot;));</span>
+<span class="lineNum">     626 </span>            :                         }
+<span class="lineNum">     627 </span>            : #endif
+<span class="lineNum">     628 </span>            :                 }
+<span class="lineNum">     629 </span>            :         }
+<span class="lineNum">     630 </span><span class="lineNoCov">          0 :         if (!iod) return isor_emulate_iod(read);</span>
+<span class="lineNum">     631 </span>            : 
+<span class="lineNum">     632 </span><span class="lineNoCov">          0 :         count = gf_list_count(iod-&gt;ESDescriptors);</span>
+<span class="lineNum">     633 </span><span class="lineNoCov">          0 :         if (!count) {</span>
+<span class="lineNum">     634 </span><span class="lineNoCov">          0 :                 gf_odf_desc_del((GF_Descriptor*) iod);</span>
+<span class="lineNum">     635 </span><span class="lineNoCov">          0 :                 return isor_emulate_iod(read);</span>
+<span class="lineNum">     636 </span>            :         }
+<span class="lineNum">     637 </span><span class="lineNoCov">          0 :         if (count==1) {</span>
+<span class="lineNum">     638 </span><span class="lineNoCov">          0 :                 esd = (GF_ESD *)gf_list_get(iod-&gt;ESDescriptors, 0);</span>
+<span class="lineNum">     639 </span><span class="lineNoCov">          0 :                 switch (esd-&gt;decoderConfig-&gt;streamType) {</span>
+<span class="lineNum">     640 </span>            :                 case GF_STREAM_SCENE:
+<span class="lineNum">     641 </span>            :                 case GF_STREAM_PRIVATE_SCENE:
+<span class="lineNum">     642 </span>            :                         break;
+<span class="lineNum">     643 </span>            :                 case GF_STREAM_VISUAL:
+<span class="lineNum">     644 </span><span class="lineNoCov">          0 :                         if (expect_type!=GF_MEDIA_OBJECT_VIDEO) {</span>
+<span class="lineNum">     645 </span><span class="lineNoCov">          0 :                                 gf_odf_desc_del((GF_Descriptor*) iod);</span>
+<span class="lineNum">     646 </span><span class="lineNoCov">          0 :                                 return isor_emulate_iod(read);</span>
+<span class="lineNum">     647 </span>            :                         }
+<span class="lineNum">     648 </span>            :                         break;
+<span class="lineNum">     649 </span>            :                 case GF_STREAM_AUDIO:
+<span class="lineNum">     650 </span>            :                         /*we need a fake scene graph*/
+<span class="lineNum">     651 </span><span class="lineNoCov">          0 :                         if (expect_type!=GF_MEDIA_OBJECT_AUDIO) {</span>
+<span class="lineNum">     652 </span><span class="lineNoCov">          0 :                                 gf_odf_desc_del((GF_Descriptor*) iod);</span>
+<span class="lineNum">     653 </span><span class="lineNoCov">          0 :                                 return isor_emulate_iod(read);</span>
+<span class="lineNum">     654 </span>            :                         }
+<span class="lineNum">     655 </span>            :                         break;
+<span class="lineNum">     656 </span>            :                 default:
+<span class="lineNum">     657 </span><span class="lineNoCov">          0 :                         gf_odf_desc_del((GF_Descriptor*) iod);</span>
+<span class="lineNum">     658 </span><span class="lineNoCov">          0 :                         return NULL;</span>
+<span class="lineNum">     659 </span>            :                 }
+<span class="lineNum">     660 </span>            :         }
+<span class="lineNum">     661 </span>            :         /*check IOD is not badly formed (eg mixing audio, video or text streams)*/
+<span class="lineNum">     662 </span>            :         nb_st = 0;
+<span class="lineNum">     663 </span><span class="lineNoCov">          0 :         for (i=0; i&lt;count; i++) {</span>
+<span class="lineNum">     664 </span><span class="lineNoCov">          0 :                 esd = (GF_ESD *)gf_list_get(iod-&gt;ESDescriptors, i);</span>
+<span class="lineNum">     665 </span><span class="lineNoCov">          0 :                 switch (esd-&gt;decoderConfig-&gt;streamType) {</span>
+<span class="lineNum">     666 </span>            :                 case GF_STREAM_VISUAL:
+<span class="lineNum">     667 </span><span class="lineNoCov">          0 :                         nb_st |= 1;</span>
+<span class="lineNum">     668 </span><span class="lineNoCov">          0 :                         break;</span>
+<span class="lineNum">     669 </span>            :                 case GF_STREAM_AUDIO:
+<span class="lineNum">     670 </span><span class="lineNoCov">          0 :                         nb_st |= 2;</span>
+<span class="lineNum">     671 </span><span class="lineNoCov">          0 :                         break;</span>
+<span class="lineNum">     672 </span>            :                 case GF_STREAM_TEXT:
+<span class="lineNum">     673 </span><span class="lineNoCov">          0 :                         nb_st |= 4;</span>
+<span class="lineNum">     674 </span><span class="lineNoCov">          0 :                         break;</span>
+<span class="lineNum">     675 </span>            :                 }
+<span class="lineNum">     676 </span>            :         }
+<span class="lineNum">     677 </span><span class="lineNoCov">          0 :         if ( (nb_st &amp; 1) + (nb_st &amp; 2) + (nb_st &amp; 4) &gt; 1) {</span>
+<span class="lineNum">     678 </span><span class="lineNoCov">          0 :                 gf_odf_desc_del((GF_Descriptor*) iod);</span>
+<span class="lineNum">     679 </span><span class="lineNoCov">          0 :                 return isor_emulate_iod(read);</span>
+<span class="lineNum">     680 </span>            :         }
+<span class="lineNum">     681 </span>            : 
+<span class="lineNum">     682 </span><span class="lineNoCov">          0 :         isor_emulate_chapters(read-&gt;mov, iod);</span>
+<span class="lineNum">     683 </span><span class="lineNoCov">          0 :         return (GF_Descriptor *) iod;</span>
+<span class="lineNum">     684 </span><span class="lineNoCov">          0 : }</span>
+<a name="685"><span class="lineNum">     685 </span>            : </a>
+<span class="lineNum">     686 </span>            : 
+<span class="lineNum">     687 </span>            : void isor_send_cenc_config(ISOMChannel *ch)
+<span class="lineNum">     688 </span>            : {
+<span class="lineNum">     689 </span><span class="lineNoCov">          0 :         GF_NetworkCommand com;</span>
+<span class="lineNum">     690 </span>            :         u32 i;
+<span class="lineNum">     691 </span>            : 
+<span class="lineNum">     692 </span><span class="lineNoCov">          0 :         memset(&amp;com, 0, sizeof(GF_NetworkCommand));</span>
+<span class="lineNum">     693 </span><span class="lineNoCov">          0 :         com.base.on_channel = ch-&gt;channel;</span>
+<span class="lineNum">     694 </span><span class="lineNoCov">          0 :         com.command_type = GF_NET_CHAN_DRM_CFG;</span>
+<span class="lineNum">     695 </span><span class="lineNoCov">          0 :         ch-&gt;is_encrypted = GF_TRUE;</span>
+<span class="lineNum">     696 </span>            : 
+<span class="lineNum">     697 </span><span class="lineNoCov">          0 :         gf_isom_get_cenc_info(ch-&gt;owner-&gt;mov, ch-&gt;track, 1, NULL, &amp;com.drm_cfg.scheme_type, &amp;com.drm_cfg.scheme_version, NULL);</span>
+<span class="lineNum">     698 </span>            : 
+<span class="lineNum">     699 </span><span class="lineNoCov">          0 :         com.drm_cfg.PSSH_count = gf_isom_get_pssh_count(ch-&gt;owner-&gt;mov);</span>
+<span class="lineNum">     700 </span><span class="lineNoCov">          0 :         com.drm_cfg.PSSHs = gf_malloc(sizeof(GF_NetComDRMConfigPSSH)*(com.drm_cfg.PSSH_count) );</span>
+<span class="lineNum">     701 </span>            : 
+<span class="lineNum">     702 </span>            :         /*fill PSSH in the structure. We will free it in CENC_Setup*/
+<span class="lineNum">     703 </span><span class="lineNoCov">          0 :         for (i=0; i&lt;com.drm_cfg.PSSH_count; i++) {</span>
+<span class="lineNum">     704 </span><span class="lineNoCov">          0 :                 GF_NetComDRMConfigPSSH *pssh = &amp;com.drm_cfg.PSSHs[i];</span>
+<span class="lineNum">     705 </span><span class="lineNoCov">          0 :                 gf_isom_get_pssh_info(ch-&gt;owner-&gt;mov, i+1, pssh-&gt;SystemID, &amp;pssh-&gt;KID_count, (const bin128 **) &amp; pssh-&gt;KIDs, (const u8 **) &amp;pssh-&gt;private_data, &amp;pssh-&gt;private_data_size);</span>
+<span class="lineNum">     706 </span>            :         }
+<span class="lineNum">     707 </span>            :         //fixme - check MSE and EME
+<span class="lineNum">     708 </span>            : #if 0
+<span class="lineNum">     709 </span>            :         if (read-&gt;input-&gt;query_proxy &amp;&amp; read-&gt;input-&gt;proxy_udta) {
+<span class="lineNum">     710 </span>            :                 read-&gt;input-&gt;query_proxy(read-&gt;input, &amp;com);
+<span class="lineNum">     711 </span>            :         } else
+<span class="lineNum">     712 </span>            : #endif
+<span class="lineNum">     713 </span><span class="lineNoCov">          0 :                 gf_service_command(ch-&gt;owner-&gt;service, &amp;com, GF_OK);</span>
+<span class="lineNum">     714 </span>            :         //free our PSSH
+<span class="lineNum">     715 </span><span class="lineNoCov">          0 :         if (com.drm_cfg.PSSHs) gf_free(com.drm_cfg.PSSHs);</span>
+<span class="lineNum">     716 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     717 </span>            : 
+<a name="718"><span class="lineNum">     718 </span>            : </a>
+<span class="lineNum">     719 </span>            : 
+<span class="lineNum">     720 </span>            : GF_Err ISOR_ConnectChannel(GF_InputService *plug, LPNETCHANNEL channel, const char *url, Bool upstream)
+<span class="lineNum">     721 </span>            : {
+<span class="lineNum">     722 </span>            :         u32 ESID;
+<span class="lineNum">     723 </span>            :         ISOMChannel *ch;
+<span class="lineNum">     724 </span><span class="lineNoCov">          0 :         GF_NetworkCommand com;</span>
+<span class="lineNum">     725 </span>            :         u32 track;
+<span class="lineNum">     726 </span>            :         Bool is_esd_url;
+<span class="lineNum">     727 </span>            :         GF_Err e;
+<span class="lineNum">     728 </span>            :         ISOMReader *read;
+<span class="lineNum">     729 </span><span class="lineNoCov">          0 :         if (!plug || !plug-&gt;priv) return GF_SERVICE_ERROR;</span>
+<span class="lineNum">     730 </span><span class="lineNoCov">          0 :         read = (ISOMReader *) plug-&gt;priv;</span>
+<span class="lineNum">     731 </span>            : 
+<span class="lineNum">     732 </span>            :         track = 0;
+<span class="lineNum">     733 </span>            :         ch = NULL;
+<span class="lineNum">     734 </span>            :         is_esd_url = GF_FALSE;
+<span class="lineNum">     735 </span>            :         e = GF_OK;
+<span class="lineNum">     736 </span><span class="lineNoCov">          0 :         if (upstream) {</span>
+<span class="lineNum">     737 </span>            :                 e = GF_ISOM_INVALID_FILE;
+<span class="lineNum">     738 </span><span class="lineNoCov">          0 :                 goto exit;</span>
+<span class="lineNum">     739 </span>            :         }
+<span class="lineNum">     740 </span><span class="lineNoCov">          0 :         if (!read-&gt;mov) return GF_SERVICE_ERROR;</span>
+<span class="lineNum">     741 </span>            : 
+<span class="lineNum">     742 </span><span class="lineNoCov">          0 :         if (strstr(url, &quot;ES_ID&quot;)) {</span>
+<span class="lineNum">     743 </span><span class="lineNoCov">          0 :                 sscanf(url, &quot;ES_ID=%ud&quot;, &amp;ESID);</span>
+<span class="lineNum">     744 </span><span class="lineNoCov">          0 :         } else {</span>
+<span class="lineNum">     745 </span>            :                 /*handle url like mypath/myfile.mp4#trackID*/
+<span class="lineNum">     746 </span><span class="lineNoCov">          0 :                 char *track_id = (char *)strrchr(url, '.');</span>
+<span class="lineNum">     747 </span><span class="lineNoCov">          0 :                 if (track_id) {</span>
+<span class="lineNum">     748 </span><span class="lineNoCov">          0 :                         track_id = (char *)strchr(url, '#');</span>
+<span class="lineNum">     749 </span><span class="lineNoCov">          0 :                         if (track_id) track_id ++;</span>
+<span class="lineNum">     750 </span>            :                 }
+<span class="lineNum">     751 </span>            :                 is_esd_url = GF_TRUE;
+<span class="lineNum">     752 </span>            : 
+<span class="lineNum">     753 </span><span class="lineNoCov">          0 :                 ESID = 0;</span>
+<span class="lineNum">     754 </span>            :                 /*if only one track ok*/
+<span class="lineNum">     755 </span><span class="lineNoCov">          0 :                 if (gf_isom_get_track_count(read-&gt;mov)==1) ESID = gf_isom_get_track_id(read-&gt;mov, 1);</span>
+<span class="lineNum">     756 </span><span class="lineNoCov">          0 :                 else if (track_id) {</span>
+<span class="lineNum">     757 </span><span class="lineNoCov">          0 :                         ESID = atoi(track_id);</span>
+<span class="lineNum">     758 </span><span class="lineNoCov">          0 :                         track = gf_isom_get_track_by_id(read-&gt;mov, (u32) ESID);</span>
+<span class="lineNum">     759 </span><span class="lineNoCov">          0 :                         if (!track) ESID = 0;</span>
+<span class="lineNum">     760 </span>            :                 }
+<span class="lineNum">     761 </span>            : 
+<span class="lineNum">     762 </span>            :         }
+<span class="lineNum">     763 </span><span class="lineNoCov">          0 :         if (!ESID) {</span>
+<span class="lineNum">     764 </span>            :                 e = GF_NOT_SUPPORTED;
+<span class="lineNum">     765 </span><span class="lineNoCov">          0 :                 goto exit;</span>
+<span class="lineNum">     766 </span>            :         }
+<span class="lineNum">     767 </span>            : 
+<span class="lineNum">     768 </span>            :         /*a channel cannot be open twice, it has to be closed before - NOTE a track is NOT a channel and the user can open
+<span class="lineNum">     769 </span>            :         several times the same track as long as a dedicated channel is used*/
+<span class="lineNum">     770 </span><span class="lineNoCov">          0 :         ch = isor_get_channel(read, channel);</span>
+<span class="lineNum">     771 </span><span class="lineNoCov">          0 :         if (ch) {</span>
+<span class="lineNum">     772 </span>            :                 e = GF_SERVICE_ERROR;
+<span class="lineNum">     773 </span><span class="lineNoCov">          0 :                 goto exit;</span>
+<span class="lineNum">     774 </span>            :         }
+<span class="lineNum">     775 </span><span class="lineNoCov">          0 :         track = gf_isom_get_track_by_id(read-&gt;mov, (u32) ESID);</span>
+<span class="lineNum">     776 </span><span class="lineNoCov">          0 :         if (!track) {</span>
+<span class="lineNum">     777 </span>            :                 e = GF_STREAM_NOT_FOUND;
+<span class="lineNum">     778 </span><span class="lineNoCov">          0 :                 goto exit;</span>
+<span class="lineNum">     779 </span>            :         }
+<span class="lineNum">     780 </span>            : 
+<span class="lineNum">     781 </span><span class="lineNoCov">          0 :         GF_SAFEALLOC(ch, ISOMChannel);</span>
+<span class="lineNum">     782 </span><span class="lineNoCov">          0 :         if (!ch) {</span>
+<span class="lineNum">     783 </span>            :                 e = GF_OUT_OF_MEM;
+<span class="lineNum">     784 </span><span class="lineNoCov">          0 :                 goto exit;</span>
+<span class="lineNum">     785 </span>            :         }
+<span class="lineNum">     786 </span><span class="lineNoCov">          0 :         ch-&gt;owner = read;</span>
+<span class="lineNum">     787 </span><span class="lineNoCov">          0 :         ch-&gt;channel = channel;</span>
+<span class="lineNum">     788 </span><span class="lineNoCov">          0 :         gf_list_add(read-&gt;channels, ch);</span>
+<span class="lineNum">     789 </span><span class="lineNoCov">          0 :         ch-&gt;track = track;</span>
+<span class="lineNum">     790 </span><span class="lineNoCov">          0 :         ch-&gt;track_id = gf_isom_get_track_id(read-&gt;mov, ch-&gt;track);</span>
+<span class="lineNum">     791 </span><span class="lineNoCov">          0 :         switch (gf_isom_get_media_type(ch-&gt;owner-&gt;mov, ch-&gt;track)) {</span>
+<span class="lineNum">     792 </span>            :         case GF_ISOM_MEDIA_OCR:
+<span class="lineNum">     793 </span><span class="lineNoCov">          0 :                 ch-&gt;streamType = GF_STREAM_OCR;</span>
+<span class="lineNum">     794 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     795 </span>            :         case GF_ISOM_MEDIA_SCENE:
+<span class="lineNum">     796 </span><span class="lineNoCov">          0 :                 ch-&gt;streamType = GF_STREAM_SCENE;</span>
+<span class="lineNum">     797 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     798 </span>            :         case GF_ISOM_MEDIA_VISUAL:
+<span class="lineNum">     799 </span><span class="lineNoCov">          0 :                 gf_isom_get_reference(ch-&gt;owner-&gt;mov, ch-&gt;track, GF_ISOM_REF_BASE, 1, &amp;ch-&gt;base_track);</span>
+<span class="lineNum">     800 </span><span class="lineNoCov">          0 :                 ch-&gt;next_track = 0;</span>
+<span class="lineNum">     801 </span>            :                 /*in scalable mode add SPS/PPS in-band*/
+<span class="lineNum">     802 </span><span class="lineNoCov">          0 :                 ch-&gt;nalu_extract_mode = GF_ISOM_NALU_EXTRACT_INBAND_PS_FLAG /*| GF_ISOM_NALU_EXTRACT_ANNEXB_FLAG*/;</span>
+<span class="lineNum">     803 </span><span class="lineNoCov">          0 :                 gf_isom_set_nalu_extract_mode(ch-&gt;owner-&gt;mov, ch-&gt;track, ch-&gt;nalu_extract_mode);</span>
+<span class="lineNum">     804 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     805 </span>            :         }
+<span class="lineNum">     806 </span>            : 
+<span class="lineNum">     807 </span><span class="lineNoCov">          0 :         ch-&gt;has_edit_list = gf_isom_get_edit_list_type(ch-&gt;owner-&gt;mov, ch-&gt;track, &amp;ch-&gt;dts_offset) ? GF_TRUE : GF_FALSE;</span>
+<span class="lineNum">     808 </span><span class="lineNoCov">          0 :         ch-&gt;has_rap = (gf_isom_has_sync_points(ch-&gt;owner-&gt;mov, ch-&gt;track)==1) ? GF_TRUE : GF_FALSE;</span>
+<span class="lineNum">     809 </span><span class="lineNoCov">          0 :         ch-&gt;time_scale = gf_isom_get_media_timescale(ch-&gt;owner-&gt;mov, ch-&gt;track);</span>
+<span class="lineNum">     810 </span>            : 
+<span class="lineNum">     811 </span>            : exit:
+<span class="lineNum">     812 </span><span class="lineNoCov">          0 :         if (read-&gt;input-&gt;query_proxy &amp;&amp; read-&gt;input-&gt;proxy_udta &amp;&amp; read-&gt;input-&gt;proxy_type) {</span>
+<span class="lineNum">     813 </span><span class="lineNoCov">          0 :                 send_proxy_command(read, GF_FALSE, GF_FALSE, e, NULL, channel);</span>
+<span class="lineNum">     814 </span><span class="lineNoCov">          0 :         } else {</span>
+<span class="lineNum">     815 </span><span class="lineNoCov">          0 :                 gf_service_connect_ack(read-&gt;service, channel, e);</span>
+<span class="lineNum">     816 </span>            :         }
+<span class="lineNum">     817 </span>            :         /*if esd url reconfig SL layer*/
+<span class="lineNum">     818 </span><span class="lineNoCov">          0 :         if (!e &amp;&amp; is_esd_url) {</span>
+<span class="lineNum">     819 </span>            :                 GF_ESD *esd;
+<span class="lineNum">     820 </span><span class="lineNoCov">          0 :                 memset(&amp;com, 0, sizeof(GF_NetworkCommand));</span>
+<span class="lineNum">     821 </span><span class="lineNoCov">          0 :                 com.base.on_channel = channel;</span>
+<span class="lineNum">     822 </span><span class="lineNoCov">          0 :                 com.command_type = GF_NET_CHAN_RECONFIG;</span>
+<span class="lineNum">     823 </span><span class="lineNoCov">          0 :                 esd = gf_isom_get_esd(read-&gt;mov, ch-&gt;track, 1);</span>
+<span class="lineNum">     824 </span><span class="lineNoCov">          0 :                 if (esd) {</span>
+<span class="lineNum">     825 </span><span class="lineNoCov">          0 :                         memcpy(&amp;com.cfg.sl_config, esd-&gt;slConfig, sizeof(GF_SLConfig));</span>
+<span class="lineNum">     826 </span><span class="lineNoCov">          0 :                         gf_odf_desc_del((GF_Descriptor *)esd);</span>
+<span class="lineNum">     827 </span><span class="lineNoCov">          0 :                 } else {</span>
+<span class="lineNum">     828 </span><span class="lineNoCov">          0 :                         com.cfg.sl_config.tag = GF_ODF_SLC_TAG;</span>
+<span class="lineNum">     829 </span><span class="lineNoCov">          0 :                         com.cfg.sl_config.timestampLength = 32;</span>
+<span class="lineNum">     830 </span><span class="lineNoCov">          0 :                         com.cfg.sl_config.timestampResolution = ch-&gt;time_scale;</span>
+<span class="lineNum">     831 </span><span class="lineNoCov">          0 :                         com.cfg.sl_config.useRandomAccessPointFlag = 1;</span>
+<span class="lineNum">     832 </span>            :                 }
+<span class="lineNum">     833 </span><span class="lineNoCov">          0 :                 if (read-&gt;input-&gt;query_proxy &amp;&amp; read-&gt;input-&gt;proxy_udta) {</span>
+<span class="lineNum">     834 </span><span class="lineNoCov">          0 :                         read-&gt;input-&gt;query_proxy(read-&gt;input, &amp;com);</span>
+<span class="lineNum">     835 </span><span class="lineNoCov">          0 :                 } else {</span>
+<span class="lineNum">     836 </span><span class="lineNoCov">          0 :                         gf_service_command(read-&gt;service, &amp;com, GF_OK);</span>
+<span class="lineNum">     837 </span>            :                 }
+<span class="lineNum">     838 </span>            :         }
+<span class="lineNum">     839 </span><span class="lineNoCov">          0 :         if (!e &amp;&amp; track &amp;&amp; gf_isom_is_track_encrypted(read-&gt;mov, track)) {</span>
+<span class="lineNum">     840 </span><span class="lineNoCov">          0 :                 memset(&amp;com, 0, sizeof(GF_NetworkCommand));</span>
+<span class="lineNum">     841 </span><span class="lineNoCov">          0 :                 com.base.on_channel = channel;</span>
+<span class="lineNum">     842 </span><span class="lineNoCov">          0 :                 com.command_type = GF_NET_CHAN_DRM_CFG;</span>
+<span class="lineNum">     843 </span><span class="lineNoCov">          0 :                 ch-&gt;is_encrypted = GF_TRUE;</span>
+<span class="lineNum">     844 </span><span class="lineNoCov">          0 :                 if (gf_isom_is_ismacryp_media(read-&gt;mov, track, 1)) {</span>
+<span class="lineNum">     845 </span><span class="lineNoCov">          0 :                         gf_isom_get_ismacryp_info(read-&gt;mov, track, 1, NULL, &amp;com.drm_cfg.scheme_type, &amp;com.drm_cfg.scheme_version, &amp;com.drm_cfg.scheme_uri, &amp;com.drm_cfg.kms_uri, NULL, NULL, NULL);</span>
+<span class="lineNum">     846 </span><span class="lineNoCov">          0 :                         if (read-&gt;input-&gt;query_proxy &amp;&amp; read-&gt;input-&gt;proxy_udta) {</span>
+<span class="lineNum">     847 </span><span class="lineNoCov">          0 :                                 read-&gt;input-&gt;query_proxy(read-&gt;input, &amp;com);</span>
+<span class="lineNum">     848 </span><span class="lineNoCov">          0 :                         } else {</span>
+<span class="lineNum">     849 </span><span class="lineNoCov">          0 :                                 gf_service_command(read-&gt;service, &amp;com, GF_OK);</span>
+<span class="lineNum">     850 </span>            :                         }
+<span class="lineNum">     851 </span><span class="lineNoCov">          0 :                 } else if (gf_isom_is_omadrm_media(read-&gt;mov, track, 1)) {</span>
+<span class="lineNum">     852 </span><span class="lineNoCov">          0 :                         gf_isom_get_omadrm_info(read-&gt;mov, track, 1, NULL, &amp;com.drm_cfg.scheme_type, &amp;com.drm_cfg.scheme_version, &amp;com.drm_cfg.contentID, &amp;com.drm_cfg.kms_uri, &amp;com.drm_cfg.oma_drm_textual_headers, &amp;com.drm_cfg.oma_drm_textual_headers_len, NULL, &amp;com.drm_cfg.oma_drm_crypt_type, NULL, NULL, NULL);</span>
+<span class="lineNum">     853 </span>            : 
+<span class="lineNum">     854 </span><span class="lineNoCov">          0 :                         gf_media_get_file_hash(gf_isom_get_filename(read-&gt;mov), com.drm_cfg.hash);</span>
+<span class="lineNum">     855 </span><span class="lineNoCov">          0 :                         if (read-&gt;input-&gt;query_proxy &amp;&amp; read-&gt;input-&gt;proxy_udta) {</span>
+<span class="lineNum">     856 </span><span class="lineNoCov">          0 :                                 read-&gt;input-&gt;query_proxy(read-&gt;input, &amp;com);</span>
+<span class="lineNum">     857 </span><span class="lineNoCov">          0 :                         } else {</span>
+<span class="lineNum">     858 </span><span class="lineNoCov">          0 :                                 gf_service_command(read-&gt;service, &amp;com, GF_OK);</span>
+<span class="lineNum">     859 </span>            :                         }
+<span class="lineNum">     860 </span><span class="lineNoCov">          0 :                 } else if (gf_isom_is_cenc_media(read-&gt;mov, track, 1)) {</span>
+<span class="lineNum">     861 </span><span class="lineNoCov">          0 :                         ch-&gt;is_cenc = GF_TRUE;</span>
+<span class="lineNum">     862 </span><span class="lineNoCov">          0 :                         isor_send_cenc_config(ch);</span>
+<span class="lineNum">     863 </span><span class="lineNoCov">          0 :                 }</span>
+<span class="lineNum">     864 </span>            :         }
+<span class="lineNum">     865 </span><span class="lineNoCov">          0 :         return e;</span>
+<a name="866"><span class="lineNum">     866 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     867 </span>            : 
+<span class="lineNum">     868 </span>            : GF_Err ISOR_DisconnectChannel(GF_InputService *plug, LPNETCHANNEL channel)
+<span class="lineNum">     869 </span>            : {
+<span class="lineNum">     870 </span>            :         ISOMChannel *ch;
+<span class="lineNum">     871 </span>            :         GF_Err e;
+<span class="lineNum">     872 </span>            :         ISOMReader *read;
+<span class="lineNum">     873 </span><span class="lineNoCov">          0 :         if (!plug || !plug-&gt;priv) return GF_SERVICE_ERROR;</span>
+<span class="lineNum">     874 </span><span class="lineNoCov">          0 :         read = (ISOMReader *) plug-&gt;priv;</span>
+<span class="lineNum">     875 </span><span class="lineNoCov">          0 :         if (!read-&gt;mov) return GF_SERVICE_ERROR;</span>
+<span class="lineNum">     876 </span>            : 
+<span class="lineNum">     877 </span><span class="lineNoCov">          0 :         gf_mx_p(read-&gt;segment_mutex);</span>
+<span class="lineNum">     878 </span>            :         e = GF_OK;
+<span class="lineNum">     879 </span><span class="lineNoCov">          0 :         ch = isor_get_channel(read, channel);</span>
+<span class="lineNum">     880 </span>            :         assert(ch);
+<span class="lineNum">     881 </span><span class="lineNoCov">          0 :         if (!ch) {</span>
+<span class="lineNum">     882 </span>            :                 e = GF_STREAM_NOT_FOUND;
+<span class="lineNum">     883 </span><span class="lineNoCov">          0 :                 goto exit;</span>
+<span class="lineNum">     884 </span>            :         }
+<span class="lineNum">     885 </span>            :         /*signal the service is broken but still process the delete*/
+<span class="lineNum">     886 </span><span class="lineNoCov">          0 :         isor_delete_channel(read, ch);</span>
+<span class="lineNum">     887 </span><span class="lineNoCov">          0 :         assert(!isor_get_channel(read, channel));</span>
+<span class="lineNum">     888 </span>            : 
+<span class="lineNum">     889 </span>            : exit:
+<span class="lineNum">     890 </span><span class="lineNoCov">          0 :         if (read-&gt;input-&gt;query_proxy &amp;&amp; read-&gt;input-&gt;proxy_udta &amp;&amp; read-&gt;input-&gt;proxy_type) {</span>
+<span class="lineNum">     891 </span><span class="lineNoCov">          0 :                 send_proxy_command(read, 1, 0, e, NULL, channel);</span>
+<span class="lineNum">     892 </span><span class="lineNoCov">          0 :         } else {</span>
+<span class="lineNum">     893 </span><span class="lineNoCov">          0 :                 gf_service_disconnect_ack(read-&gt;service, channel, e);</span>
+<span class="lineNum">     894 </span>            :         }
+<span class="lineNum">     895 </span><span class="lineNoCov">          0 :         gf_mx_v(read-&gt;segment_mutex);</span>
+<span class="lineNum">     896 </span><span class="lineNoCov">          0 :         return e;</span>
+<a name="897"><span class="lineNum">     897 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     898 </span>            : 
+<span class="lineNum">     899 </span>            : GF_Err ISOR_ChannelGetSLP(GF_InputService *plug, LPNETCHANNEL channel, char **out_data_ptr, u32 *out_data_size, GF_SLHeader *out_sl_hdr, Bool *sl_compressed, GF_Err *out_reception_status, Bool *is_new_data)
+<span class="lineNum">     900 </span>            : {
+<span class="lineNum">     901 </span>            :         ISOMChannel *ch;
+<span class="lineNum">     902 </span>            :         ISOMReader *read;
+<span class="lineNum">     903 </span><span class="lineNoCov">          0 :         if (!plug || !plug-&gt;priv) return GF_SERVICE_ERROR;</span>
+<span class="lineNum">     904 </span>            :         /*cannot read native SL-PDUs*/
+<span class="lineNum">     905 </span><span class="lineNoCov">          0 :         if (!out_sl_hdr) return GF_NOT_SUPPORTED;</span>
+<span class="lineNum">     906 </span><span class="lineNoCov">          0 :         read = (ISOMReader *) plug-&gt;priv;</span>
+<span class="lineNum">     907 </span><span class="lineNoCov">          0 :         if (!read-&gt;mov) return GF_SERVICE_ERROR;</span>
+<span class="lineNum">     908 </span>            : 
+<span class="lineNum">     909 </span><span class="lineNoCov">          0 :         *out_data_ptr = NULL;</span>
+<span class="lineNum">     910 </span><span class="lineNoCov">          0 :         *out_data_size = 0;</span>
+<span class="lineNum">     911 </span><span class="lineNoCov">          0 :         *sl_compressed = GF_FALSE;</span>
+<span class="lineNum">     912 </span><span class="lineNoCov">          0 :         *out_reception_status = GF_OK;</span>
+<span class="lineNum">     913 </span><span class="lineNoCov">          0 :         *is_new_data = GF_FALSE;</span>
+<span class="lineNum">     914 </span><span class="lineNoCov">          0 :         ch = isor_get_channel(read, channel);</span>
+<span class="lineNum">     915 </span><span class="lineNoCov">          0 :         if (!ch) return GF_STREAM_NOT_FOUND;</span>
+<span class="lineNum">     916 </span><span class="lineNoCov">          0 :         if (!ch-&gt;is_playing) return GF_OK;</span>
+<span class="lineNum">     917 </span>            : 
+<span class="lineNum">     918 </span><span class="lineNoCov">          0 :         *is_new_data = GF_FALSE;</span>
+<span class="lineNum">     919 </span><span class="lineNoCov">          0 :         if (!ch-&gt;sample) {</span>
+<span class="lineNum">     920 </span>            :                 /*get sample*/
+<span class="lineNum">     921 </span><span class="lineNoCov">          0 :                 gf_mx_p(read-&gt;segment_mutex);</span>
+<span class="lineNum">     922 </span><span class="lineNoCov">          0 :                 isor_reader_get_sample(ch);</span>
+<span class="lineNum">     923 </span><span class="lineNoCov">          0 :                 gf_mx_v(read-&gt;segment_mutex);</span>
+<span class="lineNum">     924 </span><span class="lineNoCov">          0 :                 *is_new_data = ch-&gt;sample ? GF_TRUE : GF_FALSE;</span>
+<span class="lineNum">     925 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     926 </span>            : 
+<span class="lineNum">     927 </span><span class="lineNoCov">          0 :         if (ch-&gt;sample) {</span>
+<span class="lineNum">     928 </span><span class="lineNoCov">          0 :                 *out_data_ptr = ch-&gt;sample-&gt;data;</span>
+<span class="lineNum">     929 </span><span class="lineNoCov">          0 :                 *out_data_size = ch-&gt;sample-&gt;dataLength;</span>
+<span class="lineNum">     930 </span><span class="lineNoCov">          0 :                 *out_sl_hdr = ch-&gt;current_slh;</span>
+<span class="lineNum">     931 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     932 </span><span class="lineNoCov">          0 :         *out_reception_status = ch-&gt;last_state;</span>
+<span class="lineNum">     933 </span><span class="lineNoCov">          0 :         if (read-&gt;waiting_for_data)</span>
+<span class="lineNum">     934 </span><span class="lineNoCov">          0 :                 *out_reception_status = GF_BUFFER_TOO_SMALL;</span>
+<span class="lineNum">     935 </span>            : 
+<span class="lineNum">     936 </span><span class="lineNoCov">          0 :         return GF_OK;</span>
+<a name="937"><span class="lineNum">     937 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     938 </span>            : 
+<span class="lineNum">     939 </span>            : GF_Err ISOR_ChannelReleaseSLP(GF_InputService *plug, LPNETCHANNEL channel)
+<span class="lineNum">     940 </span>            : {
+<span class="lineNum">     941 </span>            :         ISOMChannel *ch;
+<span class="lineNum">     942 </span>            :         ISOMReader *read;
+<span class="lineNum">     943 </span><span class="lineNoCov">          0 :         if (!plug || !plug-&gt;priv) return GF_SERVICE_ERROR;</span>
+<span class="lineNum">     944 </span><span class="lineNoCov">          0 :         read = (ISOMReader *) plug-&gt;priv;</span>
+<span class="lineNum">     945 </span><span class="lineNoCov">          0 :         if (!read-&gt;mov) return GF_SERVICE_ERROR;</span>
+<span class="lineNum">     946 </span><span class="lineNoCov">          0 :         ch = isor_get_channel(read, channel);</span>
+<span class="lineNum">     947 </span><span class="lineNoCov">          0 :         if (!ch) return GF_STREAM_NOT_FOUND;</span>
+<span class="lineNum">     948 </span><span class="lineNoCov">          0 :         if (!ch-&gt;is_playing) return GF_SERVICE_ERROR;</span>
+<span class="lineNum">     949 </span>            : 
+<span class="lineNum">     950 </span><span class="lineNoCov">          0 :         if (ch-&gt;sample) {</span>
+<span class="lineNum">     951 </span><span class="lineNoCov">          0 :                 isor_reader_release_sample(ch);</span>
+<span class="lineNum">     952 </span>            :                 /*release sample*/
+<span class="lineNum">     953 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     954 </span><span class="lineNoCov">          0 :         return GF_OK;</span>
+<span class="lineNum">     955 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     956 </span>            : 
+<a name="957"><span class="lineNum">     957 </span>            : /*switch channel quality. Return next channel or current channel if error*/</a>
+<span class="lineNum">     958 </span>            : static
+<span class="lineNum">     959 </span>            : u32 gf_channel_switch_quality(ISOMChannel *ch, GF_ISOFile *the_file, Bool switch_up)
+<span class="lineNum">     960 </span>            : {
+<span class="lineNum">     961 </span>            :         u32 i, count, next_track, trackID, cur_track;
+<span class="lineNum">     962 </span>            :         s32 ref_count;
+<span class="lineNum">     963 </span>            : 
+<span class="lineNum">     964 </span><span class="lineNoCov">          0 :         cur_track = ch-&gt;next_track ? ch-&gt;next_track : ch-&gt;track;</span>
+<span class="lineNum">     965 </span><span class="lineNoCov">          0 :         count = gf_isom_get_track_count(the_file);</span>
+<span class="lineNum">     966 </span><span class="lineNoCov">          0 :         trackID = gf_isom_get_track_id(the_file, cur_track);</span>
+<span class="lineNum">     967 </span><span class="lineNoCov">          0 :         next_track = 0;</span>
+<span class="lineNum">     968 </span>            : 
+<span class="lineNum">     969 </span><span class="lineNoCov">          0 :         if (switch_up)</span>
+<span class="lineNum">     970 </span>            :         {
+<span class="lineNum">     971 </span><span class="lineNoCov">          0 :                 for (i = 0; i &lt; count; i++)</span>
+<span class="lineNum">     972 </span>            :                 {
+<span class="lineNum">     973 </span><span class="lineNoCov">          0 :                         ref_count = gf_isom_get_reference_count(the_file, i+1, GF_ISOM_REF_SCAL);</span>
+<span class="lineNum">     974 </span><span class="lineNoCov">          0 :                         if (ref_count &lt; 0)</span>
+<span class="lineNum">     975 </span><span class="lineNoCov">          0 :                                 return cur_track; //error</span>
+<span class="lineNum">     976 </span><span class="lineNoCov">          0 :                         else if (ref_count == 0)</span>
+<span class="lineNum">     977 </span>            :                                 continue;
+<span class="lineNum">     978 </span>            :                         /*next track is the one that has the last reference of type GF_ISOM_REF_SCAL refers to this current track*/
+<span class="lineNum">     979 </span><span class="lineNoCov">          0 :                         else if ((u32)ref_count == gf_isom_has_track_reference(the_file, i+1, GF_ISOM_REF_SCAL, trackID))</span>
+<span class="lineNum">     980 </span>            :                         {
+<span class="lineNum">     981 </span><span class="lineNoCov">          0 :                                 next_track = i+1;</span>
+<span class="lineNum">     982 </span><span class="lineNoCov">          0 :                                 break;</span>
+<span class="lineNum">     983 </span>            :                         }
+<span class="lineNum">     984 </span>            :                 }
+<span class="lineNum">     985 </span>            :                 /*this is the highest quality*/
+<span class="lineNum">     986 </span><span class="lineNoCov">          0 :                 if (!next_track)</span>
+<span class="lineNum">     987 </span><span class="lineNoCov">          0 :                         return cur_track;</span>
+<span class="lineNum">     988 </span>            :         }
+<span class="lineNum">     989 </span>            :         else
+<span class="lineNum">     990 </span>            :         {
+<span class="lineNum">     991 </span><span class="lineNoCov">          0 :                 if (cur_track == ch-&gt;base_track)</span>
+<span class="lineNum">     992 </span><span class="lineNoCov">          0 :                         return cur_track;</span>
+<span class="lineNum">     993 </span><span class="lineNoCov">          0 :                 ref_count = gf_isom_get_reference_count(the_file, cur_track, GF_ISOM_REF_SCAL);</span>
+<span class="lineNum">     994 </span><span class="lineNoCov">          0 :                 if (ref_count &lt; 0)</span>
+<span class="lineNum">     995 </span><span class="lineNoCov">          0 :                         return cur_track;</span>
+<span class="lineNum">     996 </span><span class="lineNoCov">          0 :                 gf_isom_get_reference(the_file, cur_track, GF_ISOM_REF_SCAL, ref_count, &amp;next_track);</span>
+<span class="lineNum">     997 </span><span class="lineNoCov">          0 :                 if (!next_track)</span>
+<span class="lineNum">     998 </span><span class="lineNoCov">          0 :                         return cur_track;</span>
+<span class="lineNum">     999 </span>            :         }
+<span class="lineNum">    1000 </span>            : 
+<span class="lineNum">    1001 </span>            :         /*in scalable mode add SPS/PPS in-band*/
+<span class="lineNum">    1002 </span><span class="lineNoCov">          0 :         gf_isom_set_nalu_extract_mode(the_file, next_track, ch-&gt;nalu_extract_mode);</span>
+<span class="lineNum">    1003 </span>            : 
+<span class="lineNum">    1004 </span><span class="lineNoCov">          0 :         return next_track;</span>
+<span class="lineNum">    1005 </span><span class="lineNoCov">          0 : }</span>
+<a name="1006"><span class="lineNum">    1006 </span>            : </a>
+<span class="lineNum">    1007 </span>            : 
+<span class="lineNum">    1008 </span>            : GF_Err ISOR_ServiceCommand(GF_InputService *plug, GF_NetworkCommand *com)
+<span class="lineNum">    1009 </span>            : {
+<span class="lineNum">    1010 </span>            :         Double track_dur, media_dur;
+<span class="lineNum">    1011 </span>            :         ISOMChannel *ch;
+<span class="lineNum">    1012 </span>            :         ISOMReader *read;
+<span class="lineNum">    1013 </span>            :         u32 count, i;
+<span class="lineNum">    1014 </span>            : 
+<span class="lineNum">    1015 </span><span class="lineNoCov">          0 :         if (!plug || !plug-&gt;priv || !com) return GF_SERVICE_ERROR;</span>
+<span class="lineNum">    1016 </span><span class="lineNoCov">          0 :         read = (ISOMReader *) plug-&gt;priv;</span>
+<span class="lineNum">    1017 </span><span class="lineNoCov">          0 :         if (read-&gt;disconnected) return GF_OK;</span>
+<span class="lineNum">    1018 </span>            : 
+<span class="lineNum">    1019 </span><span class="lineNoCov">          0 :         if (com-&gt;command_type==GF_NET_SERVICE_INFO) {</span>
+<span class="lineNum">    1020 </span>            :                 u32 tag_len;
+<span class="lineNum">    1021 </span>            :                 const char *tag;
+<span class="lineNum">    1022 </span><span class="lineNoCov">          0 :                 if (gf_isom_apple_get_tag(read-&gt;mov, GF_ISOM_ITUNE_NAME, &amp;tag, &amp;tag_len)==GF_OK) com-&gt;info.name = tag;</span>
+<span class="lineNum">    1023 </span><span class="lineNoCov">          0 :                 if (gf_isom_apple_get_tag(read-&gt;mov, GF_ISOM_ITUNE_ARTIST, &amp;tag, &amp;tag_len)==GF_OK) com-&gt;info.artist = tag;</span>
+<span class="lineNum">    1024 </span><span class="lineNoCov">          0 :                 if (gf_isom_apple_get_tag(read-&gt;mov, GF_ISOM_ITUNE_ALBUM, &amp;tag, &amp;tag_len)==GF_OK) com-&gt;info.album = tag;</span>
+<span class="lineNum">    1025 </span><span class="lineNoCov">          0 :                 if (gf_isom_apple_get_tag(read-&gt;mov, GF_ISOM_ITUNE_COMMENT, &amp;tag, &amp;tag_len)==GF_OK) com-&gt;info.comment = tag;</span>
+<span class="lineNum">    1026 </span><span class="lineNoCov">          0 :                 if (gf_isom_apple_get_tag(read-&gt;mov, GF_ISOM_ITUNE_TRACK, &amp;tag, &amp;tag_len)==GF_OK) {</span>
+<span class="lineNum">    1027 </span><span class="lineNoCov">          0 :                         com-&gt;info.track_info = (((tag[2]&lt;&lt;8)|tag[3]) &lt;&lt; 16) | ((tag[4]&lt;&lt;8)|tag[5]);</span>
+<span class="lineNum">    1028 </span><span class="lineNoCov">          0 :                 }</span>
+<span class="lineNum">    1029 </span><span class="lineNoCov">          0 :                 if (gf_isom_apple_get_tag(read-&gt;mov, GF_ISOM_ITUNE_COMPOSER, &amp;tag, &amp;tag_len)==GF_OK) com-&gt;info.composer = tag;</span>
+<span class="lineNum">    1030 </span><span class="lineNoCov">          0 :                 if (gf_isom_apple_get_tag(read-&gt;mov, GF_ISOM_ITUNE_WRITER, &amp;tag, &amp;tag_len)==GF_OK) com-&gt;info.writer = tag;</span>
+<span class="lineNum">    1031 </span><span class="lineNoCov">          0 :                 if (gf_isom_apple_get_tag(read-&gt;mov, GF_ISOM_ITUNE_GENRE, &amp;tag, &amp;tag_len)==GF_OK) {</span>
+<span class="lineNum">    1032 </span><span class="lineNoCov">          0 :                         if (tag[0]) {</span>
+<span class="lineNum">    1033 </span><span class="lineNoCov">          0 :                                 com-&gt;info.genre = 0;</span>
+<span class="lineNum">    1034 </span><span class="lineNoCov">          0 :                         } else {</span>
+<span class="lineNum">    1035 </span><span class="lineNoCov">          0 :                                 com-&gt;info.genre = (tag[0]&lt;&lt;8) | tag[1];</span>
+<span class="lineNum">    1036 </span>            :                         }
+<span class="lineNum">    1037 </span>            :                 }
+<span class="lineNum">    1038 </span><span class="lineNoCov">          0 :                 return GF_OK;</span>
+<span class="lineNum">    1039 </span>            :         }
+<span class="lineNum">    1040 </span><span class="lineNoCov">          0 :         if (com-&gt;command_type==GF_NET_SERVICE_HAS_AUDIO) {</span>
+<span class="lineNum">    1041 </span>            :                 u32 i, count;
+<span class="lineNum">    1042 </span><span class="lineNoCov">          0 :                 count = gf_isom_get_track_count(read-&gt;mov);</span>
+<span class="lineNum">    1043 </span><span class="lineNoCov">          0 :                 for (i=0; i&lt;count; i++) {</span>
+<span class="lineNum">    1044 </span><span class="lineNoCov">          0 :                         if (gf_isom_get_media_type(read-&gt;mov, i+1) == GF_ISOM_MEDIA_AUDIO) return GF_OK;</span>
+<span class="lineNum">    1045 </span>            :                 }
+<span class="lineNum">    1046 </span><span class="lineNoCov">          0 :                 return GF_NOT_SUPPORTED;</span>
+<span class="lineNum">    1047 </span>            :         }
+<span class="lineNum">    1048 </span>            : 
+<span class="lineNum">    1049 </span><span class="lineNoCov">          0 :         if (com-&gt;command_type == GF_NET_SERVICE_QUALITY_SWITCH)</span>
+<span class="lineNum">    1050 </span>            :         {
+<span class="lineNum">    1051 </span><span class="lineNoCov">          0 :                 count = gf_list_count(read-&gt;channels);</span>
+<span class="lineNum">    1052 </span><span class="lineNoCov">          0 :                 for (i = 0; i &lt; count; i++)</span>
+<span class="lineNum">    1053 </span>            :                 {
+<span class="lineNum">    1054 </span><span class="lineNoCov">          0 :                         ch = (ISOMChannel *)gf_list_get(read-&gt;channels, i);</span>
+<span class="lineNum">    1055 </span><span class="lineNoCov">          0 :                         if (gf_isom_needs_layer_reconstruction(read-&gt;mov)) {</span>
+<span class="lineNum">    1056 </span><span class="lineNoCov">          0 :                                 ch-&gt;next_track = gf_channel_switch_quality(ch, read-&gt;mov, com-&gt;switch_quality.up);</span>
+<span class="lineNum">    1057 </span><span class="lineNoCov">          0 :                         }</span>
+<span class="lineNum">    1058 </span>            :                 }
+<span class="lineNum">    1059 </span><span class="lineNoCov">          0 :                 return GF_OK;</span>
+<span class="lineNum">    1060 </span>            :         }
+<span class="lineNum">    1061 </span><span class="lineNoCov">          0 :         if (com-&gt;command_type == GF_NET_SERVICE_PROXY_DATA_RECEIVE) {</span>
+<span class="lineNum">    1062 </span><span class="lineNoCov">          0 :                 isor_flush_data(read, 1, com-&gt;proxy_data.is_chunk);</span>
+<span class="lineNum">    1063 </span><span class="lineNoCov">          0 :                 return GF_OK;</span>
+<span class="lineNum">    1064 </span>            :         }
+<span class="lineNum">    1065 </span><span class="lineNoCov">          0 :         if (com-&gt;command_type == GF_NET_SERVICE_FLUSH_DATA) {</span>
+<span class="lineNum">    1066 </span><span class="lineNoCov">          0 :                 if (read-&gt;nb_playing &amp;&amp; plug-&gt;query_proxy)</span>
+<span class="lineNum">    1067 </span><span class="lineNoCov">          0 :                         isor_flush_data(read, 0, 0);</span>
+<span class="lineNum">    1068 </span><span class="lineNoCov">          0 :                 return GF_OK;</span>
+<span class="lineNum">    1069 </span>            :         }
+<span class="lineNum">    1070 </span><span class="lineNoCov">          0 :         if (com-&gt;command_type == GF_NET_SERVICE_CAN_REVERSE_PLAYBACK)</span>
+<span class="lineNum">    1071 </span><span class="lineNoCov">          0 :                 return GF_OK;</span>
+<span class="lineNum">    1072 </span>            : 
+<span class="lineNum">    1073 </span><span class="lineNoCov">          0 :         if (!com-&gt;base.on_channel) return GF_NOT_SUPPORTED;</span>
+<span class="lineNum">    1074 </span>            : 
+<span class="lineNum">    1075 </span><span class="lineNoCov">          0 :         ch = isor_get_channel(read, com-&gt;base.on_channel);</span>
+<span class="lineNum">    1076 </span><span class="lineNoCov">          0 :         if (!ch) return GF_STREAM_NOT_FOUND;</span>
+<span class="lineNum">    1077 </span>            : 
+<span class="lineNum">    1078 </span><span class="lineNoCov">          0 :         switch (com-&gt;command_type) {</span>
+<span class="lineNum">    1079 </span>            :         case GF_NET_CHAN_SET_PADDING:
+<span class="lineNum">    1080 </span><span class="lineNoCov">          0 :                 if (!ch-&gt;track) return GF_OK;</span>
+<span class="lineNum">    1081 </span><span class="lineNoCov">          0 :                 gf_isom_set_sample_padding(read-&gt;mov, ch-&gt;track, com-&gt;pad.padding_bytes);</span>
+<span class="lineNum">    1082 </span><span class="lineNoCov">          0 :                 return GF_OK;</span>
+<span class="lineNum">    1083 </span>            :         case GF_NET_CHAN_SET_PULL:
+<span class="lineNum">    1084 </span>            :                 //we don't pull in DASH base services, we flush as soon as we have a complete segment
+<span class="lineNum">    1085 </span>            : #ifndef DASH_USE_PULL
+<span class="lineNum">    1086 </span><span class="lineNoCov">          0 :                 if (read-&gt;input-&gt;proxy_udta &amp;&amp; !read-&gt;input-&gt;proxy_type)</span>
+<span class="lineNum">    1087 </span><span class="lineNoCov">          0 :                         return GF_NOT_SUPPORTED;</span>
+<span class="lineNum">    1088 </span>            : #endif
+<span class="lineNum">    1089 </span>            : 
+<span class="lineNum">    1090 </span><span class="lineNoCov">          0 :                 ch-&gt;is_pulling = 1;</span>
+<span class="lineNum">    1091 </span><span class="lineNoCov">          0 :                 return GF_OK;</span>
+<span class="lineNum">    1092 </span>            :         case GF_NET_CHAN_INTERACTIVE:
+<span class="lineNum">    1093 </span><span class="lineNoCov">          0 :                 return GF_OK;</span>
+<span class="lineNum">    1094 </span>            :         case GF_NET_CHAN_BUFFER:
+<span class="lineNum">    1095 </span>            :                 //dash or HTTP, do rebuffer if not disabled
+<span class="lineNum">    1096 </span><span class="lineNoCov">          0 :                 if (plug-&gt;query_proxy) {</span>
+<span class="lineNum">    1097 </span><span class="lineNoCov">          0 :                 } else if (read-&gt;dnload) {</span>
+<span class="lineNum">    1098 </span><span class="lineNoCov">          0 :                         ch-&gt;buffer_min = com-&gt;buffer.min;</span>
+<span class="lineNum">    1099 </span><span class="lineNoCov">          0 :                         ch-&gt;buffer_max = com-&gt;buffer.max;</span>
+<span class="lineNum">    1100 </span><span class="lineNoCov">          0 :                 } else {</span>
+<span class="lineNum">    1101 </span><span class="lineNoCov">          0 :                         com-&gt;buffer.max = com-&gt;buffer.min = 0;</span>
+<span class="lineNum">    1102 </span>            :                 }
+<span class="lineNum">    1103 </span><span class="lineNoCov">          0 :                 return GF_OK;</span>
+<span class="lineNum">    1104 </span>            :         case GF_NET_CHAN_DURATION:
+<span class="lineNum">    1105 </span><span class="lineNoCov">          0 :                 if (!ch-&gt;track) {</span>
+<span class="lineNum">    1106 </span><span class="lineNoCov">          0 :                         com-&gt;duration.duration = 0;</span>
+<span class="lineNum">    1107 </span><span class="lineNoCov">          0 :                         return GF_OK;</span>
+<span class="lineNum">    1108 </span>            :                 }
+<span class="lineNum">    1109 </span><span class="lineNoCov">          0 :                 ch-&gt;duration = gf_isom_get_track_duration(read-&gt;mov, ch-&gt;track);</span>
+<span class="lineNum">    1110 </span><span class="lineNoCov">          0 :                 track_dur = (Double) (s64) ch-&gt;duration;</span>
+<span class="lineNum">    1111 </span><span class="lineNoCov">          0 :                 track_dur /= read-&gt;time_scale;</span>
+<span class="lineNum">    1112 </span><span class="lineNoCov">          0 :                 if (gf_isom_get_edit_segment_count(read-&gt;mov, ch-&gt;track)) {</span>
+<span class="lineNum">    1113 </span><span class="lineNoCov">          0 :                         com-&gt;duration.duration = (Double) track_dur;</span>
+<span class="lineNum">    1114 </span><span class="lineNoCov">          0 :                         ch-&gt;duration = (u32) (track_dur * ch-&gt;time_scale);</span>
+<span class="lineNum">    1115 </span><span class="lineNoCov">          0 :                 } else {</span>
+<span class="lineNum">    1116 </span>            :                         /*some file indicate a wrong TrackDuration, get the longest*/
+<span class="lineNum">    1117 </span><span class="lineNoCov">          0 :                         ch-&gt;duration = gf_isom_get_media_duration(read-&gt;mov, ch-&gt;track);</span>
+<span class="lineNum">    1118 </span><span class="lineNoCov">          0 :                         media_dur = (Double) (s64) ch-&gt;duration;</span>
+<span class="lineNum">    1119 </span><span class="lineNoCov">          0 :                         media_dur /= ch-&gt;time_scale;</span>
+<span class="lineNum">    1120 </span><span class="lineNoCov">          0 :                         com-&gt;duration.duration = MAX(track_dur, media_dur);</span>
+<span class="lineNum">    1121 </span>            :                 }
+<span class="lineNum">    1122 </span><span class="lineNoCov">          0 :                 return GF_OK;</span>
+<span class="lineNum">    1123 </span>            :         case GF_NET_CHAN_PLAY:
+<span class="lineNum">    1124 </span>            : 
+<span class="lineNum">    1125 </span><span class="lineNoCov">          0 :                 gf_mx_p(read-&gt;segment_mutex);</span>
+<span class="lineNum">    1126 </span><span class="lineNoCov">          0 :                 isor_reset_reader(ch);</span>
+<span class="lineNum">    1127 </span><span class="lineNoCov">          0 :                 ch-&gt;speed = com-&gt;play.speed;</span>
+<span class="lineNum">    1128 </span><span class="lineNoCov">          0 :                 read-&gt;reset_frag_state = 1;</span>
+<span class="lineNum">    1129 </span><span class="lineNoCov">          0 :                 if (read-&gt;frag_type)</span>
+<span class="lineNum">    1130 </span><span class="lineNoCov">          0 :                         read-&gt;frag_type = 1;</span>
+<span class="lineNum">    1131 </span><span class="lineNoCov">          0 :                 gf_mx_v(read-&gt;segment_mutex);</span>
+<span class="lineNum">    1132 </span>            : 
+<span class="lineNum">    1133 </span><span class="lineNoCov">          0 :                 ch-&gt;start = ch-&gt;end = 0;</span>
+<span class="lineNum">    1134 </span><span class="lineNoCov">          0 :                 if (com-&gt;play.speed&gt;0) {</span>
+<span class="lineNum">    1135 </span>            :                         Double t;
+<span class="lineNum">    1136 </span><span class="lineNoCov">          0 :                         if (com-&gt;play.start_range&gt;=0) {</span>
+<span class="lineNum">    1137 </span>            :                                 t = com-&gt;play.start_range;
+<span class="lineNum">    1138 </span><span class="lineNoCov">          0 :                                 t *= ch-&gt;time_scale;</span>
+<span class="lineNum">    1139 </span><span class="lineNoCov">          0 :                                 ch-&gt;start = (u64) t;</span>
+<span class="lineNum">    1140 </span><span class="lineNoCov">          0 :                         }</span>
+<span class="lineNum">    1141 </span><span class="lineNoCov">          0 :                         if (com-&gt;play.end_range &gt;= com-&gt;play.start_range) {</span>
+<span class="lineNum">    1142 </span>            :                                 t = com-&gt;play.end_range;
+<span class="lineNum">    1143 </span><span class="lineNoCov">          0 :                                 t *= ch-&gt;time_scale;</span>
+<span class="lineNum">    1144 </span><span class="lineNoCov">          0 :                                 ch-&gt;end = (u64) t;</span>
+<span class="lineNum">    1145 </span><span class="lineNoCov">          0 :                         }</span>
+<span class="lineNum">    1146 </span><span class="lineNoCov">          0 :                 } else if (com-&gt;play.speed&lt;0) {</span>
+<span class="lineNum">    1147 </span><span class="lineNoCov">          0 :                         Double end = com-&gt;play.end_range;</span>
+<span class="lineNum">    1148 </span><span class="lineNoCov">          0 :                         if (end==-1) end = 0;</span>
+<span class="lineNum">    1149 </span><span class="lineNoCov">          0 :                         ch-&gt;start = (u64) (s64) (com-&gt;play.start_range * ch-&gt;time_scale);</span>
+<span class="lineNum">    1150 </span><span class="lineNoCov">          0 :                         if (end &lt;= com-&gt;play.start_range)</span>
+<span class="lineNum">    1151 </span><span class="lineNoCov">          0 :                                 ch-&gt;end = (u64) (s64) (end  * ch-&gt;time_scale);</span>
+<span class="lineNum">    1152 </span>            :                 }
+<span class="lineNum">    1153 </span><span class="lineNoCov">          0 :                 ch-&gt;is_playing = 1;</span>
+<span class="lineNum">    1154 </span><span class="lineNoCov">          0 :                 if (com-&gt;play.dash_segment_switch) ch-&gt;wait_for_segment_switch = 1;</span>
+<span class="lineNum">    1155 </span><span class="lineNoCov">          0 :                 GF_LOG(GF_LOG_DEBUG, GF_LOG_NETWORK, (&quot;[IsoMedia] Starting channel playback &quot;LLD&quot; to &quot;LLD&quot; (%g to %g)\n&quot;, ch-&gt;start, ch-&gt;end, com-&gt;play.start_range, com-&gt;play.end_range));</span>
+<span class="lineNum">    1156 </span>            : 
+<span class="lineNum">    1157 </span>            :                 //and check buffer level on play request
+<span class="lineNum">    1158 </span><span class="lineNoCov">          0 :                 isor_check_buffer_level(read);</span>
+<span class="lineNum">    1159 </span><span class="lineNoCov">          0 :                 read-&gt;nb_playing++;</span>
+<span class="lineNum">    1160 </span><span class="lineNoCov">          0 :                 return GF_OK;</span>
+<span class="lineNum">    1161 </span>            :         case GF_NET_CHAN_STOP:
+<span class="lineNum">    1162 </span><span class="lineNoCov">          0 :                 if (read-&gt;nb_playing) read-&gt;nb_playing--;</span>
+<span class="lineNum">    1163 </span><span class="lineNoCov">          0 :                 isor_reset_reader(ch);</span>
+<span class="lineNum">    1164 </span><span class="lineNoCov">          0 :                 return GF_OK;</span>
+<span class="lineNum">    1165 </span>            : 
+<span class="lineNum">    1166 </span>            :         case GF_NET_CHAN_SET_SPEED:
+<span class="lineNum">    1167 </span><span class="lineNoCov">          0 :                 gf_mx_p(read-&gt;segment_mutex);</span>
+<span class="lineNum">    1168 </span><span class="lineNoCov">          0 :                 ch-&gt;speed = com-&gt;play.speed;</span>
+<span class="lineNum">    1169 </span><span class="lineNoCov">          0 :                 gf_mx_v(read-&gt;segment_mutex);</span>
+<span class="lineNum">    1170 </span><span class="lineNoCov">          0 :                 return GF_OK;</span>
+<span class="lineNum">    1171 </span>            :         /*nothing to do on MP4 for channel config*/
+<span class="lineNum">    1172 </span>            :         case GF_NET_CHAN_CONFIG:
+<span class="lineNum">    1173 </span><span class="lineNoCov">          0 :                 return GF_OK;</span>
+<span class="lineNum">    1174 </span>            :         case GF_NET_CHAN_GET_PIXEL_AR:
+<span class="lineNum">    1175 </span><span class="lineNoCov">          0 :                 return gf_isom_get_pixel_aspect_ratio(read-&gt;mov, ch-&gt;track, 1, &amp;com-&gt;par.hSpacing, &amp;com-&gt;par.vSpacing);</span>
+<span class="lineNum">    1176 </span>            :         case GF_NET_CHAN_GET_DSI:
+<span class="lineNum">    1177 </span>            :         {
+<span class="lineNum">    1178 </span>            :                 /*it may happen that there are conflicting config when using ESD URLs...*/
+<span class="lineNum">    1179 </span><span class="lineNoCov">          0 :                 GF_DecoderConfig *dcd = gf_isom_get_decoder_config(read-&gt;mov, ch-&gt;track, 1);</span>
+<span class="lineNum">    1180 </span><span class="lineNoCov">          0 :                 com-&gt;get_dsi.dsi = NULL;</span>
+<span class="lineNum">    1181 </span><span class="lineNoCov">          0 :                 com-&gt;get_dsi.dsi_len = 0;</span>
+<span class="lineNum">    1182 </span><span class="lineNoCov">          0 :                 if (dcd) {</span>
+<span class="lineNum">    1183 </span><span class="lineNoCov">          0 :                         if (dcd-&gt;decoderSpecificInfo) {</span>
+<span class="lineNum">    1184 </span><span class="lineNoCov">          0 :                                 com-&gt;get_dsi.dsi = dcd-&gt;decoderSpecificInfo-&gt;data;</span>
+<span class="lineNum">    1185 </span><span class="lineNoCov">          0 :                                 com-&gt;get_dsi.dsi_len = dcd-&gt;decoderSpecificInfo-&gt;dataLength;</span>
+<span class="lineNum">    1186 </span><span class="lineNoCov">          0 :                                 dcd-&gt;decoderSpecificInfo-&gt;data = NULL;</span>
+<span class="lineNum">    1187 </span><span class="lineNoCov">          0 :                         }</span>
+<span class="lineNum">    1188 </span><span class="lineNoCov">          0 :                         gf_odf_desc_del((GF_Descriptor *) dcd);</span>
+<span class="lineNum">    1189 </span><span class="lineNoCov">          0 :                 }</span>
+<span class="lineNum">    1190 </span><span class="lineNoCov">          0 :                 return GF_OK;</span>
+<span class="lineNum">    1191 </span>            :         }
+<span class="lineNum">    1192 </span>            :         case GF_NET_CHAN_NALU_MODE:
+<span class="lineNum">    1193 </span><span class="lineNoCov">          0 :                 ch-&gt;nalu_extract_mode = GF_ISOM_NALU_EXTRACT_INBAND_PS_FLAG;</span>
+<span class="lineNum">    1194 </span><span class="lineNoCov">          0 :                 ch-&gt;disable_seek = 1;</span>
+<span class="lineNum">    1195 </span>            :                 //when this is set, we work in real scalable (eg N streams reassembled by the player) so only extract the layer. This wll need refinements if we plan to support
+<span class="lineNum">    1196 </span>            :                 //several scalable layers ...
+<span class="lineNum">    1197 </span><span class="lineNoCov">          0 :                 if (com-&gt;nalu_mode.extract_mode==1) {</span>
+<span class="lineNum">    1198 </span><span class="lineNoCov">          0 :                         ch-&gt;nalu_extract_mode |= GF_ISOM_NALU_EXTRACT_ANNEXB_FLAG | GF_ISOM_NALU_EXTRACT_VDRD_FLAG | GF_ISOM_NALU_EXTRACT_LAYER_ONLY;</span>
+<span class="lineNum">    1199 </span><span class="lineNoCov">          0 :                 }</span>
+<span class="lineNum">    1200 </span><span class="lineNoCov">          0 :                 gf_isom_set_nalu_extract_mode(ch-&gt;owner-&gt;mov, ch-&gt;track, ch-&gt;nalu_extract_mode);</span>
+<span class="lineNum">    1201 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">    1202 </span>            :         default:
+<span class="lineNum">    1203 </span>            :                 break;
+<span class="lineNum">    1204 </span>            :         }
+<span class="lineNum">    1205 </span><span class="lineNoCov">          0 :         return GF_NOT_SUPPORTED;</span>
+<a name="1206"><span class="lineNum">    1206 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">    1207 </span>            : 
+<span class="lineNum">    1208 </span>            : static Bool ISOR_CanHandleURLInService(GF_InputService *plug, const char *url)
+<span class="lineNum">    1209 </span>            : {
+<span class="lineNum">    1210 </span><span class="lineNoCov">          0 :         char szURL[2048], *sep;</span>
+<span class="lineNum">    1211 </span><span class="lineNoCov">          0 :         ISOMReader *read = (ISOMReader *)plug-&gt;priv;</span>
+<span class="lineNum">    1212 </span><span class="lineNoCov">          0 :         const char *this_url = gf_service_get_url(read-&gt;service);</span>
+<span class="lineNum">    1213 </span><span class="lineNoCov">          0 :         if (!this_url || !url) return GF_FALSE;</span>
+<span class="lineNum">    1214 </span>            : 
+<span class="lineNum">    1215 </span><span class="lineNoCov">          0 :         if (!strcmp(this_url, url)) return GF_TRUE;</span>
+<span class="lineNum">    1216 </span>            : 
+<span class="lineNum">    1217 </span><span class="lineNoCov">          0 :         strcpy(szURL, this_url);</span>
+<span class="lineNum">    1218 </span><span class="lineNoCov">          0 :         sep = strrchr(szURL, '#');</span>
+<span class="lineNum">    1219 </span><span class="lineNoCov">          0 :         if (sep) sep[0] = 0;</span>
+<span class="lineNum">    1220 </span>            : 
+<span class="lineNum">    1221 </span>            :         /*direct addressing in service*/
+<span class="lineNum">    1222 </span><span class="lineNoCov">          0 :         if (url[0] == '#') return GF_TRUE;</span>
+<span class="lineNum">    1223 </span><span class="lineNoCov">          0 :         if (strnicmp(szURL, url, sizeof(char)*strlen(szURL))) return GF_FALSE;</span>
+<span class="lineNum">    1224 </span><span class="lineNoCov">          0 :         return GF_TRUE;</span>
+<a name="1225"><span class="lineNum">    1225 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">    1226 </span>            : 
+<span class="lineNum">    1227 </span>            : GF_InputService *isor_client_load()
+<span class="lineNum">    1228 </span>            : {
+<span class="lineNum">    1229 </span>            :         ISOMReader *reader;
+<span class="lineNum">    1230 </span>            :         GF_InputService *plug;
+<span class="lineNum">    1231 </span><span class="lineCov">          2 :         GF_SAFEALLOC(plug, GF_InputService);</span>
+<span class="lineNum">    1232 </span><span class="lineCov">          1 :         if (!plug) return NULL;</span>
+<span class="lineNum">    1233 </span><span class="lineCov">          1 :         GF_REGISTER_MODULE_INTERFACE(plug, GF_NET_CLIENT_INTERFACE, &quot;GPAC IsoMedia Reader&quot;, &quot;gpac distribution&quot;)</span>
+<span class="lineNum">    1234 </span>            : 
+<span class="lineNum">    1235 </span><span class="lineCov">          2 :         GF_SAFEALLOC(reader, ISOMReader);</span>
+<span class="lineNum">    1236 </span><span class="lineCov">          1 :         if (!reader) {</span>
+<span class="lineNum">    1237 </span><span class="lineNoCov">          0 :                 gf_free(plug);</span>
+<span class="lineNum">    1238 </span><span class="lineNoCov">          0 :                 return NULL;</span>
+<span class="lineNum">    1239 </span>            :         }
+<span class="lineNum">    1240 </span><span class="lineCov">          1 :         reader-&gt;channels = gf_list_new();</span>
+<span class="lineNum">    1241 </span><span class="lineCov">          1 :         reader-&gt;segment_mutex = gf_mx_new(&quot;ISO Segment&quot;);</span>
+<span class="lineNum">    1242 </span>            : 
+<span class="lineNum">    1243 </span><span class="lineCov">          1 :         plug-&gt;priv = reader;</span>
+<span class="lineNum">    1244 </span>            :         
+<span class="lineNum">    1245 </span><span class="lineCov">          1 :         plug-&gt;RegisterMimeTypes = ISOR_RegisterMimeTypes;</span>
+<span class="lineNum">    1246 </span><span class="lineCov">          1 :         plug-&gt;CanHandleURL = ISOR_CanHandleURL;</span>
+<span class="lineNum">    1247 </span><span class="lineCov">          1 :         plug-&gt;ConnectService = ISOR_ConnectService;</span>
+<span class="lineNum">    1248 </span><span class="lineCov">          1 :         plug-&gt;CloseService = ISOR_CloseService;</span>
+<span class="lineNum">    1249 </span><span class="lineCov">          1 :         plug-&gt;GetServiceDescriptor = ISOR_GetServiceDesc;</span>
+<span class="lineNum">    1250 </span><span class="lineCov">          1 :         plug-&gt;ConnectChannel = ISOR_ConnectChannel;</span>
+<span class="lineNum">    1251 </span><span class="lineCov">          1 :         plug-&gt;DisconnectChannel = ISOR_DisconnectChannel;</span>
+<span class="lineNum">    1252 </span><span class="lineCov">          1 :         plug-&gt;ServiceCommand = ISOR_ServiceCommand;</span>
+<span class="lineNum">    1253 </span><span class="lineCov">          1 :         plug-&gt;CanHandleURLInService = ISOR_CanHandleURLInService;</span>
+<span class="lineNum">    1254 </span>            :         /*we do support pull mode*/
+<span class="lineNum">    1255 </span><span class="lineCov">          1 :         plug-&gt;ChannelGetSLP = ISOR_ChannelGetSLP;</span>
+<span class="lineNum">    1256 </span><span class="lineCov">          1 :         plug-&gt;ChannelReleaseSLP = ISOR_ChannelReleaseSLP;</span>
+<span class="lineNum">    1257 </span><span class="lineCov">          1 :         return plug;</span>
+<a name="1258"><span class="lineNum">    1258 </span><span class="lineCov">          1 : }</span></a>
+<span class="lineNum">    1259 </span>            : 
+<span class="lineNum">    1260 </span>            : void isor_client_del(GF_BaseInterface *bi)
+<span class="lineNum">    1261 </span>            : {
+<span class="lineNum">    1262 </span><span class="lineCov">          1 :         GF_InputService *plug = (GF_InputService *) bi;</span>
+<span class="lineNum">    1263 </span><span class="lineCov">          1 :         ISOMReader *read = (ISOMReader *)plug-&gt;priv;</span>
+<span class="lineNum">    1264 </span>            : 
+<span class="lineNum">    1265 </span><span class="lineCov">          2 :         if (read-&gt;segment_mutex) gf_mx_del(read-&gt;segment_mutex);</span>
+<span class="lineNum">    1266 </span><span class="lineCov">          1 :         gf_list_del(read-&gt;channels);</span>
+<span class="lineNum">    1267 </span><span class="lineCov">          1 :         gf_free(read);</span>
+<span class="lineNum">    1268 </span><span class="lineCov">          1 :         gf_free(bi);</span>
+<span class="lineNum">    1269 </span><span class="lineCov">          1 : }</span>
+<span class="lineNum">    1270 </span>            : 
+<span class="lineNum">    1271 </span>            : #endif /*GPAC_DISABLE_ISOM*/
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.12</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

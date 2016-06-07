@@ -1,0 +1,12 @@
+*** encryption-isma logs (GPAC version 0.6.2-DEV-revUNKNOWN-HEAD ) - test date 07/06/2016 10:25:35 ***
+
+
+*** Subtest "Encrypt": executing "MP4Box -noprog -for-test  -mem-track -crypt /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/encryption/drm_isma.xml -out /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/isma-crypted.mp4 /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/source_media.mp4" ***
+[32m[CENC/ISMA] Encrypting track ID 1 - KMS: self - Selective Encryption
+[0mSaving to /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/isma-crypted.mp4: 0.500 secs Interleaving
+
+
+*** Subtest "Decrypt": executing "MP4Box -noprog -for-test  -mem-track -decrypt /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/encryption/drm_isma.xml -out /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/isma-decrypted.mp4 /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/source_media.mp4" ***
+Saving to /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/isma-decrypted.mp4: 0.500 secs Interleaving
+
+Same Hash for /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/source_media.mp4 and /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/isma-decrypted.mp4

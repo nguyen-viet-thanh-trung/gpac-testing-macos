@@ -1,0 +1,41 @@
+*** xmlin-meta-mett logs (GPAC version 0.6.2-DEV-revUNKNOWN-HEAD ) - test date 07/06/2016 10:35:31 ***
+
+
+*** Subtest "import": executing "MP4Box -noprog -for-test  -mem-track -add /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/xmlin4/meta-mett.nhml -new /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/meta-mett.mp4" ***
+Saving /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/meta-mett.mp4: 0.500 secs Interleaving
+
+
+*** Subtest "info": executing "MP4Box -noprog -for-test  -mem-track -info /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/meta-mett.mp4" ***
+* Movie Info *
+	Timescale 600 - 1 track
+	Computed Duration 00:00:05.000 - Indicated Duration 00:00:05.000
+	Fragmented File: no
+	File suitable for progressive download (moov before mdat)
+	File Brand isom - version 1
+	Created: UNKNOWN DATE	Modified: UNKNOWN DATE
+File has no MPEG4 IOD/OD
+
+Track # 1 Info - TrackID 1 - TimeScale 1000
+Media Duration 00:00:05.000 - Indicated Duration 00:00:05.000
+Media Info: Language "Undetermined (und)" - Type "meta:mett" - 5 samples
+Textual Metadata Stream - mime text/plain - encoding utf-8
+	RFC6381 Codec Parameters: mett
+	Average GOP length: 5 samples
+
+
+
+*** Subtest "export-track": executing "MP4Box -noprog -for-test  -mem-track -raw 1 /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/meta-mett.mp4" ***
+[33mExtracting Text-based Metadata Stream
+[0m
+
+*** Subtest "export-samples": executing "MP4Box -noprog -for-test  -mem-track -raws 1 /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/meta-mett.mp4" ***
+[33mExtracting Metadata Text samples
+[0m
+
+*** Subtest "export-nhml": executing "MP4Box -noprog -for-test  -mem-track -nhml 1 /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/meta-mett.mp4" ***
+[33mExporting NHML for track mett
+[0m
+
+*** Subtest "nhml-reimport": executing "MP4Box -noprog -for-test  -mem-track -add /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/meta-mett_track1.nhml -new /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/meta-mett_track1.mp4" ***
+Saving /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/meta-mett_track1.mp4: 0.500 secs Interleaving
+

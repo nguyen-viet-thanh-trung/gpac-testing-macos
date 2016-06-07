@@ -1,0 +1,30 @@
+ <test name="bifs-2D-painting-xlineproperties-lineargradient" result="OK" date="07/06/2016 10:18:54">
+
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="45629440" cpu_percent="16%" cpu_elapsed_time="0:00.29" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -mp4 /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-painting-xlineproperties-lineargradient.bt</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44466176" cpu_percent="17%" cpu_elapsed_time="0:00.27" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -xmt /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-painting-xlineproperties-lineargradient.bt</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44974080" cpu_percent="4%" cpu_elapsed_time="0:01.10" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -bt /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-painting-xlineproperties-lineargradient.mp4 -out test2.bt</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="45105152" cpu_percent="6%" cpu_elapsed_time="0:00.72" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -xmt /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-painting-xlineproperties-lineargradient.mp4 -out test.xmt</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44515328" cpu_percent="4%" cpu_elapsed_time="0:01.14" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -stat /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-painting-xlineproperties-lineargradient.mp4 -std</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44580864" cpu_percent="5%" cpu_elapsed_time="0:00.90" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -stats /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-painting-xlineproperties-lineargradient.mp4 -std</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44630016" cpu_percent="9%" cpu_elapsed_time="0:00.53" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -statx /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-painting-xlineproperties-lineargradient.mp4 -std</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44400640" cpu_percent="4%" cpu_elapsed_time="0:01.06" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -bt /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-painting-xlineproperties-lineargradient.xmt -out test1.bt</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="45793280" cpu_percent="3%" cpu_elapsed_time="0:01.17" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -mp4 /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-painting-xlineproperties-lineargradient.xmt -out /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-painting-xlineproperties-lineargradient.mp4.tmp</command_line>
+  </stat>
+ </test>

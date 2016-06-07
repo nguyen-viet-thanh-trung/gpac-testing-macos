@@ -1,0 +1,1457 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - modules/widgetman/unzip.c</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">modules/widgetman</a> - unzip.c<span style="font-size: 80%;"> (source / <a href="unzip.c.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">571</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2016-06-07 10:36:32</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">29</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*</a>
+<span class="lineNum">       2 </span>            :    miniunz.c
+<span class="lineNum">       3 </span>            :    Version 1.01e, February 12th, 2005
+<span class="lineNum">       4 </span>            : 
+<span class="lineNum">       5 </span>            :    Copyright (C) 1998-2005 Gilles Vollant
+<span class="lineNum">       6 </span>            : */
+<span class="lineNum">       7 </span>            : 
+<span class="lineNum">       8 </span>            : #include &lt;stdio.h&gt;
+<span class="lineNum">       9 </span>            : #include &lt;stdlib.h&gt;
+<span class="lineNum">      10 </span>            : #include &lt;string.h&gt;
+<span class="lineNum">      11 </span>            : #include &lt;time.h&gt;
+<span class="lineNum">      12 </span>            : 
+<span class="lineNum">      13 </span>            : #ifndef _WIN32_WCE
+<span class="lineNum">      14 </span>            : #include &lt;errno.h&gt;
+<span class="lineNum">      15 </span>            : #include &lt;fcntl.h&gt;
+<span class="lineNum">      16 </span>            : 
+<span class="lineNum">      17 </span>            : #ifdef WIN32
+<span class="lineNum">      18 </span>            : # include &lt;direct.h&gt;
+<span class="lineNum">      19 </span>            : # include &lt;io.h&gt;
+<span class="lineNum">      20 </span>            : #else
+<span class="lineNum">      21 </span>            : # include &lt;unistd.h&gt;
+<span class="lineNum">      22 </span>            : # include &lt;utime.h&gt;
+<span class="lineNum">      23 </span>            : # include &lt;sys/stat.h&gt;
+<span class="lineNum">      24 </span>            : #endif
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : #endif
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span>            : //hack: prevent mozilla to redifine z functions
+<span class="lineNum">      29 </span>            : #define MOZZCONF_H
+<span class="lineNum">      30 </span>            : 
+<span class="lineNum">      31 </span>            : #include &quot;unzip.h&quot;
+<span class="lineNum">      32 </span>            : #include &lt;gpac/tools.h&gt;
+<span class="lineNum">      33 </span>            : 
+<span class="lineNum">      34 </span>            : 
+<span class="lineNum">      35 </span>            : 
+<span class="lineNum">      36 </span>            : /* I've found an old Unix (a SunOS 4.1.3_U1) without all SEEK_* defined.... */
+<span class="lineNum">      37 </span>            : 
+<span class="lineNum">      38 </span>            : #ifndef SEEK_CUR
+<span class="lineNum">      39 </span>            : #define SEEK_CUR    1
+<span class="lineNum">      40 </span>            : #endif
+<span class="lineNum">      41 </span>            : 
+<span class="lineNum">      42 </span>            : #ifndef SEEK_END
+<span class="lineNum">      43 </span>            : #define SEEK_END    2
+<span class="lineNum">      44 </span>            : #endif
+<span class="lineNum">      45 </span>            : 
+<span class="lineNum">      46 </span>            : #ifndef SEEK_SET
+<span class="lineNum">      47 </span>            : #define SEEK_SET    0
+<span class="lineNum">      48 </span>            : #endif
+<span class="lineNum">      49 </span>            : 
+<span class="lineNum">      50 </span>            : voidpf ZCALLBACK fopen_file_func OF((
+<span class="lineNum">      51 </span>            :                                         voidpf opaque,
+<span class="lineNum">      52 </span>            :                                         const char* filename,
+<span class="lineNum">      53 </span>            :                                         int mode));
+<span class="lineNum">      54 </span>            : 
+<span class="lineNum">      55 </span>            : uLong ZCALLBACK fread_file_func OF((
+<span class="lineNum">      56 </span>            :                                        voidpf opaque,
+<span class="lineNum">      57 </span>            :                                        voidpf stream,
+<span class="lineNum">      58 </span>            :                                        void* buf,
+<span class="lineNum">      59 </span>            :                                        uLong size));
+<span class="lineNum">      60 </span>            : 
+<span class="lineNum">      61 </span>            : uLong ZCALLBACK fwrite_file_func OF((
+<span class="lineNum">      62 </span>            :                                         voidpf opaque,
+<span class="lineNum">      63 </span>            :                                         voidpf stream,
+<span class="lineNum">      64 </span>            :                                         const void* buf,
+<span class="lineNum">      65 </span>            :                                         uLong size));
+<span class="lineNum">      66 </span>            : 
+<span class="lineNum">      67 </span>            : long ZCALLBACK ftell_file_func OF((
+<span class="lineNum">      68 </span>            :                                       voidpf opaque,
+<span class="lineNum">      69 </span>            :                                       voidpf stream));
+<span class="lineNum">      70 </span>            : 
+<span class="lineNum">      71 </span>            : long ZCALLBACK fseek_file_func OF((
+<span class="lineNum">      72 </span>            :                                       voidpf opaque,
+<span class="lineNum">      73 </span>            :                                       voidpf stream,
+<span class="lineNum">      74 </span>            :                                       uLong offset,
+<span class="lineNum">      75 </span>            :                                       int origin));
+<span class="lineNum">      76 </span>            : 
+<span class="lineNum">      77 </span>            : int ZCALLBACK fclose_file_func OF((
+<span class="lineNum">      78 </span>            :                                       voidpf opaque,
+<span class="lineNum">      79 </span>            :                                       voidpf stream));
+<span class="lineNum">      80 </span>            : 
+<span class="lineNum">      81 </span>            : int ZCALLBACK ferror_file_func OF((
+<span class="lineNum">      82 </span>            :                                       voidpf opaque,
+<span class="lineNum">      83 </span>            :                                       voidpf stream));
+<a name="84"><span class="lineNum">      84 </span>            : </a>
+<span class="lineNum">      85 </span>            : 
+<span class="lineNum">      86 </span>            : voidpf ZCALLBACK fopen_file_func (opaque, filename, mode)
+<span class="lineNum">      87 </span>            : voidpf opaque;
+<span class="lineNum">      88 </span>            : const char* filename;
+<span class="lineNum">      89 </span>            : int mode;
+<span class="lineNum">      90 </span>            : {
+<span class="lineNum">      91 </span>            :         FILE* file = NULL;
+<span class="lineNum">      92 </span>            :         const char* mode_fopen = NULL;
+<span class="lineNum">      93 </span><span class="lineNoCov">          0 :         if ((mode &amp; ZLIB_FILEFUNC_MODE_READWRITEFILTER)==ZLIB_FILEFUNC_MODE_READ)</span>
+<span class="lineNum">      94 </span><span class="lineNoCov">          0 :                 mode_fopen = &quot;rb&quot;;</span>
+<span class="lineNum">      95 </span><span class="lineNoCov">          0 :         else if (mode &amp; ZLIB_FILEFUNC_MODE_EXISTING)</span>
+<span class="lineNum">      96 </span><span class="lineNoCov">          0 :                 mode_fopen = &quot;r+b&quot;;</span>
+<span class="lineNum">      97 </span><span class="lineNoCov">          0 :         else if (mode &amp; ZLIB_FILEFUNC_MODE_CREATE)</span>
+<span class="lineNum">      98 </span><span class="lineNoCov">          0 :                 mode_fopen = &quot;wb&quot;;</span>
+<span class="lineNum">      99 </span>            : 
+<span class="lineNum">     100 </span><span class="lineNoCov">          0 :         if ((filename!=NULL) &amp;&amp; (mode_fopen != NULL))</span>
+<span class="lineNum">     101 </span><span class="lineNoCov">          0 :                 file = gf_fopen(filename, mode_fopen);</span>
+<span class="lineNum">     102 </span><span class="lineNoCov">          0 :         return file;</span>
+<span class="lineNum">     103 </span>            : }
+<a name="104"><span class="lineNum">     104 </span>            : </a>
+<span class="lineNum">     105 </span>            : 
+<span class="lineNum">     106 </span>            : uLong ZCALLBACK fread_file_func (opaque, stream, buf, size)
+<span class="lineNum">     107 </span>            : voidpf opaque;
+<span class="lineNum">     108 </span>            : voidpf stream;
+<span class="lineNum">     109 </span>            : void* buf;
+<span class="lineNum">     110 </span>            : uLong size;
+<span class="lineNum">     111 </span>            : {
+<span class="lineNum">     112 </span>            :         uLong ret;
+<span class="lineNum">     113 </span><span class="lineNoCov">          0 :         ret = (uLong)fread(buf, 1, (size_t)size, (FILE *)stream);</span>
+<span class="lineNum">     114 </span><span class="lineNoCov">          0 :         return ret;</span>
+<span class="lineNum">     115 </span>            : }
+<a name="116"><span class="lineNum">     116 </span>            : </a>
+<span class="lineNum">     117 </span>            : 
+<span class="lineNum">     118 </span>            : uLong ZCALLBACK fwrite_file_func (opaque, stream, buf, size)
+<span class="lineNum">     119 </span>            : voidpf opaque;
+<span class="lineNum">     120 </span>            : voidpf stream;
+<span class="lineNum">     121 </span>            : const void* buf;
+<span class="lineNum">     122 </span>            : uLong size;
+<span class="lineNum">     123 </span>            : {
+<span class="lineNum">     124 </span>            :         uLong ret;
+<span class="lineNum">     125 </span><span class="lineNoCov">          0 :         ret = (uLong)gf_fwrite(buf, 1, (size_t)size, (FILE *)stream);</span>
+<span class="lineNum">     126 </span><span class="lineNoCov">          0 :         return ret;</span>
+<a name="127"><span class="lineNum">     127 </span>            : }</a>
+<span class="lineNum">     128 </span>            : 
+<span class="lineNum">     129 </span>            : long ZCALLBACK ftell_file_func (opaque, stream)
+<span class="lineNum">     130 </span>            : voidpf opaque;
+<span class="lineNum">     131 </span>            : voidpf stream;
+<span class="lineNum">     132 </span>            : {
+<span class="lineNum">     133 </span>            :         long ret;
+<span class="lineNum">     134 </span><span class="lineNoCov">          0 :         ret = ftell((FILE *)stream);</span>
+<span class="lineNum">     135 </span><span class="lineNoCov">          0 :         return ret;</span>
+<a name="136"><span class="lineNum">     136 </span>            : }</a>
+<span class="lineNum">     137 </span>            : 
+<span class="lineNum">     138 </span>            : long ZCALLBACK fseek_file_func (opaque, stream, offset, origin)
+<span class="lineNum">     139 </span>            : voidpf opaque;
+<span class="lineNum">     140 </span>            : voidpf stream;
+<span class="lineNum">     141 </span>            : uLong offset;
+<span class="lineNum">     142 </span>            : int origin;
+<span class="lineNum">     143 </span>            : {
+<span class="lineNum">     144 </span>            :         int fseek_origin=0;
+<span class="lineNum">     145 </span>            :         long ret;
+<span class="lineNum">     146 </span><span class="lineNoCov">          0 :         switch (origin)</span>
+<span class="lineNum">     147 </span>            :         {
+<span class="lineNum">     148 </span>            :         case ZLIB_FILEFUNC_SEEK_CUR :
+<span class="lineNum">     149 </span>            :                 fseek_origin = SEEK_CUR;
+<span class="lineNum">     150 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     151 </span>            :         case ZLIB_FILEFUNC_SEEK_END :
+<span class="lineNum">     152 </span>            :                 fseek_origin = SEEK_END;
+<span class="lineNum">     153 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     154 </span>            :         case ZLIB_FILEFUNC_SEEK_SET :
+<span class="lineNum">     155 </span>            :                 fseek_origin = SEEK_SET;
+<span class="lineNum">     156 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     157 </span>            :         default:
+<span class="lineNum">     158 </span><span class="lineNoCov">          0 :                 return -1;</span>
+<span class="lineNum">     159 </span>            :         }
+<span class="lineNum">     160 </span>            :         ret = 0;
+<span class="lineNum">     161 </span><span class="lineNoCov">          0 :         fseek((FILE *)stream, offset, fseek_origin);</span>
+<span class="lineNum">     162 </span><span class="lineNoCov">          0 :         return ret;</span>
+<a name="163"><span class="lineNum">     163 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     164 </span>            : 
+<span class="lineNum">     165 </span>            : int ZCALLBACK fclose_file_func (opaque, stream)
+<span class="lineNum">     166 </span>            : voidpf opaque;
+<span class="lineNum">     167 </span>            : voidpf stream;
+<span class="lineNum">     168 </span>            : {
+<span class="lineNum">     169 </span>            :         int ret;
+<span class="lineNum">     170 </span><span class="lineNoCov">          0 :         ret = gf_fclose((FILE *)stream);</span>
+<span class="lineNum">     171 </span><span class="lineNoCov">          0 :         return ret;</span>
+<a name="172"><span class="lineNum">     172 </span>            : }</a>
+<span class="lineNum">     173 </span>            : 
+<span class="lineNum">     174 </span>            : int ZCALLBACK ferror_file_func (opaque, stream)
+<span class="lineNum">     175 </span>            : voidpf opaque;
+<span class="lineNum">     176 </span>            : voidpf stream;
+<span class="lineNum">     177 </span>            : {
+<span class="lineNum">     178 </span>            :         int ret;
+<span class="lineNum">     179 </span><span class="lineNoCov">          0 :         ret = ferror((FILE *)stream);</span>
+<span class="lineNum">     180 </span><span class="lineNoCov">          0 :         return ret;</span>
+<a name="181"><span class="lineNum">     181 </span>            : }</a>
+<span class="lineNum">     182 </span>            : 
+<span class="lineNum">     183 </span>            : void fill_fopen_filefunc (pzlib_filefunc_def)
+<span class="lineNum">     184 </span>            : zlib_filefunc_def* pzlib_filefunc_def;
+<span class="lineNum">     185 </span>            : {
+<span class="lineNum">     186 </span><span class="lineNoCov">          0 :         pzlib_filefunc_def-&gt;zopen_file = fopen_file_func;</span>
+<span class="lineNum">     187 </span><span class="lineNoCov">          0 :         pzlib_filefunc_def-&gt;zread_file = fread_file_func;</span>
+<span class="lineNum">     188 </span><span class="lineNoCov">          0 :         pzlib_filefunc_def-&gt;zwrite_file = fwrite_file_func;</span>
+<span class="lineNum">     189 </span><span class="lineNoCov">          0 :         pzlib_filefunc_def-&gt;ztell_file = ftell_file_func;</span>
+<span class="lineNum">     190 </span><span class="lineNoCov">          0 :         pzlib_filefunc_def-&gt;zseek_file = fseek_file_func;</span>
+<span class="lineNum">     191 </span><span class="lineNoCov">          0 :         pzlib_filefunc_def-&gt;zclose_file = fclose_file_func;</span>
+<span class="lineNum">     192 </span><span class="lineNoCov">          0 :         pzlib_filefunc_def-&gt;zerror_file = ferror_file_func;</span>
+<span class="lineNum">     193 </span><span class="lineNoCov">          0 :         pzlib_filefunc_def-&gt;opaque = NULL;</span>
+<a name="194"><span class="lineNum">     194 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     195 </span>            : 
+<span class="lineNum">     196 </span>            : static int unzlocal_getByte(pzlib_filefunc_def,filestream,pi)
+<span class="lineNum">     197 </span>            : const zlib_filefunc_def* pzlib_filefunc_def;
+<span class="lineNum">     198 </span>            : voidpf filestream;
+<span class="lineNum">     199 </span>            : int *pi;
+<span class="lineNum">     200 </span>            : {
+<span class="lineNum">     201 </span>            :         unsigned char c;
+<span class="lineNum">     202 </span><span class="lineNoCov">          0 :         int err = (int)ZREAD(*pzlib_filefunc_def,filestream,&amp;c,1);</span>
+<span class="lineNum">     203 </span><span class="lineNoCov">          0 :         if (err==1)</span>
+<span class="lineNum">     204 </span>            :         {
+<span class="lineNum">     205 </span><span class="lineNoCov">          0 :                 *pi = (int)c;</span>
+<span class="lineNum">     206 </span><span class="lineNoCov">          0 :                 return UNZ_OK;</span>
+<span class="lineNum">     207 </span>            :         }
+<span class="lineNum">     208 </span>            :         else
+<span class="lineNum">     209 </span>            :         {
+<span class="lineNum">     210 </span><span class="lineNoCov">          0 :                 if (ZERROR(*pzlib_filefunc_def,filestream))</span>
+<span class="lineNum">     211 </span><span class="lineNoCov">          0 :                         return UNZ_ERRNO;</span>
+<span class="lineNum">     212 </span>            :                 else
+<span class="lineNum">     213 </span><span class="lineNoCov">          0 :                         return UNZ_EOF;</span>
+<span class="lineNum">     214 </span>            :         }
+<a name="215"><span class="lineNum">     215 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     216 </span>            : 
+<span class="lineNum">     217 </span>            : static int unzlocal_getShort (pzlib_filefunc_def,filestream,pX)
+<span class="lineNum">     218 </span>            : const zlib_filefunc_def* pzlib_filefunc_def;
+<span class="lineNum">     219 </span>            : voidpf filestream;
+<span class="lineNum">     220 </span>            : uLong *pX;
+<span class="lineNum">     221 </span>            : {
+<span class="lineNum">     222 </span>            :         uLong x ;
+<span class="lineNum">     223 </span>            :         int err;
+<span class="lineNum">     224 </span><span class="lineNoCov">          0 :         int i = 0;</span>
+<span class="lineNum">     225 </span>            : 
+<span class="lineNum">     226 </span><span class="lineNoCov">          0 :         err = unzlocal_getByte(pzlib_filefunc_def,filestream,&amp;i);</span>
+<span class="lineNum">     227 </span><span class="lineNoCov">          0 :         x = (uLong)i;</span>
+<span class="lineNum">     228 </span>            : 
+<span class="lineNum">     229 </span><span class="lineNoCov">          0 :         if (err==UNZ_OK)</span>
+<span class="lineNum">     230 </span><span class="lineNoCov">          0 :                 err = unzlocal_getByte(pzlib_filefunc_def,filestream,&amp;i);</span>
+<span class="lineNum">     231 </span><span class="lineNoCov">          0 :         x += ((uLong)i)&lt;&lt;8;</span>
+<span class="lineNum">     232 </span>            : 
+<span class="lineNum">     233 </span><span class="lineNoCov">          0 :         if (err==UNZ_OK)</span>
+<span class="lineNum">     234 </span><span class="lineNoCov">          0 :                 *pX = x;</span>
+<span class="lineNum">     235 </span>            :         else
+<span class="lineNum">     236 </span><span class="lineNoCov">          0 :                 *pX = 0;</span>
+<span class="lineNum">     237 </span><span class="lineNoCov">          0 :         return err;</span>
+<a name="238"><span class="lineNum">     238 </span>            : }</a>
+<span class="lineNum">     239 </span>            : 
+<span class="lineNum">     240 </span>            : static int unzlocal_getLong (pzlib_filefunc_def,filestream,pX)
+<span class="lineNum">     241 </span>            : const zlib_filefunc_def* pzlib_filefunc_def;
+<span class="lineNum">     242 </span>            : voidpf filestream;
+<span class="lineNum">     243 </span>            : uLong *pX;
+<span class="lineNum">     244 </span>            : {
+<span class="lineNum">     245 </span>            :         uLong x ;
+<span class="lineNum">     246 </span>            :         int err;
+<span class="lineNum">     247 </span><span class="lineNoCov">          0 :         int i = 0;</span>
+<span class="lineNum">     248 </span>            : 
+<span class="lineNum">     249 </span><span class="lineNoCov">          0 :         err = unzlocal_getByte(pzlib_filefunc_def,filestream,&amp;i);</span>
+<span class="lineNum">     250 </span><span class="lineNoCov">          0 :         x = (uLong)i;</span>
+<span class="lineNum">     251 </span>            : 
+<span class="lineNum">     252 </span><span class="lineNoCov">          0 :         if (err==UNZ_OK)</span>
+<span class="lineNum">     253 </span><span class="lineNoCov">          0 :                 err = unzlocal_getByte(pzlib_filefunc_def,filestream,&amp;i);</span>
+<span class="lineNum">     254 </span><span class="lineNoCov">          0 :         x += ((uLong)i)&lt;&lt;8;</span>
+<span class="lineNum">     255 </span>            : 
+<span class="lineNum">     256 </span><span class="lineNoCov">          0 :         if (err==UNZ_OK)</span>
+<span class="lineNum">     257 </span><span class="lineNoCov">          0 :                 err = unzlocal_getByte(pzlib_filefunc_def,filestream,&amp;i);</span>
+<span class="lineNum">     258 </span><span class="lineNoCov">          0 :         x += ((uLong)i)&lt;&lt;16;</span>
+<span class="lineNum">     259 </span>            : 
+<span class="lineNum">     260 </span><span class="lineNoCov">          0 :         if (err==UNZ_OK)</span>
+<span class="lineNum">     261 </span><span class="lineNoCov">          0 :                 err = unzlocal_getByte(pzlib_filefunc_def,filestream,&amp;i);</span>
+<span class="lineNum">     262 </span><span class="lineNoCov">          0 :         x += ((uLong)i)&lt;&lt;24;</span>
+<span class="lineNum">     263 </span>            : 
+<span class="lineNum">     264 </span><span class="lineNoCov">          0 :         if (err==UNZ_OK)</span>
+<span class="lineNum">     265 </span><span class="lineNoCov">          0 :                 *pX = x;</span>
+<span class="lineNum">     266 </span>            :         else
+<span class="lineNum">     267 </span><span class="lineNoCov">          0 :                 *pX = 0;</span>
+<span class="lineNum">     268 </span><span class="lineNoCov">          0 :         return err;</span>
+<a name="269"><span class="lineNum">     269 </span>            : }</a>
+<span class="lineNum">     270 </span>            : 
+<span class="lineNum">     271 </span>            : static uLong unzlocal_SearchCentralDir(pzlib_filefunc_def,filestream)
+<span class="lineNum">     272 </span>            : const zlib_filefunc_def* pzlib_filefunc_def;
+<span class="lineNum">     273 </span>            : voidpf filestream;
+<span class="lineNum">     274 </span>            : {
+<span class="lineNum">     275 </span>            :         unsigned char* buf;
+<span class="lineNum">     276 </span>            :         uLong uSizeFile;
+<span class="lineNum">     277 </span>            :         uLong uBackRead;
+<span class="lineNum">     278 </span>            :         uLong uMaxBack=0xffff; /* maximum size of global comment */
+<span class="lineNum">     279 </span>            :         uLong uPosFound=0;
+<span class="lineNum">     280 </span>            : 
+<span class="lineNum">     281 </span><span class="lineNoCov">          0 :         if (ZSEEK(*pzlib_filefunc_def,filestream,0,ZLIB_FILEFUNC_SEEK_END) != 0)</span>
+<span class="lineNum">     282 </span><span class="lineNoCov">          0 :                 return 0;</span>
+<span class="lineNum">     283 </span>            : 
+<span class="lineNum">     284 </span>            : 
+<span class="lineNum">     285 </span><span class="lineNoCov">          0 :         uSizeFile = ZTELL(*pzlib_filefunc_def,filestream);</span>
+<span class="lineNum">     286 </span>            : 
+<span class="lineNum">     287 </span><span class="lineNoCov">          0 :         if (uMaxBack&gt;uSizeFile)</span>
+<span class="lineNum">     288 </span><span class="lineNoCov">          0 :                 uMaxBack = uSizeFile;</span>
+<span class="lineNum">     289 </span>            : 
+<span class="lineNum">     290 </span><span class="lineNoCov">          0 :         buf = (unsigned char*)ALLOC(BUFREADCOMMENT+4);</span>
+<span class="lineNum">     291 </span><span class="lineNoCov">          0 :         if (buf==NULL)</span>
+<span class="lineNum">     292 </span><span class="lineNoCov">          0 :                 return 0;</span>
+<span class="lineNum">     293 </span>            : 
+<span class="lineNum">     294 </span>            :         uBackRead = 4;
+<span class="lineNum">     295 </span><span class="lineNoCov">          0 :         while (uBackRead&lt;uMaxBack)</span>
+<span class="lineNum">     296 </span>            :         {
+<span class="lineNum">     297 </span>            :                 uLong uReadSize,uReadPos ;
+<span class="lineNum">     298 </span>            :                 int i;
+<span class="lineNum">     299 </span><span class="lineNoCov">          0 :                 if (uBackRead+BUFREADCOMMENT&gt;uMaxBack)</span>
+<span class="lineNum">     300 </span><span class="lineNoCov">          0 :                         uBackRead = uMaxBack;</span>
+<span class="lineNum">     301 </span>            :                 else
+<span class="lineNum">     302 </span>            :                         uBackRead+=BUFREADCOMMENT;
+<span class="lineNum">     303 </span><span class="lineNoCov">          0 :                 uReadPos = uSizeFile-uBackRead ;</span>
+<span class="lineNum">     304 </span>            : 
+<span class="lineNum">     305 </span><span class="lineNoCov">          0 :                 uReadSize = ((BUFREADCOMMENT+4) &lt; (uSizeFile-uReadPos)) ?</span>
+<span class="lineNum">     306 </span>            :                             (BUFREADCOMMENT+4) : (uSizeFile-uReadPos);
+<span class="lineNum">     307 </span><span class="lineNoCov">          0 :                 if (ZSEEK(*pzlib_filefunc_def,filestream,uReadPos,ZLIB_FILEFUNC_SEEK_SET)!=0)</span>
+<span class="lineNum">     308 </span>            :                         break;
+<span class="lineNum">     309 </span>            : 
+<span class="lineNum">     310 </span><span class="lineNoCov">          0 :                 if (ZREAD(*pzlib_filefunc_def,filestream,buf,uReadSize)!=uReadSize)</span>
+<span class="lineNum">     311 </span>            :                         break;
+<span class="lineNum">     312 </span>            : 
+<span class="lineNum">     313 </span><span class="lineNoCov">          0 :                 for (i=(int)uReadSize-3; (i--)&gt;0;)</span>
+<span class="lineNum">     314 </span><span class="lineNoCov">          0 :                         if (((*(buf+i))==0x50) &amp;&amp; ((*(buf+i+1))==0x4b) &amp;&amp;</span>
+<span class="lineNum">     315 </span>            :                                 ((*(buf+i+2))==0x05) &amp;&amp; ((*(buf+i+3))==0x06))
+<span class="lineNum">     316 </span>            :                         {
+<span class="lineNum">     317 </span><span class="lineNoCov">          0 :                                 uPosFound = uReadPos+i;</span>
+<span class="lineNum">     318 </span><span class="lineNoCov">          0 :                                 break;</span>
+<span class="lineNum">     319 </span>            :                         }
+<span class="lineNum">     320 </span>            : 
+<span class="lineNum">     321 </span><span class="lineNoCov">          0 :                 if (uPosFound!=0)</span>
+<span class="lineNum">     322 </span>            :                         break;
+<span class="lineNum">     323 </span>            :         }
+<span class="lineNum">     324 </span><span class="lineNoCov">          0 :         TRYFREE(buf);</span>
+<span class="lineNum">     325 </span><span class="lineNoCov">          0 :         return uPosFound;</span>
+<span class="lineNum">     326 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     327 </span>            : 
+<span class="lineNum">     328 </span>            : 
+<span class="lineNum">     329 </span>            : /*
+<a name="330"><span class="lineNum">     330 </span>            :    Translate date/time from Dos format to tm_unz (readable more easilty)</a>
+<span class="lineNum">     331 </span>            : */
+<span class="lineNum">     332 </span>            : void unzlocal_DosDateToTmuDate (ulDosDate, ptm)
+<span class="lineNum">     333 </span>            : uLong ulDosDate;
+<span class="lineNum">     334 </span>            : tm_unz* ptm;
+<span class="lineNum">     335 </span>            : {
+<span class="lineNum">     336 </span>            :         uLong uDate;
+<span class="lineNum">     337 </span><span class="lineNoCov">          0 :         uDate = (uLong)(ulDosDate&gt;&gt;16);</span>
+<span class="lineNum">     338 </span><span class="lineNoCov">          0 :         ptm-&gt;tm_mday = (uInt)(uDate&amp;0x1f) ;</span>
+<span class="lineNum">     339 </span><span class="lineNoCov">          0 :         ptm-&gt;tm_mon =  (uInt)((((uDate)&amp;0x1E0)/0x20)-1) ;</span>
+<span class="lineNum">     340 </span><span class="lineNoCov">          0 :         ptm-&gt;tm_year = (uInt)(((uDate&amp;0x0FE00)/0x0200)+1980) ;</span>
+<span class="lineNum">     341 </span>            : 
+<span class="lineNum">     342 </span><span class="lineNoCov">          0 :         ptm-&gt;tm_hour = (uInt) ((ulDosDate &amp;0xF800)/0x800);</span>
+<span class="lineNum">     343 </span><span class="lineNoCov">          0 :         ptm-&gt;tm_min =  (uInt) ((ulDosDate&amp;0x7E0)/0x20) ;</span>
+<span class="lineNum">     344 </span><span class="lineNoCov">          0 :         ptm-&gt;tm_sec =  (uInt) (2*(ulDosDate&amp;0x1f)) ;</span>
+<a name="345"><span class="lineNum">     345 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     346 </span>            : 
+<span class="lineNum">     347 </span>            : static int unzlocal_GetCurrentFileInfoInternal (file,
+<span class="lineNum">     348 </span>            :         pfile_info,
+<span class="lineNum">     349 </span>            :         pfile_info_internal,
+<span class="lineNum">     350 </span>            :         szFileName, fileNameBufferSize,
+<span class="lineNum">     351 </span>            :         extraField, extraFieldBufferSize,
+<span class="lineNum">     352 </span>            :         szComment,  commentBufferSize)
+<span class="lineNum">     353 </span>            : unzFile file;
+<span class="lineNum">     354 </span>            : unz_file_info *pfile_info;
+<span class="lineNum">     355 </span>            : unz_file_info_internal *pfile_info_internal;
+<span class="lineNum">     356 </span>            : char *szFileName;
+<span class="lineNum">     357 </span>            : uLong fileNameBufferSize;
+<span class="lineNum">     358 </span>            : void *extraField;
+<span class="lineNum">     359 </span>            : uLong extraFieldBufferSize;
+<span class="lineNum">     360 </span>            : char *szComment;
+<span class="lineNum">     361 </span>            : uLong commentBufferSize;
+<span class="lineNum">     362 </span>            : {
+<span class="lineNum">     363 </span>            :         unz_s* s;
+<span class="lineNum">     364 </span><span class="lineNoCov">          0 :         unz_file_info file_info;</span>
+<span class="lineNum">     365 </span>            :         unz_file_info_internal file_info_internal;
+<span class="lineNum">     366 </span>            :         int err=UNZ_OK;
+<span class="lineNum">     367 </span>            :         uLong uMagic;
+<span class="lineNum">     368 </span>            :         long lSeek=0;
+<span class="lineNum">     369 </span>            : 
+<span class="lineNum">     370 </span><span class="lineNoCov">          0 :         if (file==NULL)</span>
+<span class="lineNum">     371 </span><span class="lineNoCov">          0 :                 return UNZ_PARAMERROR;</span>
+<span class="lineNum">     372 </span><span class="lineNoCov">          0 :         s=(unz_s*)file;</span>
+<span class="lineNum">     373 </span><span class="lineNoCov">          0 :         if (ZSEEK(s-&gt;z_filefunc, s-&gt;filestream,</span>
+<span class="lineNum">     374 </span>            :                   s-&gt;pos_in_central_dir+s-&gt;byte_before_the_zipfile,
+<span class="lineNum">     375 </span>            :                   ZLIB_FILEFUNC_SEEK_SET)!=0)
+<span class="lineNum">     376 </span><span class="lineNoCov">          0 :                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     377 </span>            : 
+<span class="lineNum">     378 </span>            : 
+<span class="lineNum">     379 </span>            :         /* we check the magic */
+<span class="lineNum">     380 </span><span class="lineNoCov">          0 :         if (err==UNZ_OK) {</span>
+<span class="lineNum">     381 </span><span class="lineNoCov">          0 :                 if (unzlocal_getLong(&amp;s-&gt;z_filefunc, s-&gt;filestream,&amp;uMagic) != UNZ_OK)</span>
+<span class="lineNum">     382 </span><span class="lineNoCov">          0 :                         err=UNZ_ERRNO;</span>
+<span class="lineNum">     383 </span><span class="lineNoCov">          0 :                 else if (uMagic!=0x02014b50)</span>
+<span class="lineNum">     384 </span><span class="lineNoCov">          0 :                         err=UNZ_BADZIPFILE;</span>
+<span class="lineNum">     385 </span>            :         }
+<span class="lineNum">     386 </span>            : 
+<span class="lineNum">     387 </span><span class="lineNoCov">          0 :         if (unzlocal_getShort(&amp;s-&gt;z_filefunc, s-&gt;filestream,&amp;file_info.version) != UNZ_OK)</span>
+<span class="lineNum">     388 </span><span class="lineNoCov">          0 :                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     389 </span>            : 
+<span class="lineNum">     390 </span><span class="lineNoCov">          0 :         if (unzlocal_getShort(&amp;s-&gt;z_filefunc, s-&gt;filestream,&amp;file_info.version_needed) != UNZ_OK)</span>
+<span class="lineNum">     391 </span><span class="lineNoCov">          0 :                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     392 </span>            : 
+<span class="lineNum">     393 </span><span class="lineNoCov">          0 :         if (unzlocal_getShort(&amp;s-&gt;z_filefunc, s-&gt;filestream,&amp;file_info.flag) != UNZ_OK)</span>
+<span class="lineNum">     394 </span><span class="lineNoCov">          0 :                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     395 </span>            : 
+<span class="lineNum">     396 </span><span class="lineNoCov">          0 :         if (unzlocal_getShort(&amp;s-&gt;z_filefunc, s-&gt;filestream,&amp;file_info.compression_method) != UNZ_OK)</span>
+<span class="lineNum">     397 </span><span class="lineNoCov">          0 :                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     398 </span>            : 
+<span class="lineNum">     399 </span><span class="lineNoCov">          0 :         if (unzlocal_getLong(&amp;s-&gt;z_filefunc, s-&gt;filestream,&amp;file_info.dosDate) != UNZ_OK)</span>
+<span class="lineNum">     400 </span><span class="lineNoCov">          0 :                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     401 </span>            : 
+<span class="lineNum">     402 </span><span class="lineNoCov">          0 :         unzlocal_DosDateToTmuDate(file_info.dosDate,&amp;file_info.tmu_date);</span>
+<span class="lineNum">     403 </span>            : 
+<span class="lineNum">     404 </span><span class="lineNoCov">          0 :         if (unzlocal_getLong(&amp;s-&gt;z_filefunc, s-&gt;filestream,&amp;file_info.crc) != UNZ_OK)</span>
+<span class="lineNum">     405 </span><span class="lineNoCov">          0 :                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     406 </span>            : 
+<span class="lineNum">     407 </span><span class="lineNoCov">          0 :         if (unzlocal_getLong(&amp;s-&gt;z_filefunc, s-&gt;filestream,&amp;file_info.compressed_size) != UNZ_OK)</span>
+<span class="lineNum">     408 </span><span class="lineNoCov">          0 :                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     409 </span>            : 
+<span class="lineNum">     410 </span><span class="lineNoCov">          0 :         if (unzlocal_getLong(&amp;s-&gt;z_filefunc, s-&gt;filestream,&amp;file_info.uncompressed_size) != UNZ_OK)</span>
+<span class="lineNum">     411 </span><span class="lineNoCov">          0 :                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     412 </span>            : 
+<span class="lineNum">     413 </span><span class="lineNoCov">          0 :         if (unzlocal_getShort(&amp;s-&gt;z_filefunc, s-&gt;filestream,&amp;file_info.size_filename) != UNZ_OK)</span>
+<span class="lineNum">     414 </span><span class="lineNoCov">          0 :                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     415 </span>            : 
+<span class="lineNum">     416 </span><span class="lineNoCov">          0 :         if (unzlocal_getShort(&amp;s-&gt;z_filefunc, s-&gt;filestream,&amp;file_info.size_file_extra) != UNZ_OK)</span>
+<span class="lineNum">     417 </span><span class="lineNoCov">          0 :                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     418 </span>            : 
+<span class="lineNum">     419 </span><span class="lineNoCov">          0 :         if (unzlocal_getShort(&amp;s-&gt;z_filefunc, s-&gt;filestream,&amp;file_info.size_file_comment) != UNZ_OK)</span>
+<span class="lineNum">     420 </span><span class="lineNoCov">          0 :                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     421 </span>            : 
+<span class="lineNum">     422 </span><span class="lineNoCov">          0 :         if (unzlocal_getShort(&amp;s-&gt;z_filefunc, s-&gt;filestream,&amp;file_info.disk_num_start) != UNZ_OK)</span>
+<span class="lineNum">     423 </span><span class="lineNoCov">          0 :                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     424 </span>            : 
+<span class="lineNum">     425 </span><span class="lineNoCov">          0 :         if (unzlocal_getShort(&amp;s-&gt;z_filefunc, s-&gt;filestream,&amp;file_info.internal_fa) != UNZ_OK)</span>
+<span class="lineNum">     426 </span><span class="lineNoCov">          0 :                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     427 </span>            : 
+<span class="lineNum">     428 </span><span class="lineNoCov">          0 :         if (unzlocal_getLong(&amp;s-&gt;z_filefunc, s-&gt;filestream,&amp;file_info.external_fa) != UNZ_OK)</span>
+<span class="lineNum">     429 </span><span class="lineNoCov">          0 :                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     430 </span>            : 
+<span class="lineNum">     431 </span><span class="lineNoCov">          0 :         if (unzlocal_getLong(&amp;s-&gt;z_filefunc, s-&gt;filestream,&amp;file_info_internal.offset_curfile) != UNZ_OK)</span>
+<span class="lineNum">     432 </span><span class="lineNoCov">          0 :                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     433 </span>            : 
+<span class="lineNum">     434 </span><span class="lineNoCov">          0 :         lSeek+=file_info.size_filename;</span>
+<span class="lineNum">     435 </span><span class="lineNoCov">          0 :         if ((err==UNZ_OK) &amp;&amp; (szFileName!=NULL))</span>
+<span class="lineNum">     436 </span>            :         {
+<span class="lineNum">     437 </span>            :                 uLong uSizeRead ;
+<span class="lineNum">     438 </span><span class="lineNoCov">          0 :                 if (file_info.size_filename&lt;fileNameBufferSize)</span>
+<span class="lineNum">     439 </span>            :                 {
+<span class="lineNum">     440 </span><span class="lineNoCov">          0 :                         *(szFileName+file_info.size_filename)='\0';</span>
+<span class="lineNum">     441 </span><span class="lineNoCov">          0 :                         uSizeRead = file_info.size_filename;</span>
+<span class="lineNum">     442 </span><span class="lineNoCov">          0 :                 }</span>
+<span class="lineNum">     443 </span>            :                 else
+<span class="lineNum">     444 </span>            :                         uSizeRead = fileNameBufferSize;
+<span class="lineNum">     445 </span>            : 
+<span class="lineNum">     446 </span><span class="lineNoCov">          0 :                 if ((file_info.size_filename&gt;0) &amp;&amp; (fileNameBufferSize&gt;0))</span>
+<span class="lineNum">     447 </span><span class="lineNoCov">          0 :                         if (ZREAD(s-&gt;z_filefunc, s-&gt;filestream,szFileName,uSizeRead)!=uSizeRead)</span>
+<span class="lineNum">     448 </span><span class="lineNoCov">          0 :                                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     449 </span><span class="lineNoCov">          0 :                 lSeek -= uSizeRead;</span>
+<span class="lineNum">     450 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     451 </span>            : 
+<span class="lineNum">     452 </span>            : 
+<span class="lineNum">     453 </span><span class="lineNoCov">          0 :         if ((err==UNZ_OK) &amp;&amp; (extraField!=NULL))</span>
+<span class="lineNum">     454 </span>            :         {
+<span class="lineNum">     455 </span>            :                 uLong uSizeRead ;
+<span class="lineNum">     456 </span><span class="lineNoCov">          0 :                 if (file_info.size_file_extra&lt;extraFieldBufferSize)</span>
+<span class="lineNum">     457 </span><span class="lineNoCov">          0 :                         uSizeRead = file_info.size_file_extra;</span>
+<span class="lineNum">     458 </span>            :                 else
+<span class="lineNum">     459 </span>            :                         uSizeRead = extraFieldBufferSize;
+<span class="lineNum">     460 </span>            : 
+<span class="lineNum">     461 </span><span class="lineNoCov">          0 :                 if (lSeek!=0) {</span>
+<span class="lineNum">     462 </span><span class="lineNoCov">          0 :                         if (ZSEEK(s-&gt;z_filefunc, s-&gt;filestream,lSeek,ZLIB_FILEFUNC_SEEK_CUR)==0)</span>
+<span class="lineNum">     463 </span><span class="lineNoCov">          0 :                                 lSeek=0;</span>
+<span class="lineNum">     464 </span>            :                         else
+<span class="lineNum">     465 </span>            :                                 err=UNZ_ERRNO;
+<span class="lineNum">     466 </span>            :                 }
+<span class="lineNum">     467 </span><span class="lineNoCov">          0 :                 if ((file_info.size_file_extra&gt;0) &amp;&amp; (extraFieldBufferSize&gt;0))</span>
+<span class="lineNum">     468 </span><span class="lineNoCov">          0 :                         if (ZREAD(s-&gt;z_filefunc, s-&gt;filestream,extraField,uSizeRead)!=uSizeRead)</span>
+<span class="lineNum">     469 </span><span class="lineNoCov">          0 :                                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     470 </span><span class="lineNoCov">          0 :                 lSeek += file_info.size_file_extra - uSizeRead;</span>
+<span class="lineNum">     471 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     472 </span>            :         else
+<span class="lineNum">     473 </span><span class="lineNoCov">          0 :                 lSeek+=file_info.size_file_extra;</span>
+<span class="lineNum">     474 </span>            : 
+<span class="lineNum">     475 </span>            : 
+<span class="lineNum">     476 </span><span class="lineNoCov">          0 :         if ((err==UNZ_OK) &amp;&amp; (szComment!=NULL))</span>
+<span class="lineNum">     477 </span>            :         {
+<span class="lineNum">     478 </span>            :                 uLong uSizeRead ;
+<span class="lineNum">     479 </span><span class="lineNoCov">          0 :                 if (file_info.size_file_comment&lt;commentBufferSize)</span>
+<span class="lineNum">     480 </span>            :                 {
+<span class="lineNum">     481 </span><span class="lineNoCov">          0 :                         *(szComment+file_info.size_file_comment)='\0';</span>
+<span class="lineNum">     482 </span><span class="lineNoCov">          0 :                         uSizeRead = file_info.size_file_comment;</span>
+<span class="lineNum">     483 </span><span class="lineNoCov">          0 :                 }</span>
+<span class="lineNum">     484 </span>            :                 else
+<span class="lineNum">     485 </span>            :                         uSizeRead = commentBufferSize;
+<span class="lineNum">     486 </span>            : 
+<span class="lineNum">     487 </span><span class="lineNoCov">          0 :                 if (lSeek!=0) {</span>
+<span class="lineNum">     488 </span><span class="lineNoCov">          0 :                         if (ZSEEK(s-&gt;z_filefunc, s-&gt;filestream,lSeek,ZLIB_FILEFUNC_SEEK_CUR)==0) {</span>
+<span class="lineNum">     489 </span>            :                                 //lSeek=0;
+<span class="lineNum">     490 </span>            :                         } else {
+<span class="lineNum">     491 </span>            :                                 err=UNZ_ERRNO;
+<span class="lineNum">     492 </span>            :                         }
+<span class="lineNum">     493 </span>            :                 }
+<span class="lineNum">     494 </span><span class="lineNoCov">          0 :                 if ((file_info.size_file_comment&gt;0) &amp;&amp; (commentBufferSize&gt;0))</span>
+<span class="lineNum">     495 </span><span class="lineNoCov">          0 :                         if (ZREAD(s-&gt;z_filefunc, s-&gt;filestream,szComment,uSizeRead)!=uSizeRead)</span>
+<span class="lineNum">     496 </span><span class="lineNoCov">          0 :                                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     497 </span>            :                 //lSeek+=file_info.size_file_comment - uSizeRead;
+<span class="lineNum">     498 </span>            :         } else {
+<span class="lineNum">     499 </span>            :                 //lSeek+=file_info.size_file_comment;
+<span class="lineNum">     500 </span>            :         }
+<span class="lineNum">     501 </span>            : 
+<span class="lineNum">     502 </span><span class="lineNoCov">          0 :         if ((err==UNZ_OK) &amp;&amp; (pfile_info!=NULL))</span>
+<span class="lineNum">     503 </span><span class="lineNoCov">          0 :                 *pfile_info=file_info;</span>
+<span class="lineNum">     504 </span>            : 
+<span class="lineNum">     505 </span><span class="lineNoCov">          0 :         if ((err==UNZ_OK) &amp;&amp; (pfile_info_internal!=NULL))</span>
+<span class="lineNum">     506 </span><span class="lineNoCov">          0 :                 *pfile_info_internal=file_info_internal;</span>
+<span class="lineNum">     507 </span>            : 
+<span class="lineNum">     508 </span><span class="lineNoCov">          0 :         return err;</span>
+<a name="509"><span class="lineNum">     509 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     510 </span>            : 
+<span class="lineNum">     511 </span>            : int unzGetCurrentFileInfo(unzFile file,
+<span class="lineNum">     512 </span>            :                           unz_file_info *pfile_info,
+<span class="lineNum">     513 </span>            :                           char *szFileName,
+<span class="lineNum">     514 </span>            :                           uLong fileNameBufferSize,
+<span class="lineNum">     515 </span>            :                           void *extraField,
+<span class="lineNum">     516 </span>            :                           uLong extraFieldBufferSize,
+<span class="lineNum">     517 </span>            :                           char *szComment,
+<span class="lineNum">     518 </span>            :                           uLong commentBufferSize)
+<span class="lineNum">     519 </span>            : {
+<span class="lineNum">     520 </span><span class="lineNoCov">          0 :         return unzlocal_GetCurrentFileInfoInternal(file, pfile_info, NULL, szFileName, fileNameBufferSize, extraField, extraFieldBufferSize, szComment, commentBufferSize);</span>
+<span class="lineNum">     521 </span>            : }
+<span class="lineNum">     522 </span>            : 
+<span class="lineNum">     523 </span>            : /*
+<span class="lineNum">     524 </span>            :   Set the current file of the zipfile to the next file.
+<span class="lineNum">     525 </span>            :   return UNZ_OK if there is no problem
+<a name="526"><span class="lineNum">     526 </span>            :   return UNZ_END_OF_LIST_OF_FILE if the actual file was the latest.</a>
+<span class="lineNum">     527 </span>            : */
+<span class="lineNum">     528 </span>            : int unzGoToNextFile (file)
+<span class="lineNum">     529 </span>            : unzFile file;
+<span class="lineNum">     530 </span>            : {
+<span class="lineNum">     531 </span>            :         unz_s* s;
+<span class="lineNum">     532 </span>            :         int err;
+<span class="lineNum">     533 </span>            : 
+<span class="lineNum">     534 </span><span class="lineNoCov">          0 :         if (file==NULL)</span>
+<span class="lineNum">     535 </span><span class="lineNoCov">          0 :                 return UNZ_PARAMERROR;</span>
+<span class="lineNum">     536 </span><span class="lineNoCov">          0 :         s=(unz_s*)file;</span>
+<span class="lineNum">     537 </span><span class="lineNoCov">          0 :         if (!s-&gt;current_file_ok)</span>
+<span class="lineNum">     538 </span><span class="lineNoCov">          0 :                 return UNZ_END_OF_LIST_OF_FILE;</span>
+<span class="lineNum">     539 </span><span class="lineNoCov">          0 :         if (s-&gt;gi.number_entry != 0xffff)    /* 2^16 files overflow hack */</span>
+<span class="lineNum">     540 </span><span class="lineNoCov">          0 :                 if (s-&gt;num_file+1==s-&gt;gi.number_entry)</span>
+<span class="lineNum">     541 </span><span class="lineNoCov">          0 :                         return UNZ_END_OF_LIST_OF_FILE;</span>
+<span class="lineNum">     542 </span>            : 
+<span class="lineNum">     543 </span><span class="lineNoCov">          0 :         s-&gt;pos_in_central_dir += SIZECENTRALDIRITEM + s-&gt;cur_file_info.size_filename +</span>
+<span class="lineNum">     544 </span>            :                                  s-&gt;cur_file_info.size_file_extra + s-&gt;cur_file_info.size_file_comment ;
+<span class="lineNum">     545 </span><span class="lineNoCov">          0 :         s-&gt;num_file++;</span>
+<span class="lineNum">     546 </span><span class="lineNoCov">          0 :         err = unzlocal_GetCurrentFileInfoInternal(file,&amp;s-&gt;cur_file_info,</span>
+<span class="lineNum">     547 </span>            :                 &amp;s-&gt;cur_file_info_internal,
+<span class="lineNum">     548 </span>            :                 NULL,0,NULL,0,NULL,0);
+<span class="lineNum">     549 </span><span class="lineNoCov">          0 :         s-&gt;current_file_ok = (err == UNZ_OK);</span>
+<span class="lineNum">     550 </span><span class="lineNoCov">          0 :         return err;</span>
+<span class="lineNum">     551 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     552 </span>            : 
+<span class="lineNum">     553 </span>            : /*
+<span class="lineNum">     554 </span>            :   Set the current file of the zipfile to the first file.
+<a name="555"><span class="lineNum">     555 </span>            :   return UNZ_OK if there is no problem</a>
+<span class="lineNum">     556 </span>            : */
+<span class="lineNum">     557 </span>            : int unzGoToFirstFile (file)
+<span class="lineNum">     558 </span>            : unzFile file;
+<span class="lineNum">     559 </span>            : {
+<span class="lineNum">     560 </span>            :         int err=UNZ_OK;
+<span class="lineNum">     561 </span>            :         unz_s* s;
+<span class="lineNum">     562 </span><span class="lineNoCov">          0 :         if (file==NULL)</span>
+<span class="lineNum">     563 </span><span class="lineNoCov">          0 :                 return UNZ_PARAMERROR;</span>
+<span class="lineNum">     564 </span><span class="lineNoCov">          0 :         s=(unz_s*)file;</span>
+<span class="lineNum">     565 </span><span class="lineNoCov">          0 :         s-&gt;pos_in_central_dir=s-&gt;offset_central_dir;</span>
+<span class="lineNum">     566 </span><span class="lineNoCov">          0 :         s-&gt;num_file=0;</span>
+<span class="lineNum">     567 </span><span class="lineNoCov">          0 :         err=unzlocal_GetCurrentFileInfoInternal(file,&amp;s-&gt;cur_file_info,</span>
+<span class="lineNum">     568 </span>            :                                                 &amp;s-&gt;cur_file_info_internal,
+<span class="lineNum">     569 </span>            :                                                 NULL,0,NULL,0,NULL,0);
+<span class="lineNum">     570 </span><span class="lineNoCov">          0 :         s-&gt;current_file_ok = (err == UNZ_OK);</span>
+<span class="lineNum">     571 </span><span class="lineNoCov">          0 :         return err;</span>
+<a name="572"><span class="lineNum">     572 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     573 </span>            : 
+<span class="lineNum">     574 </span>            : int unzGetGlobalInfo (file,pglobal_info)
+<span class="lineNum">     575 </span>            : unzFile file;
+<span class="lineNum">     576 </span>            : unz_global_info *pglobal_info;
+<span class="lineNum">     577 </span>            : {
+<span class="lineNum">     578 </span>            :         unz_s* s;
+<span class="lineNum">     579 </span><span class="lineNoCov">          0 :         if (file==NULL)</span>
+<span class="lineNum">     580 </span><span class="lineNoCov">          0 :                 return UNZ_PARAMERROR;</span>
+<span class="lineNum">     581 </span><span class="lineNoCov">          0 :         s=(unz_s*)file;</span>
+<span class="lineNum">     582 </span><span class="lineNoCov">          0 :         *pglobal_info=s-&gt;gi;</span>
+<span class="lineNum">     583 </span><span class="lineNoCov">          0 :         return UNZ_OK;</span>
+<span class="lineNum">     584 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     585 </span>            : 
+<span class="lineNum">     586 </span>            : /*
+<span class="lineNum">     587 </span>            :   Close the file in zip opened with unzipOpenCurrentFile
+<a name="588"><span class="lineNum">     588 </span>            :   Return UNZ_CRCERROR if all the file was read but the CRC is not good</a>
+<span class="lineNum">     589 </span>            : */
+<span class="lineNum">     590 </span>            : int unzCloseCurrentFile (file)
+<span class="lineNum">     591 </span>            : unzFile file;
+<span class="lineNum">     592 </span>            : {
+<span class="lineNum">     593 </span>            :         int err=UNZ_OK;
+<span class="lineNum">     594 </span>            : 
+<span class="lineNum">     595 </span>            :         unz_s* s;
+<span class="lineNum">     596 </span>            :         file_in_zip_read_info_s* pfile_in_zip_read_info;
+<span class="lineNum">     597 </span><span class="lineNoCov">          0 :         if (file==NULL)</span>
+<span class="lineNum">     598 </span><span class="lineNoCov">          0 :                 return UNZ_PARAMERROR;</span>
+<span class="lineNum">     599 </span><span class="lineNoCov">          0 :         s=(unz_s*)file;</span>
+<span class="lineNum">     600 </span><span class="lineNoCov">          0 :         pfile_in_zip_read_info=s-&gt;pfile_in_zip_read;</span>
+<span class="lineNum">     601 </span>            : 
+<span class="lineNum">     602 </span><span class="lineNoCov">          0 :         if (pfile_in_zip_read_info==NULL)</span>
+<span class="lineNum">     603 </span><span class="lineNoCov">          0 :                 return UNZ_PARAMERROR;</span>
+<span class="lineNum">     604 </span>            : 
+<span class="lineNum">     605 </span>            : 
+<span class="lineNum">     606 </span><span class="lineNoCov">          0 :         if ((pfile_in_zip_read_info-&gt;rest_read_uncompressed == 0) &amp;&amp;</span>
+<span class="lineNum">     607 </span>            :                 (!pfile_in_zip_read_info-&gt;raw))
+<span class="lineNum">     608 </span>            :         {
+<span class="lineNum">     609 </span><span class="lineNoCov">          0 :                 if (pfile_in_zip_read_info-&gt;crc32 != pfile_in_zip_read_info-&gt;crc32_wait)</span>
+<span class="lineNum">     610 </span><span class="lineNoCov">          0 :                         err=UNZ_CRCERROR;</span>
+<span class="lineNum">     611 </span>            :         }
+<span class="lineNum">     612 </span>            : 
+<span class="lineNum">     613 </span>            : 
+<span class="lineNum">     614 </span><span class="lineNoCov">          0 :         TRYFREE(pfile_in_zip_read_info-&gt;read_buffer);</span>
+<span class="lineNum">     615 </span><span class="lineNoCov">          0 :         pfile_in_zip_read_info-&gt;read_buffer = NULL;</span>
+<span class="lineNum">     616 </span><span class="lineNoCov">          0 :         if (pfile_in_zip_read_info-&gt;stream_initialised)</span>
+<span class="lineNum">     617 </span><span class="lineNoCov">          0 :                 inflateEnd(&amp;pfile_in_zip_read_info-&gt;stream);</span>
+<span class="lineNum">     618 </span>            : 
+<span class="lineNum">     619 </span><span class="lineNoCov">          0 :         pfile_in_zip_read_info-&gt;stream_initialised = 0;</span>
+<span class="lineNum">     620 </span><span class="lineNoCov">          0 :         TRYFREE(pfile_in_zip_read_info);</span>
+<span class="lineNum">     621 </span>            : 
+<span class="lineNum">     622 </span><span class="lineNoCov">          0 :         s-&gt;pfile_in_zip_read=NULL;</span>
+<span class="lineNum">     623 </span>            : 
+<span class="lineNum">     624 </span><span class="lineNoCov">          0 :         return err;</span>
+<span class="lineNum">     625 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     626 </span>            : 
+<span class="lineNum">     627 </span>            : 
+<span class="lineNum">     628 </span>            : /*
+<span class="lineNum">     629 </span>            :   Open a Zip file. path contain the full pathname (by example,
+<span class="lineNum">     630 </span>            :      on a Windows NT computer &quot;c:\\test\\zlib114.zip&quot; or on an Unix computer
+<span class="lineNum">     631 </span>            :      &quot;zlib/zlib114.zip&quot;.
+<span class="lineNum">     632 </span>            :      If the zipfile cannot be opened (file doesn't exist or in not valid), the
+<span class="lineNum">     633 </span>            :        return value is NULL.
+<span class="lineNum">     634 </span>            :      Else, the return value is a unzFile Handle, usable with other function
+<a name="635"><span class="lineNum">     635 </span>            :        of this unzip package.</a>
+<span class="lineNum">     636 </span>            : */
+<span class="lineNum">     637 </span>            : extern unzFile ZEXPORT unzOpen2 (path, pzlib_filefunc_def)
+<span class="lineNum">     638 </span>            : const char *path;
+<span class="lineNum">     639 </span>            : zlib_filefunc_def* pzlib_filefunc_def;
+<span class="lineNum">     640 </span>            : {
+<span class="lineNum">     641 </span><span class="lineNoCov">          0 :         unz_s us;</span>
+<span class="lineNum">     642 </span>            :         unz_s *s;
+<span class="lineNum">     643 </span>            :         uLong central_pos,uL;
+<span class="lineNum">     644 </span>            : 
+<span class="lineNum">     645 </span>            :         uLong number_disk;          /* number of the current dist, used for
+<span class="lineNum">     646 </span>            :                                    spaning ZIP, unsupported, always 0*/
+<span class="lineNum">     647 </span>            :         uLong number_disk_with_CD;  /* number the the disk with central dir, used
+<span class="lineNum">     648 </span>            :                                    for spaning ZIP, unsupported, always 0*/
+<span class="lineNum">     649 </span>            :         uLong number_entry_CD;      /* total number of entries in
+<span class="lineNum">     650 </span>            :                                    the central dir
+<span class="lineNum">     651 </span>            :                                    (same than number_entry on nospan) */
+<span class="lineNum">     652 </span>            : 
+<span class="lineNum">     653 </span>            :         int err=UNZ_OK;
+<span class="lineNum">     654 </span>            : 
+<span class="lineNum">     655 </span><span class="lineNoCov">          0 :         if (pzlib_filefunc_def==NULL)</span>
+<span class="lineNum">     656 </span><span class="lineNoCov">          0 :                 fill_fopen_filefunc(&amp;us.z_filefunc);</span>
+<span class="lineNum">     657 </span>            :         else
+<span class="lineNum">     658 </span><span class="lineNoCov">          0 :                 us.z_filefunc = *pzlib_filefunc_def;</span>
+<span class="lineNum">     659 </span>            : 
+<span class="lineNum">     660 </span><span class="lineNoCov">          0 :         us.filestream= (*(us.z_filefunc.zopen_file))(us.z_filefunc.opaque,</span>
+<span class="lineNum">     661 </span>            :                        path,
+<span class="lineNum">     662 </span>            :                        ZLIB_FILEFUNC_MODE_READ |
+<span class="lineNum">     663 </span>            :                        ZLIB_FILEFUNC_MODE_EXISTING);
+<span class="lineNum">     664 </span><span class="lineNoCov">          0 :         if (us.filestream==NULL)</span>
+<span class="lineNum">     665 </span><span class="lineNoCov">          0 :                 return NULL;</span>
+<span class="lineNum">     666 </span>            : 
+<span class="lineNum">     667 </span><span class="lineNoCov">          0 :         central_pos = unzlocal_SearchCentralDir(&amp;us.z_filefunc,us.filestream);</span>
+<span class="lineNum">     668 </span><span class="lineNoCov">          0 :         if (central_pos==0)</span>
+<span class="lineNum">     669 </span><span class="lineNoCov">          0 :                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     670 </span>            : 
+<span class="lineNum">     671 </span><span class="lineNoCov">          0 :         if (ZSEEK(us.z_filefunc, us.filestream,</span>
+<span class="lineNum">     672 </span>            :                   central_pos,ZLIB_FILEFUNC_SEEK_SET)!=0)
+<span class="lineNum">     673 </span><span class="lineNoCov">          0 :                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     674 </span>            : 
+<span class="lineNum">     675 </span>            :         /* the signature, already checked */
+<span class="lineNum">     676 </span><span class="lineNoCov">          0 :         if (unzlocal_getLong(&amp;us.z_filefunc, us.filestream,&amp;uL)!=UNZ_OK)</span>
+<span class="lineNum">     677 </span><span class="lineNoCov">          0 :                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     678 </span>            : 
+<span class="lineNum">     679 </span>            :         /* number of this disk */
+<span class="lineNum">     680 </span><span class="lineNoCov">          0 :         if (unzlocal_getShort(&amp;us.z_filefunc, us.filestream,&amp;number_disk)!=UNZ_OK)</span>
+<span class="lineNum">     681 </span><span class="lineNoCov">          0 :                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     682 </span>            : 
+<span class="lineNum">     683 </span>            :         /* number of the disk with the start of the central directory */
+<span class="lineNum">     684 </span><span class="lineNoCov">          0 :         if (unzlocal_getShort(&amp;us.z_filefunc, us.filestream,&amp;number_disk_with_CD)!=UNZ_OK)</span>
+<span class="lineNum">     685 </span><span class="lineNoCov">          0 :                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     686 </span>            : 
+<span class="lineNum">     687 </span>            :         /* total number of entries in the central dir on this disk */
+<span class="lineNum">     688 </span><span class="lineNoCov">          0 :         if (unzlocal_getShort(&amp;us.z_filefunc, us.filestream,&amp;us.gi.number_entry)!=UNZ_OK)</span>
+<span class="lineNum">     689 </span><span class="lineNoCov">          0 :                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     690 </span>            : 
+<span class="lineNum">     691 </span>            :         /* total number of entries in the central dir */
+<span class="lineNum">     692 </span><span class="lineNoCov">          0 :         if (unzlocal_getShort(&amp;us.z_filefunc, us.filestream,&amp;number_entry_CD)!=UNZ_OK)</span>
+<span class="lineNum">     693 </span><span class="lineNoCov">          0 :                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     694 </span>            : 
+<span class="lineNum">     695 </span><span class="lineNoCov">          0 :         if ((number_entry_CD!=us.gi.number_entry) ||</span>
+<span class="lineNum">     696 </span>            :                 (number_disk_with_CD!=0) ||
+<span class="lineNum">     697 </span>            :                 (number_disk!=0))
+<span class="lineNum">     698 </span><span class="lineNoCov">          0 :                 err=UNZ_BADZIPFILE;</span>
+<span class="lineNum">     699 </span>            : 
+<span class="lineNum">     700 </span>            :         /* size of the central directory */
+<span class="lineNum">     701 </span><span class="lineNoCov">          0 :         if (unzlocal_getLong(&amp;us.z_filefunc, us.filestream,&amp;us.size_central_dir)!=UNZ_OK)</span>
+<span class="lineNum">     702 </span><span class="lineNoCov">          0 :                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     703 </span>            : 
+<span class="lineNum">     704 </span>            :         /* offset of start of central directory with respect to the
+<span class="lineNum">     705 </span>            :               starting disk number */
+<span class="lineNum">     706 </span><span class="lineNoCov">          0 :         if (unzlocal_getLong(&amp;us.z_filefunc, us.filestream,&amp;us.offset_central_dir)!=UNZ_OK)</span>
+<span class="lineNum">     707 </span><span class="lineNoCov">          0 :                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     708 </span>            : 
+<span class="lineNum">     709 </span>            :         /* zipfile comment length */
+<span class="lineNum">     710 </span><span class="lineNoCov">          0 :         if (unzlocal_getShort(&amp;us.z_filefunc, us.filestream,&amp;us.gi.size_comment)!=UNZ_OK)</span>
+<span class="lineNum">     711 </span><span class="lineNoCov">          0 :                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     712 </span>            : 
+<span class="lineNum">     713 </span><span class="lineNoCov">          0 :         if ((central_pos&lt;us.offset_central_dir+us.size_central_dir) &amp;&amp;</span>
+<span class="lineNum">     714 </span>            :                 (err==UNZ_OK))
+<span class="lineNum">     715 </span><span class="lineNoCov">          0 :                 err=UNZ_BADZIPFILE;</span>
+<span class="lineNum">     716 </span>            : 
+<span class="lineNum">     717 </span><span class="lineNoCov">          0 :         if (err!=UNZ_OK)</span>
+<span class="lineNum">     718 </span>            :         {
+<span class="lineNum">     719 </span><span class="lineNoCov">          0 :                 ZCLOSE(us.z_filefunc, us.filestream);</span>
+<span class="lineNum">     720 </span><span class="lineNoCov">          0 :                 return NULL;</span>
+<span class="lineNum">     721 </span>            :         }
+<span class="lineNum">     722 </span>            : 
+<span class="lineNum">     723 </span><span class="lineNoCov">          0 :         us.byte_before_the_zipfile = central_pos -</span>
+<span class="lineNum">     724 </span>            :                                      (us.offset_central_dir+us.size_central_dir);
+<span class="lineNum">     725 </span><span class="lineNoCov">          0 :         us.central_pos = central_pos;</span>
+<span class="lineNum">     726 </span><span class="lineNoCov">          0 :         us.pfile_in_zip_read = NULL;</span>
+<span class="lineNum">     727 </span><span class="lineNoCov">          0 :         us.encrypted = 0;</span>
+<span class="lineNum">     728 </span>            : 
+<span class="lineNum">     729 </span>            : 
+<span class="lineNum">     730 </span><span class="lineNoCov">          0 :         s=(unz_s*)ALLOC(sizeof(unz_s));</span>
+<span class="lineNum">     731 </span><span class="lineNoCov">          0 :         *s=us;</span>
+<span class="lineNum">     732 </span><span class="lineNoCov">          0 :         unzGoToFirstFile((unzFile)s);</span>
+<span class="lineNum">     733 </span><span class="lineNoCov">          0 :         return (unzFile)s;</span>
+<span class="lineNum">     734 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     735 </span>            : 
+<span class="lineNum">     736 </span>            : 
+<span class="lineNum">     737 </span>            : /*
+<span class="lineNum">     738 </span>            :   Read bytes from the current file.
+<span class="lineNum">     739 </span>            :   buf contain buffer where data must be copied
+<span class="lineNum">     740 </span>            :   len the size of buf.
+<span class="lineNum">     741 </span>            : 
+<span class="lineNum">     742 </span>            :   return the number of byte copied if somes bytes are copied
+<span class="lineNum">     743 </span>            :   return 0 if the end of file was reached
+<span class="lineNum">     744 </span>            :   return &lt;0 with error code if there is an error
+<a name="745"><span class="lineNum">     745 </span>            :     (UNZ_ERRNO for IO error, or zLib error for uncompress error)</a>
+<span class="lineNum">     746 </span>            : */
+<span class="lineNum">     747 </span>            : int unzReadCurrentFile  (file, buf, len)
+<span class="lineNum">     748 </span>            : unzFile file;
+<span class="lineNum">     749 </span>            : voidp buf;
+<span class="lineNum">     750 </span>            : unsigned len;
+<span class="lineNum">     751 </span>            : {
+<span class="lineNum">     752 </span>            :         int err=UNZ_OK;
+<span class="lineNum">     753 </span>            :         uInt iRead = 0;
+<span class="lineNum">     754 </span>            :         unz_s* s;
+<span class="lineNum">     755 </span>            :         file_in_zip_read_info_s* pfile_in_zip_read_info;
+<span class="lineNum">     756 </span><span class="lineNoCov">          0 :         if (file==NULL)</span>
+<span class="lineNum">     757 </span><span class="lineNoCov">          0 :                 return UNZ_PARAMERROR;</span>
+<span class="lineNum">     758 </span><span class="lineNoCov">          0 :         s=(unz_s*)file;</span>
+<span class="lineNum">     759 </span><span class="lineNoCov">          0 :         pfile_in_zip_read_info=s-&gt;pfile_in_zip_read;</span>
+<span class="lineNum">     760 </span>            : 
+<span class="lineNum">     761 </span><span class="lineNoCov">          0 :         if (pfile_in_zip_read_info==NULL)</span>
+<span class="lineNum">     762 </span><span class="lineNoCov">          0 :                 return UNZ_PARAMERROR;</span>
+<span class="lineNum">     763 </span>            : 
+<span class="lineNum">     764 </span>            : 
+<span class="lineNum">     765 </span><span class="lineNoCov">          0 :         if (pfile_in_zip_read_info-&gt;read_buffer == NULL)</span>
+<span class="lineNum">     766 </span><span class="lineNoCov">          0 :                 return UNZ_END_OF_LIST_OF_FILE;</span>
+<span class="lineNum">     767 </span><span class="lineNoCov">          0 :         if (len==0)</span>
+<span class="lineNum">     768 </span><span class="lineNoCov">          0 :                 return 0;</span>
+<span class="lineNum">     769 </span>            : 
+<span class="lineNum">     770 </span><span class="lineNoCov">          0 :         pfile_in_zip_read_info-&gt;stream.next_out = (Bytef*)buf;</span>
+<span class="lineNum">     771 </span>            : 
+<span class="lineNum">     772 </span><span class="lineNoCov">          0 :         pfile_in_zip_read_info-&gt;stream.avail_out = (uInt)len;</span>
+<span class="lineNum">     773 </span>            : 
+<span class="lineNum">     774 </span><span class="lineNoCov">          0 :         if ((len&gt;pfile_in_zip_read_info-&gt;rest_read_uncompressed) &amp;&amp;</span>
+<span class="lineNum">     775 </span>            :                 (!(pfile_in_zip_read_info-&gt;raw)))
+<span class="lineNum">     776 </span><span class="lineNoCov">          0 :                 pfile_in_zip_read_info-&gt;stream.avail_out =</span>
+<span class="lineNum">     777 </span>            :                     (uInt)pfile_in_zip_read_info-&gt;rest_read_uncompressed;
+<span class="lineNum">     778 </span>            : 
+<span class="lineNum">     779 </span><span class="lineNoCov">          0 :         if ((len&gt;pfile_in_zip_read_info-&gt;rest_read_compressed+</span>
+<span class="lineNum">     780 </span>            :                 pfile_in_zip_read_info-&gt;stream.avail_in) &amp;&amp;
+<span class="lineNum">     781 </span>            :                 (pfile_in_zip_read_info-&gt;raw))
+<span class="lineNum">     782 </span><span class="lineNoCov">          0 :                 pfile_in_zip_read_info-&gt;stream.avail_out =</span>
+<span class="lineNum">     783 </span>            :                     (uInt)pfile_in_zip_read_info-&gt;rest_read_compressed+
+<span class="lineNum">     784 </span>            :                     pfile_in_zip_read_info-&gt;stream.avail_in;
+<span class="lineNum">     785 </span>            : 
+<span class="lineNum">     786 </span><span class="lineNoCov">          0 :         while (pfile_in_zip_read_info-&gt;stream.avail_out&gt;0)</span>
+<span class="lineNum">     787 </span>            :         {
+<span class="lineNum">     788 </span><span class="lineNoCov">          0 :                 if ((pfile_in_zip_read_info-&gt;stream.avail_in==0) &amp;&amp;</span>
+<span class="lineNum">     789 </span>            :                         (pfile_in_zip_read_info-&gt;rest_read_compressed&gt;0))
+<span class="lineNum">     790 </span>            :                 {
+<span class="lineNum">     791 </span>            :                         uInt uReadThis = UNZ_BUFSIZE;
+<span class="lineNum">     792 </span><span class="lineNoCov">          0 :                         if (pfile_in_zip_read_info-&gt;rest_read_compressed&lt;uReadThis)</span>
+<span class="lineNum">     793 </span><span class="lineNoCov">          0 :                                 uReadThis = (uInt)pfile_in_zip_read_info-&gt;rest_read_compressed;</span>
+<span class="lineNum">     794 </span><span class="lineNoCov">          0 :                         if (uReadThis == 0)</span>
+<span class="lineNum">     795 </span><span class="lineNoCov">          0 :                                 return UNZ_EOF;</span>
+<span class="lineNum">     796 </span><span class="lineNoCov">          0 :                         if (ZSEEK(pfile_in_zip_read_info-&gt;z_filefunc,</span>
+<span class="lineNum">     797 </span>            :                                   pfile_in_zip_read_info-&gt;filestream,
+<span class="lineNum">     798 </span>            :                                   pfile_in_zip_read_info-&gt;pos_in_zipfile +
+<span class="lineNum">     799 </span>            :                                   pfile_in_zip_read_info-&gt;byte_before_the_zipfile,
+<span class="lineNum">     800 </span>            :                                   ZLIB_FILEFUNC_SEEK_SET)!=0)
+<span class="lineNum">     801 </span><span class="lineNoCov">          0 :                                 return UNZ_ERRNO;</span>
+<span class="lineNum">     802 </span><span class="lineNoCov">          0 :                         if (ZREAD(pfile_in_zip_read_info-&gt;z_filefunc,</span>
+<span class="lineNum">     803 </span>            :                                   pfile_in_zip_read_info-&gt;filestream,
+<span class="lineNum">     804 </span>            :                                   pfile_in_zip_read_info-&gt;read_buffer,
+<span class="lineNum">     805 </span>            :                                   uReadThis)!=uReadThis)
+<span class="lineNum">     806 </span><span class="lineNoCov">          0 :                                 return UNZ_ERRNO;</span>
+<span class="lineNum">     807 </span>            : 
+<span class="lineNum">     808 </span><span class="lineNoCov">          0 :                         pfile_in_zip_read_info-&gt;pos_in_zipfile += uReadThis;</span>
+<span class="lineNum">     809 </span>            : 
+<span class="lineNum">     810 </span><span class="lineNoCov">          0 :                         pfile_in_zip_read_info-&gt;rest_read_compressed-=uReadThis;</span>
+<span class="lineNum">     811 </span>            : 
+<span class="lineNum">     812 </span><span class="lineNoCov">          0 :                         pfile_in_zip_read_info-&gt;stream.next_in =</span>
+<span class="lineNum">     813 </span>            :                             (Bytef*)pfile_in_zip_read_info-&gt;read_buffer;
+<span class="lineNum">     814 </span><span class="lineNoCov">          0 :                         pfile_in_zip_read_info-&gt;stream.avail_in = (uInt)uReadThis;</span>
+<span class="lineNum">     815 </span><span class="lineNoCov">          0 :                 }</span>
+<span class="lineNum">     816 </span>            : 
+<span class="lineNum">     817 </span><span class="lineNoCov">          0 :                 if ((pfile_in_zip_read_info-&gt;compression_method==0) || (pfile_in_zip_read_info-&gt;raw))</span>
+<span class="lineNum">     818 </span>            :                 {
+<span class="lineNum">     819 </span>            :                         uInt uDoCopy,i ;
+<span class="lineNum">     820 </span>            : 
+<span class="lineNum">     821 </span><span class="lineNoCov">          0 :                         if ((pfile_in_zip_read_info-&gt;stream.avail_in == 0) &amp;&amp;</span>
+<span class="lineNum">     822 </span>            :                                 (pfile_in_zip_read_info-&gt;rest_read_compressed == 0))
+<span class="lineNum">     823 </span><span class="lineNoCov">          0 :                                 return (iRead==0) ? UNZ_EOF : iRead;</span>
+<span class="lineNum">     824 </span>            : 
+<span class="lineNum">     825 </span><span class="lineNoCov">          0 :                         if (pfile_in_zip_read_info-&gt;stream.avail_out &lt;</span>
+<span class="lineNum">     826 </span>            :                                 pfile_in_zip_read_info-&gt;stream.avail_in)
+<span class="lineNum">     827 </span><span class="lineNoCov">          0 :                                 uDoCopy = pfile_in_zip_read_info-&gt;stream.avail_out ;</span>
+<span class="lineNum">     828 </span>            :                         else
+<span class="lineNum">     829 </span>            :                                 uDoCopy = pfile_in_zip_read_info-&gt;stream.avail_in ;
+<span class="lineNum">     830 </span>            : 
+<span class="lineNum">     831 </span><span class="lineNoCov">          0 :                         for (i=0; i&lt;uDoCopy; i++)</span>
+<span class="lineNum">     832 </span><span class="lineNoCov">          0 :                                 *(pfile_in_zip_read_info-&gt;stream.next_out+i) =</span>
+<span class="lineNum">     833 </span>            :                                     *(pfile_in_zip_read_info-&gt;stream.next_in+i);
+<span class="lineNum">     834 </span>            : 
+<span class="lineNum">     835 </span><span class="lineNoCov">          0 :                         pfile_in_zip_read_info-&gt;crc32 = crc32(pfile_in_zip_read_info-&gt;crc32,</span>
+<span class="lineNum">     836 </span>            :                                                               pfile_in_zip_read_info-&gt;stream.next_out,
+<span class="lineNum">     837 </span>            :                                                               uDoCopy);
+<span class="lineNum">     838 </span><span class="lineNoCov">          0 :                         pfile_in_zip_read_info-&gt;rest_read_uncompressed-=uDoCopy;</span>
+<span class="lineNum">     839 </span><span class="lineNoCov">          0 :                         pfile_in_zip_read_info-&gt;stream.avail_in -= uDoCopy;</span>
+<span class="lineNum">     840 </span><span class="lineNoCov">          0 :                         pfile_in_zip_read_info-&gt;stream.avail_out -= uDoCopy;</span>
+<span class="lineNum">     841 </span><span class="lineNoCov">          0 :                         pfile_in_zip_read_info-&gt;stream.next_out += uDoCopy;</span>
+<span class="lineNum">     842 </span><span class="lineNoCov">          0 :                         pfile_in_zip_read_info-&gt;stream.next_in += uDoCopy;</span>
+<span class="lineNum">     843 </span><span class="lineNoCov">          0 :                         pfile_in_zip_read_info-&gt;stream.total_out += uDoCopy;</span>
+<span class="lineNum">     844 </span><span class="lineNoCov">          0 :                         iRead += uDoCopy;</span>
+<span class="lineNum">     845 </span><span class="lineNoCov">          0 :                 }</span>
+<span class="lineNum">     846 </span>            :                 else
+<span class="lineNum">     847 </span>            :                 {
+<span class="lineNum">     848 </span>            :                         uLong uTotalOutBefore,uTotalOutAfter;
+<span class="lineNum">     849 </span>            :                         const Bytef *bufBefore;
+<span class="lineNum">     850 </span>            :                         uLong uOutThis;
+<span class="lineNum">     851 </span>            :                         int flush=Z_SYNC_FLUSH;
+<span class="lineNum">     852 </span>            : 
+<span class="lineNum">     853 </span><span class="lineNoCov">          0 :                         uTotalOutBefore = pfile_in_zip_read_info-&gt;stream.total_out;</span>
+<span class="lineNum">     854 </span><span class="lineNoCov">          0 :                         bufBefore = pfile_in_zip_read_info-&gt;stream.next_out;</span>
+<span class="lineNum">     855 </span>            : 
+<span class="lineNum">     856 </span>            :                         /*
+<span class="lineNum">     857 </span>            :                         if ((pfile_in_zip_read_info-&gt;rest_read_uncompressed ==
+<span class="lineNum">     858 </span>            :                                  pfile_in_zip_read_info-&gt;stream.avail_out) &amp;&amp;
+<span class="lineNum">     859 </span>            :                             (pfile_in_zip_read_info-&gt;rest_read_compressed == 0))
+<span class="lineNum">     860 </span>            :                             flush = Z_FINISH;
+<span class="lineNum">     861 </span>            :                         */
+<span class="lineNum">     862 </span><span class="lineNoCov">          0 :                         err=inflate(&amp;pfile_in_zip_read_info-&gt;stream,flush);</span>
+<span class="lineNum">     863 </span>            : 
+<span class="lineNum">     864 </span><span class="lineNoCov">          0 :                         if ((err&gt;=0) &amp;&amp; (pfile_in_zip_read_info-&gt;stream.msg!=NULL))</span>
+<span class="lineNum">     865 </span><span class="lineNoCov">          0 :                                 err = Z_DATA_ERROR;</span>
+<span class="lineNum">     866 </span>            : 
+<span class="lineNum">     867 </span><span class="lineNoCov">          0 :                         uTotalOutAfter = pfile_in_zip_read_info-&gt;stream.total_out;</span>
+<span class="lineNum">     868 </span><span class="lineNoCov">          0 :                         uOutThis = uTotalOutAfter-uTotalOutBefore;</span>
+<span class="lineNum">     869 </span>            : 
+<span class="lineNum">     870 </span>            :                         pfile_in_zip_read_info-&gt;crc32 =
+<span class="lineNum">     871 </span><span class="lineNoCov">          0 :                             crc32(pfile_in_zip_read_info-&gt;crc32,bufBefore,</span>
+<span class="lineNum">     872 </span>            :                                   (uInt)(uOutThis));
+<span class="lineNum">     873 </span>            : 
+<span class="lineNum">     874 </span><span class="lineNoCov">          0 :                         pfile_in_zip_read_info-&gt;rest_read_uncompressed -=</span>
+<span class="lineNum">     875 </span>            :                             uOutThis;
+<span class="lineNum">     876 </span>            : 
+<span class="lineNum">     877 </span><span class="lineNoCov">          0 :                         iRead += (uInt)(uTotalOutAfter - uTotalOutBefore);</span>
+<span class="lineNum">     878 </span>            : 
+<span class="lineNum">     879 </span><span class="lineNoCov">          0 :                         if (err==Z_STREAM_END)</span>
+<span class="lineNum">     880 </span><span class="lineNoCov">          0 :                                 return (iRead==0) ? UNZ_EOF : iRead;</span>
+<span class="lineNum">     881 </span><span class="lineNoCov">          0 :                         if (err!=Z_OK)</span>
+<span class="lineNum">     882 </span>            :                                 break;
+<span class="lineNum">     883 </span>            :                 }
+<span class="lineNum">     884 </span>            :         }
+<span class="lineNum">     885 </span>            : 
+<span class="lineNum">     886 </span><span class="lineNoCov">          0 :         if (err==Z_OK)</span>
+<span class="lineNum">     887 </span><span class="lineNoCov">          0 :                 return iRead;</span>
+<span class="lineNum">     888 </span><span class="lineNoCov">          0 :         return err;</span>
+<span class="lineNum">     889 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     890 </span>            : 
+<span class="lineNum">     891 </span>            : /*
+<span class="lineNum">     892 </span>            :   Read the local header of the current zipfile
+<span class="lineNum">     893 </span>            :   Check the coherency of the local header and info in the end of central
+<span class="lineNum">     894 </span>            :         directory about this file
+<span class="lineNum">     895 </span>            :   store in *piSizeVar the size of extra info in local header
+<a name="896"><span class="lineNum">     896 </span>            :         (filename and size of extra field data)</a>
+<span class="lineNum">     897 </span>            : */
+<span class="lineNum">     898 </span>            : int unzlocal_CheckCurrentFileCoherencyHeader (s,piSizeVar,
+<span class="lineNum">     899 </span>            :         poffset_local_extrafield,
+<span class="lineNum">     900 </span>            :         psize_local_extrafield)
+<span class="lineNum">     901 </span>            : unz_s* s;
+<span class="lineNum">     902 </span>            : uInt* piSizeVar;
+<span class="lineNum">     903 </span>            : uLong *poffset_local_extrafield;
+<span class="lineNum">     904 </span>            : uInt  *psize_local_extrafield;
+<span class="lineNum">     905 </span>            : {
+<span class="lineNum">     906 </span>            :         uLong uMagic,uData,uFlags;
+<span class="lineNum">     907 </span>            :         uLong size_filename;
+<span class="lineNum">     908 </span>            :         uLong size_extra_field;
+<span class="lineNum">     909 </span>            :         int err=UNZ_OK;
+<span class="lineNum">     910 </span>            : 
+<span class="lineNum">     911 </span><span class="lineNoCov">          0 :         *piSizeVar = 0;</span>
+<span class="lineNum">     912 </span><span class="lineNoCov">          0 :         *poffset_local_extrafield = 0;</span>
+<span class="lineNum">     913 </span><span class="lineNoCov">          0 :         *psize_local_extrafield = 0;</span>
+<span class="lineNum">     914 </span>            : 
+<span class="lineNum">     915 </span><span class="lineNoCov">          0 :         if (ZSEEK(s-&gt;z_filefunc, s-&gt;filestream,s-&gt;cur_file_info_internal.offset_curfile +</span>
+<span class="lineNum">     916 </span>            :                   s-&gt;byte_before_the_zipfile,ZLIB_FILEFUNC_SEEK_SET)!=0)
+<span class="lineNum">     917 </span><span class="lineNoCov">          0 :                 return UNZ_ERRNO;</span>
+<span class="lineNum">     918 </span>            : 
+<span class="lineNum">     919 </span>            : 
+<span class="lineNum">     920 </span><span class="lineNoCov">          0 :         if (err==UNZ_OK) {</span>
+<span class="lineNum">     921 </span><span class="lineNoCov">          0 :                 if (unzlocal_getLong(&amp;s-&gt;z_filefunc, s-&gt;filestream,&amp;uMagic) != UNZ_OK)</span>
+<span class="lineNum">     922 </span><span class="lineNoCov">          0 :                         err=UNZ_ERRNO;</span>
+<span class="lineNum">     923 </span><span class="lineNoCov">          0 :                 else if (uMagic!=0x04034b50)</span>
+<span class="lineNum">     924 </span><span class="lineNoCov">          0 :                         err=UNZ_BADZIPFILE;</span>
+<span class="lineNum">     925 </span>            :         }
+<span class="lineNum">     926 </span>            : 
+<span class="lineNum">     927 </span><span class="lineNoCov">          0 :         if (unzlocal_getShort(&amp;s-&gt;z_filefunc, s-&gt;filestream,&amp;uData) != UNZ_OK)</span>
+<span class="lineNum">     928 </span><span class="lineNoCov">          0 :                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     929 </span>            :         /*
+<span class="lineNum">     930 </span>            :             else if ((err==UNZ_OK) &amp;&amp; (uData!=s-&gt;cur_file_info.wVersion))
+<span class="lineNum">     931 </span>            :                 err=UNZ_BADZIPFILE;
+<span class="lineNum">     932 </span>            :         */
+<span class="lineNum">     933 </span><span class="lineNoCov">          0 :         if (unzlocal_getShort(&amp;s-&gt;z_filefunc, s-&gt;filestream,&amp;uFlags) != UNZ_OK)</span>
+<span class="lineNum">     934 </span><span class="lineNoCov">          0 :                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     935 </span>            : 
+<span class="lineNum">     936 </span><span class="lineNoCov">          0 :         if (unzlocal_getShort(&amp;s-&gt;z_filefunc, s-&gt;filestream,&amp;uData) != UNZ_OK)</span>
+<span class="lineNum">     937 </span><span class="lineNoCov">          0 :                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     938 </span><span class="lineNoCov">          0 :         else if ((err==UNZ_OK) &amp;&amp; (uData!=s-&gt;cur_file_info.compression_method))</span>
+<span class="lineNum">     939 </span><span class="lineNoCov">          0 :                 err=UNZ_BADZIPFILE;</span>
+<span class="lineNum">     940 </span>            : 
+<span class="lineNum">     941 </span><span class="lineNoCov">          0 :         if ((err==UNZ_OK) &amp;&amp; (s-&gt;cur_file_info.compression_method!=0) &amp;&amp;</span>
+<span class="lineNum">     942 </span>            :                 (s-&gt;cur_file_info.compression_method!=Z_DEFLATED))
+<span class="lineNum">     943 </span><span class="lineNoCov">          0 :                 err=UNZ_BADZIPFILE;</span>
+<span class="lineNum">     944 </span>            : 
+<span class="lineNum">     945 </span><span class="lineNoCov">          0 :         if (unzlocal_getLong(&amp;s-&gt;z_filefunc, s-&gt;filestream,&amp;uData) != UNZ_OK) /* date/time */</span>
+<span class="lineNum">     946 </span><span class="lineNoCov">          0 :                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     947 </span>            : 
+<span class="lineNum">     948 </span><span class="lineNoCov">          0 :         if (unzlocal_getLong(&amp;s-&gt;z_filefunc, s-&gt;filestream,&amp;uData) != UNZ_OK) /* crc */</span>
+<span class="lineNum">     949 </span><span class="lineNoCov">          0 :                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     950 </span><span class="lineNoCov">          0 :         else if ((err==UNZ_OK) &amp;&amp; (uData!=s-&gt;cur_file_info.crc) &amp;&amp;</span>
+<span class="lineNum">     951 </span>            :                  ((uFlags &amp; 8)==0))
+<span class="lineNum">     952 </span><span class="lineNoCov">          0 :                 err=UNZ_BADZIPFILE;</span>
+<span class="lineNum">     953 </span>            : 
+<span class="lineNum">     954 </span><span class="lineNoCov">          0 :         if (unzlocal_getLong(&amp;s-&gt;z_filefunc, s-&gt;filestream,&amp;uData) != UNZ_OK) /* size compr */</span>
+<span class="lineNum">     955 </span><span class="lineNoCov">          0 :                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     956 </span><span class="lineNoCov">          0 :         else if ((err==UNZ_OK) &amp;&amp; (uData!=s-&gt;cur_file_info.compressed_size) &amp;&amp;</span>
+<span class="lineNum">     957 </span>            :                  ((uFlags &amp; 8)==0))
+<span class="lineNum">     958 </span><span class="lineNoCov">          0 :                 err=UNZ_BADZIPFILE;</span>
+<span class="lineNum">     959 </span>            : 
+<span class="lineNum">     960 </span><span class="lineNoCov">          0 :         if (unzlocal_getLong(&amp;s-&gt;z_filefunc, s-&gt;filestream,&amp;uData) != UNZ_OK) /* size uncompr */</span>
+<span class="lineNum">     961 </span><span class="lineNoCov">          0 :                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     962 </span><span class="lineNoCov">          0 :         else if ((err==UNZ_OK) &amp;&amp; (uData!=s-&gt;cur_file_info.uncompressed_size) &amp;&amp;</span>
+<span class="lineNum">     963 </span>            :                  ((uFlags &amp; 8)==0))
+<span class="lineNum">     964 </span><span class="lineNoCov">          0 :                 err=UNZ_BADZIPFILE;</span>
+<span class="lineNum">     965 </span>            : 
+<span class="lineNum">     966 </span>            : 
+<span class="lineNum">     967 </span><span class="lineNoCov">          0 :         if (unzlocal_getShort(&amp;s-&gt;z_filefunc, s-&gt;filestream,&amp;size_filename) != UNZ_OK)</span>
+<span class="lineNum">     968 </span><span class="lineNoCov">          0 :                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     969 </span><span class="lineNoCov">          0 :         else if ((err==UNZ_OK) &amp;&amp; (size_filename!=s-&gt;cur_file_info.size_filename))</span>
+<span class="lineNum">     970 </span><span class="lineNoCov">          0 :                 err=UNZ_BADZIPFILE;</span>
+<span class="lineNum">     971 </span>            : 
+<span class="lineNum">     972 </span><span class="lineNoCov">          0 :         *piSizeVar += (uInt)size_filename;</span>
+<span class="lineNum">     973 </span>            : 
+<span class="lineNum">     974 </span><span class="lineNoCov">          0 :         if (unzlocal_getShort(&amp;s-&gt;z_filefunc, s-&gt;filestream,&amp;size_extra_field) != UNZ_OK)</span>
+<span class="lineNum">     975 </span><span class="lineNoCov">          0 :                 err=UNZ_ERRNO;</span>
+<span class="lineNum">     976 </span><span class="lineNoCov">          0 :         *poffset_local_extrafield= s-&gt;cur_file_info_internal.offset_curfile +</span>
+<span class="lineNum">     977 </span>            :                                    SIZEZIPLOCALHEADER + size_filename;
+<span class="lineNum">     978 </span><span class="lineNoCov">          0 :         *psize_local_extrafield = (uInt)size_extra_field;</span>
+<span class="lineNum">     979 </span>            : 
+<span class="lineNum">     980 </span><span class="lineNoCov">          0 :         *piSizeVar += (uInt)size_extra_field;</span>
+<span class="lineNum">     981 </span>            : 
+<span class="lineNum">     982 </span><span class="lineNoCov">          0 :         return err;</span>
+<span class="lineNum">     983 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     984 </span>            : 
+<span class="lineNum">     985 </span>            : /*
+<span class="lineNum">     986 </span>            :   Open for reading data the current file in the zipfile.
+<a name="987"><span class="lineNum">     987 </span>            :   If there is no error and the file is opened, the return value is UNZ_OK.</a>
+<span class="lineNum">     988 </span>            : */
+<span class="lineNum">     989 </span>            : int unzOpenCurrentFile3 (file, method, level, raw, password)
+<span class="lineNum">     990 </span>            : unzFile file;
+<span class="lineNum">     991 </span>            : int* method;
+<span class="lineNum">     992 </span>            : int* level;
+<span class="lineNum">     993 </span>            : int raw;
+<span class="lineNum">     994 </span>            : const char* password;
+<span class="lineNum">     995 </span>            : {
+<span class="lineNum">     996 </span>            :         int err=UNZ_OK;
+<span class="lineNum">     997 </span>            :         uInt iSizeVar;
+<span class="lineNum">     998 </span>            :         unz_s* s;
+<span class="lineNum">     999 </span>            :         file_in_zip_read_info_s* pfile_in_zip_read_info;
+<span class="lineNum">    1000 </span>            :         uLong offset_local_extrafield;  /* offset of the local extra field */
+<span class="lineNum">    1001 </span>            :         uInt  size_local_extrafield;    /* size of the local extra field */
+<span class="lineNum">    1002 </span>            : 
+<span class="lineNum">    1003 </span><span class="lineNoCov">          0 :         if (password != NULL)</span>
+<span class="lineNum">    1004 </span><span class="lineNoCov">          0 :                 return UNZ_PARAMERROR;</span>
+<span class="lineNum">    1005 </span>            : 
+<span class="lineNum">    1006 </span><span class="lineNoCov">          0 :         if (file==NULL)</span>
+<span class="lineNum">    1007 </span><span class="lineNoCov">          0 :                 return UNZ_PARAMERROR;</span>
+<span class="lineNum">    1008 </span><span class="lineNoCov">          0 :         s=(unz_s*)file;</span>
+<span class="lineNum">    1009 </span><span class="lineNoCov">          0 :         if (!s-&gt;current_file_ok)</span>
+<span class="lineNum">    1010 </span><span class="lineNoCov">          0 :                 return UNZ_PARAMERROR;</span>
+<span class="lineNum">    1011 </span>            : 
+<span class="lineNum">    1012 </span><span class="lineNoCov">          0 :         if (s-&gt;pfile_in_zip_read != NULL)</span>
+<span class="lineNum">    1013 </span><span class="lineNoCov">          0 :                 unzCloseCurrentFile(file);</span>
+<span class="lineNum">    1014 </span>            : 
+<span class="lineNum">    1015 </span><span class="lineNoCov">          0 :         if (unzlocal_CheckCurrentFileCoherencyHeader(s,&amp;iSizeVar,</span>
+<span class="lineNum">    1016 </span>            :                 &amp;offset_local_extrafield,&amp;size_local_extrafield)!=UNZ_OK)
+<span class="lineNum">    1017 </span><span class="lineNoCov">          0 :                 return UNZ_BADZIPFILE;</span>
+<span class="lineNum">    1018 </span>            : 
+<span class="lineNum">    1019 </span>            :         pfile_in_zip_read_info = (file_in_zip_read_info_s*)
+<span class="lineNum">    1020 </span><span class="lineNoCov">          0 :                                  ALLOC(sizeof(file_in_zip_read_info_s));</span>
+<span class="lineNum">    1021 </span><span class="lineNoCov">          0 :         if (pfile_in_zip_read_info==NULL)</span>
+<span class="lineNum">    1022 </span><span class="lineNoCov">          0 :                 return UNZ_INTERNALERROR;</span>
+<span class="lineNum">    1023 </span>            : 
+<span class="lineNum">    1024 </span><span class="lineNoCov">          0 :         pfile_in_zip_read_info-&gt;read_buffer=(char*)ALLOC(UNZ_BUFSIZE);</span>
+<span class="lineNum">    1025 </span><span class="lineNoCov">          0 :         pfile_in_zip_read_info-&gt;offset_local_extrafield = offset_local_extrafield;</span>
+<span class="lineNum">    1026 </span><span class="lineNoCov">          0 :         pfile_in_zip_read_info-&gt;size_local_extrafield = size_local_extrafield;</span>
+<span class="lineNum">    1027 </span><span class="lineNoCov">          0 :         pfile_in_zip_read_info-&gt;pos_local_extrafield=0;</span>
+<span class="lineNum">    1028 </span><span class="lineNoCov">          0 :         pfile_in_zip_read_info-&gt;raw=raw;</span>
+<span class="lineNum">    1029 </span>            : 
+<span class="lineNum">    1030 </span><span class="lineNoCov">          0 :         if (pfile_in_zip_read_info-&gt;read_buffer==NULL)</span>
+<span class="lineNum">    1031 </span>            :         {
+<span class="lineNum">    1032 </span><span class="lineNoCov">          0 :                 TRYFREE(pfile_in_zip_read_info);</span>
+<span class="lineNum">    1033 </span><span class="lineNoCov">          0 :                 return UNZ_INTERNALERROR;</span>
+<span class="lineNum">    1034 </span>            :         }
+<span class="lineNum">    1035 </span>            : 
+<span class="lineNum">    1036 </span><span class="lineNoCov">          0 :         pfile_in_zip_read_info-&gt;stream_initialised=0;</span>
+<span class="lineNum">    1037 </span>            : 
+<span class="lineNum">    1038 </span><span class="lineNoCov">          0 :         if (method!=NULL)</span>
+<span class="lineNum">    1039 </span><span class="lineNoCov">          0 :                 *method = (int)s-&gt;cur_file_info.compression_method;</span>
+<span class="lineNum">    1040 </span>            : 
+<span class="lineNum">    1041 </span><span class="lineNoCov">          0 :         if (level!=NULL)</span>
+<span class="lineNum">    1042 </span>            :         {
+<span class="lineNum">    1043 </span><span class="lineNoCov">          0 :                 *level = 6;</span>
+<span class="lineNum">    1044 </span><span class="lineNoCov">          0 :                 switch (s-&gt;cur_file_info.flag &amp; 0x06)</span>
+<span class="lineNum">    1045 </span>            :                 {
+<span class="lineNum">    1046 </span>            :                 case 6 :
+<span class="lineNum">    1047 </span><span class="lineNoCov">          0 :                         *level = 1;</span>
+<span class="lineNum">    1048 </span><span class="lineNoCov">          0 :                         break;</span>
+<span class="lineNum">    1049 </span>            :                 case 4 :
+<span class="lineNum">    1050 </span><span class="lineNoCov">          0 :                         *level = 2;</span>
+<span class="lineNum">    1051 </span><span class="lineNoCov">          0 :                         break;</span>
+<span class="lineNum">    1052 </span>            :                 case 2 :
+<span class="lineNum">    1053 </span><span class="lineNoCov">          0 :                         *level = 9;</span>
+<span class="lineNum">    1054 </span><span class="lineNoCov">          0 :                         break;</span>
+<span class="lineNum">    1055 </span>            :                 }
+<span class="lineNum">    1056 </span>            :         }
+<span class="lineNum">    1057 </span>            : 
+<span class="lineNum">    1058 </span><span class="lineNoCov">          0 :         if ((s-&gt;cur_file_info.compression_method!=0) &amp;&amp; (s-&gt;cur_file_info.compression_method!=Z_DEFLATED)) {</span>
+<span class="lineNum">    1059 </span><span class="lineNoCov">          0 :                 TRYFREE(pfile_in_zip_read_info);</span>
+<span class="lineNum">    1060 </span><span class="lineNoCov">          0 :                 return UNZ_BADZIPFILE;</span>
+<span class="lineNum">    1061 </span>            :         }
+<span class="lineNum">    1062 </span>            : 
+<span class="lineNum">    1063 </span><span class="lineNoCov">          0 :         pfile_in_zip_read_info-&gt;crc32_wait=s-&gt;cur_file_info.crc;</span>
+<span class="lineNum">    1064 </span><span class="lineNoCov">          0 :         pfile_in_zip_read_info-&gt;crc32=0;</span>
+<span class="lineNum">    1065 </span><span class="lineNoCov">          0 :         pfile_in_zip_read_info-&gt;compression_method =</span>
+<span class="lineNum">    1066 </span>            :             s-&gt;cur_file_info.compression_method;
+<span class="lineNum">    1067 </span><span class="lineNoCov">          0 :         pfile_in_zip_read_info-&gt;filestream=s-&gt;filestream;</span>
+<span class="lineNum">    1068 </span><span class="lineNoCov">          0 :         pfile_in_zip_read_info-&gt;z_filefunc=s-&gt;z_filefunc;</span>
+<span class="lineNum">    1069 </span><span class="lineNoCov">          0 :         pfile_in_zip_read_info-&gt;byte_before_the_zipfile=s-&gt;byte_before_the_zipfile;</span>
+<span class="lineNum">    1070 </span>            : 
+<span class="lineNum">    1071 </span><span class="lineNoCov">          0 :         pfile_in_zip_read_info-&gt;stream.total_out = 0;</span>
+<span class="lineNum">    1072 </span>            : 
+<span class="lineNum">    1073 </span><span class="lineNoCov">          0 :         if ((s-&gt;cur_file_info.compression_method==Z_DEFLATED) &amp;&amp;</span>
+<span class="lineNum">    1074 </span>            :                 (!raw))
+<span class="lineNum">    1075 </span>            :         {
+<span class="lineNum">    1076 </span><span class="lineNoCov">          0 :                 pfile_in_zip_read_info-&gt;stream.zalloc = (alloc_func)0;</span>
+<span class="lineNum">    1077 </span><span class="lineNoCov">          0 :                 pfile_in_zip_read_info-&gt;stream.zfree = (free_func)0;</span>
+<span class="lineNum">    1078 </span><span class="lineNoCov">          0 :                 pfile_in_zip_read_info-&gt;stream.opaque = (voidpf)0;</span>
+<span class="lineNum">    1079 </span><span class="lineNoCov">          0 :                 pfile_in_zip_read_info-&gt;stream.next_in = (voidpf)0;</span>
+<span class="lineNum">    1080 </span><span class="lineNoCov">          0 :                 pfile_in_zip_read_info-&gt;stream.avail_in = 0;</span>
+<span class="lineNum">    1081 </span>            : 
+<span class="lineNum">    1082 </span><span class="lineNoCov">          0 :                 err=inflateInit2(&amp;pfile_in_zip_read_info-&gt;stream, -MAX_WBITS);</span>
+<span class="lineNum">    1083 </span><span class="lineNoCov">          0 :                 if (err == Z_OK)</span>
+<span class="lineNum">    1084 </span><span class="lineNoCov">          0 :                         pfile_in_zip_read_info-&gt;stream_initialised=1;</span>
+<span class="lineNum">    1085 </span>            :                 else
+<span class="lineNum">    1086 </span>            :                 {
+<span class="lineNum">    1087 </span><span class="lineNoCov">          0 :                         TRYFREE(pfile_in_zip_read_info);</span>
+<span class="lineNum">    1088 </span><span class="lineNoCov">          0 :                         return err;</span>
+<span class="lineNum">    1089 </span>            :                 }
+<span class="lineNum">    1090 </span>            :                 /* windowBits is passed &lt; 0 to tell that there is no zlib header.
+<span class="lineNum">    1091 </span>            :                  * Note that in this case inflate *requires* an extra &quot;dummy&quot; byte
+<span class="lineNum">    1092 </span>            :                  * after the compressed stream in order to complete decompression and
+<span class="lineNum">    1093 </span>            :                  * return Z_STREAM_END.
+<span class="lineNum">    1094 </span>            :                  * In unzip, i don't wait absolutely Z_STREAM_END because I known the
+<span class="lineNum">    1095 </span>            :                  * size of both compressed and uncompressed data
+<span class="lineNum">    1096 </span>            :                  */
+<span class="lineNum">    1097 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">    1098 </span><span class="lineNoCov">          0 :         pfile_in_zip_read_info-&gt;rest_read_compressed =</span>
+<span class="lineNum">    1099 </span>            :             s-&gt;cur_file_info.compressed_size ;
+<span class="lineNum">    1100 </span><span class="lineNoCov">          0 :         pfile_in_zip_read_info-&gt;rest_read_uncompressed =</span>
+<span class="lineNum">    1101 </span>            :             s-&gt;cur_file_info.uncompressed_size ;
+<span class="lineNum">    1102 </span>            : 
+<span class="lineNum">    1103 </span>            : 
+<span class="lineNum">    1104 </span><span class="lineNoCov">          0 :         pfile_in_zip_read_info-&gt;pos_in_zipfile =</span>
+<span class="lineNum">    1105 </span>            :             s-&gt;cur_file_info_internal.offset_curfile + SIZEZIPLOCALHEADER +
+<span class="lineNum">    1106 </span>            :             iSizeVar;
+<span class="lineNum">    1107 </span>            : 
+<span class="lineNum">    1108 </span><span class="lineNoCov">          0 :         pfile_in_zip_read_info-&gt;stream.avail_in = (uInt)0;</span>
+<span class="lineNum">    1109 </span>            : 
+<span class="lineNum">    1110 </span><span class="lineNoCov">          0 :         s-&gt;pfile_in_zip_read = pfile_in_zip_read_info;</span>
+<span class="lineNum">    1111 </span>            : 
+<span class="lineNum">    1112 </span><span class="lineNoCov">          0 :         return UNZ_OK;</span>
+<span class="lineNum">    1113 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">    1114 </span>            : 
+<span class="lineNum">    1115 </span>            : /*
+<span class="lineNum">    1116 </span>            :   Close a ZipFile opened with unzipOpen.
+<span class="lineNum">    1117 </span>            :   If there is files inside the .Zip opened with unzipOpenCurrentFile (see later),
+<a name="1118"><span class="lineNum">    1118 </span>            :     these files MUST be closed with unzipCloseCurrentFile before call unzipClose.</a>
+<span class="lineNum">    1119 </span>            :   return UNZ_OK if there is no problem. */
+<span class="lineNum">    1120 </span>            : extern int ZEXPORT unzClose (file)
+<span class="lineNum">    1121 </span>            : unzFile file;
+<span class="lineNum">    1122 </span>            : {
+<span class="lineNum">    1123 </span>            :         unz_s* s;
+<span class="lineNum">    1124 </span><span class="lineNoCov">          0 :         if (file==NULL)</span>
+<span class="lineNum">    1125 </span><span class="lineNoCov">          0 :                 return UNZ_PARAMERROR;</span>
+<span class="lineNum">    1126 </span><span class="lineNoCov">          0 :         s=(unz_s*)file;</span>
+<span class="lineNum">    1127 </span>            : 
+<span class="lineNum">    1128 </span><span class="lineNoCov">          0 :         if (s-&gt;pfile_in_zip_read!=NULL)</span>
+<span class="lineNum">    1129 </span><span class="lineNoCov">          0 :                 unzCloseCurrentFile(file);</span>
+<span class="lineNum">    1130 </span>            : 
+<span class="lineNum">    1131 </span><span class="lineNoCov">          0 :         ZCLOSE(s-&gt;z_filefunc, s-&gt;filestream);</span>
+<span class="lineNum">    1132 </span><span class="lineNoCov">          0 :         TRYFREE(s);</span>
+<span class="lineNum">    1133 </span><span class="lineNoCov">          0 :         return UNZ_OK;</span>
+<span class="lineNum">    1134 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">    1135 </span>            : 
+<span class="lineNum">    1136 </span>            : #ifndef _WIN32_WCE
+<span class="lineNum">    1137 </span>            : 
+<span class="lineNum">    1138 </span>            : /* mymkdir and change_file_date are not 100 % portable
+<a name="1139"><span class="lineNum">    1139 </span>            :    As I don't know well Unix, I wait feedback for the unix portion */</a>
+<span class="lineNum">    1140 </span>            : 
+<span class="lineNum">    1141 </span>            : int mymkdir(dirname)
+<span class="lineNum">    1142 </span>            : const char* dirname;
+<span class="lineNum">    1143 </span>            : {
+<span class="lineNum">    1144 </span>            :         int ret=0;
+<span class="lineNum">    1145 </span>            : #if defined(WIN32) || defined(_WIN32_WCE)
+<span class="lineNum">    1146 </span>            :         return mkdir(dirname);
+<span class="lineNum">    1147 </span>            : #else
+<span class="lineNum">    1148 </span><span class="lineNoCov">          0 :         return mkdir (dirname, 700);</span>
+<span class="lineNum">    1149 </span>            : #endif
+<span class="lineNum">    1150 </span>            :         return ret;
+<a name="1151"><span class="lineNum">    1151 </span>            : }</a>
+<span class="lineNum">    1152 </span>            : 
+<span class="lineNum">    1153 </span>            : int makedir (newdir)
+<span class="lineNum">    1154 </span>            : const char *newdir;
+<span class="lineNum">    1155 </span>            : {
+<span class="lineNum">    1156 </span>            :         char *buffer ;
+<span class="lineNum">    1157 </span>            :         char *p;
+<span class="lineNum">    1158 </span><span class="lineNoCov">          0 :         int  len = (int)strlen(newdir);</span>
+<span class="lineNum">    1159 </span>            : 
+<span class="lineNum">    1160 </span><span class="lineNoCov">          0 :         if (len &lt;= 0)</span>
+<span class="lineNum">    1161 </span><span class="lineNoCov">          0 :                 return 0;</span>
+<span class="lineNum">    1162 </span>            : 
+<span class="lineNum">    1163 </span><span class="lineNoCov">          0 :         buffer = (char*)gf_malloc(len+1);</span>
+<span class="lineNum">    1164 </span><span class="lineNoCov">          0 :         strcpy(buffer,newdir);</span>
+<span class="lineNum">    1165 </span>            : 
+<span class="lineNum">    1166 </span><span class="lineNoCov">          0 :         if (buffer[len-1] == '/') {</span>
+<span class="lineNum">    1167 </span><span class="lineNoCov">          0 :                 buffer[len-1] = '\0';</span>
+<span class="lineNum">    1168 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">    1169 </span><span class="lineNoCov">          0 :         if (mymkdir(buffer) == 0)</span>
+<span class="lineNum">    1170 </span>            :         {
+<span class="lineNum">    1171 </span><span class="lineNoCov">          0 :                 gf_free(buffer);</span>
+<span class="lineNum">    1172 </span><span class="lineNoCov">          0 :                 return 1;</span>
+<span class="lineNum">    1173 </span>            :         }
+<span class="lineNum">    1174 </span>            : 
+<span class="lineNum">    1175 </span><span class="lineNoCov">          0 :         p = buffer+1;</span>
+<span class="lineNum">    1176 </span><span class="lineNoCov">          0 :         while (1)</span>
+<span class="lineNum">    1177 </span>            :         {
+<span class="lineNum">    1178 </span>            :                 char hold;
+<span class="lineNum">    1179 </span>            : 
+<span class="lineNum">    1180 </span><span class="lineNoCov">          0 :                 while(*p &amp;&amp; *p != '\\' &amp;&amp; *p != '/')</span>
+<span class="lineNum">    1181 </span><span class="lineNoCov">          0 :                         p++;</span>
+<span class="lineNum">    1182 </span><span class="lineNoCov">          0 :                 hold = *p;</span>
+<span class="lineNum">    1183 </span><span class="lineNoCov">          0 :                 *p = 0;</span>
+<span class="lineNum">    1184 </span><span class="lineNoCov">          0 :                 if ((mymkdir(buffer) == -1) &amp;&amp; (errno == ENOENT))</span>
+<span class="lineNum">    1185 </span>            :                 {
+<span class="lineNum">    1186 </span><span class="lineNoCov">          0 :                         fprintf(stderr, &quot;couldn't create directory %s\n&quot;,buffer);</span>
+<span class="lineNum">    1187 </span><span class="lineNoCov">          0 :                         gf_free(buffer);</span>
+<span class="lineNum">    1188 </span><span class="lineNoCov">          0 :                         return 0;</span>
+<span class="lineNum">    1189 </span>            :                 }
+<span class="lineNum">    1190 </span><span class="lineNoCov">          0 :                 if (hold == 0)</span>
+<span class="lineNum">    1191 </span>            :                         break;
+<span class="lineNum">    1192 </span><span class="lineNoCov">          0 :                 *p++ = hold;</span>
+<span class="lineNum">    1193 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">    1194 </span><span class="lineNoCov">          0 :         gf_free(buffer);</span>
+<span class="lineNum">    1195 </span><span class="lineNoCov">          0 :         return 1;</span>
+<span class="lineNum">    1196 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">    1197 </span>            : #else
+<span class="lineNum">    1198 </span>            : int makedir (newdir)
+<span class="lineNum">    1199 </span>            : {
+<span class="lineNum">    1200 </span>            :         return 0;
+<span class="lineNum">    1201 </span>            : }
+<span class="lineNum">    1202 </span>            : #endif
+<a name="1203"><span class="lineNum">    1203 </span>            : </a>
+<span class="lineNum">    1204 </span>            : 
+<span class="lineNum">    1205 </span>            : int do_extract_currentfile(uf)
+<span class="lineNum">    1206 </span>            : unzFile uf;
+<span class="lineNum">    1207 </span>            : {
+<span class="lineNum">    1208 </span><span class="lineNoCov">          0 :         char filename_inzip[256];</span>
+<span class="lineNum">    1209 </span>            :         char* filename_withoutpath;
+<span class="lineNum">    1210 </span>            :         char* p;
+<span class="lineNum">    1211 </span>            :         int err=UNZ_OK;
+<span class="lineNum">    1212 </span>            :         FILE *fout=NULL;
+<span class="lineNum">    1213 </span>            :         void* buf;
+<span class="lineNum">    1214 </span>            :         uInt size_buf;
+<span class="lineNum">    1215 </span>            : 
+<span class="lineNum">    1216 </span><span class="lineNoCov">          0 :         unz_file_info file_info;</span>
+<span class="lineNum">    1217 </span><span class="lineNoCov">          0 :         err = unzlocal_GetCurrentFileInfoInternal(uf,&amp;file_info,NULL,filename_inzip,sizeof(filename_inzip),NULL,0,NULL,0);</span>
+<span class="lineNum">    1218 </span>            : 
+<span class="lineNum">    1219 </span><span class="lineNoCov">          0 :         if (err!=UNZ_OK)</span>
+<span class="lineNum">    1220 </span>            :         {
+<span class="lineNum">    1221 </span><span class="lineNoCov">          0 :                 fprintf(stderr, &quot;error %d with zipfile in unzGetCurrentFileInfo\n&quot;,err);</span>
+<span class="lineNum">    1222 </span><span class="lineNoCov">          0 :                 return err;</span>
+<span class="lineNum">    1223 </span>            :         }
+<span class="lineNum">    1224 </span>            : 
+<span class="lineNum">    1225 </span>            :         size_buf = WRITEBUFFERSIZE;
+<span class="lineNum">    1226 </span><span class="lineNoCov">          0 :         buf = (void*)gf_malloc(size_buf);</span>
+<span class="lineNum">    1227 </span><span class="lineNoCov">          0 :         if (buf==NULL)</span>
+<span class="lineNum">    1228 </span>            :         {
+<span class="lineNum">    1229 </span><span class="lineNoCov">          0 :                 fprintf(stderr, &quot;Error allocating memory\n&quot;);</span>
+<span class="lineNum">    1230 </span><span class="lineNoCov">          0 :                 return UNZ_INTERNALERROR;</span>
+<span class="lineNum">    1231 </span>            :         }
+<span class="lineNum">    1232 </span>            : 
+<span class="lineNum">    1233 </span>            :         p = filename_withoutpath = filename_inzip;
+<span class="lineNum">    1234 </span><span class="lineNoCov">          0 :         while ((*p) != '\0')</span>
+<span class="lineNum">    1235 </span>            :         {
+<span class="lineNum">    1236 </span><span class="lineNoCov">          0 :                 if (((*p)=='/') || ((*p)=='\\'))</span>
+<span class="lineNum">    1237 </span><span class="lineNoCov">          0 :                         filename_withoutpath = p+1;</span>
+<span class="lineNum">    1238 </span><span class="lineNoCov">          0 :                 p++;</span>
+<span class="lineNum">    1239 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">    1240 </span>            : 
+<span class="lineNum">    1241 </span><span class="lineNoCov">          0 :         if ((*filename_withoutpath)=='\0')</span>
+<span class="lineNum">    1242 </span>            :         {
+<span class="lineNum">    1243 </span>            : #ifndef _WIN32_WCE
+<span class="lineNum">    1244 </span><span class="lineNoCov">          0 :                 fprintf(stderr, &quot;creating directory: %s\n&quot;,filename_inzip);</span>
+<span class="lineNum">    1245 </span><span class="lineNoCov">          0 :                 mymkdir(filename_inzip);</span>
+<span class="lineNum">    1246 </span>            : #endif
+<span class="lineNum">    1247 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">    1248 </span>            :         else
+<span class="lineNum">    1249 </span>            :         {
+<span class="lineNum">    1250 </span>            :                 const char* write_filename;
+<span class="lineNum">    1251 </span>            :                 int skip=0;
+<span class="lineNum">    1252 </span>            : 
+<span class="lineNum">    1253 </span>            :                 write_filename = filename_inzip;
+<span class="lineNum">    1254 </span>            : 
+<span class="lineNum">    1255 </span><span class="lineNoCov">          0 :                 err = unzOpenCurrentFile3(uf, NULL, NULL, 0, NULL/*password*/);</span>
+<span class="lineNum">    1256 </span><span class="lineNoCov">          0 :                 if (err!=UNZ_OK)</span>
+<span class="lineNum">    1257 </span>            :                 {
+<span class="lineNum">    1258 </span><span class="lineNoCov">          0 :                         fprintf(stderr, &quot;error %d with zipfile in unzOpenCurrentFilePassword\n&quot;,err);</span>
+<span class="lineNum">    1259 </span><span class="lineNoCov">          0 :                 }</span>
+<span class="lineNum">    1260 </span>            : 
+<span class="lineNum">    1261 </span><span class="lineNoCov">          0 :                 if ((skip==0) &amp;&amp; (err==UNZ_OK))</span>
+<span class="lineNum">    1262 </span>            :                 {
+<span class="lineNum">    1263 </span><span class="lineNoCov">          0 :                         fout = gf_fopen(write_filename,&quot;wb&quot;);</span>
+<span class="lineNum">    1264 </span>            : 
+<span class="lineNum">    1265 </span>            :                         /* some zipfile don't contain directory alone before file */
+<span class="lineNum">    1266 </span><span class="lineNoCov">          0 :                         if ((fout==NULL) &amp;&amp; (filename_withoutpath!=(char*)filename_inzip))</span>
+<span class="lineNum">    1267 </span>            :                         {
+<span class="lineNum">    1268 </span><span class="lineNoCov">          0 :                                 char c=*(filename_withoutpath-1);</span>
+<span class="lineNum">    1269 </span><span class="lineNoCov">          0 :                                 *(filename_withoutpath-1)='\0';</span>
+<span class="lineNum">    1270 </span><span class="lineNoCov">          0 :                                 makedir(write_filename);</span>
+<span class="lineNum">    1271 </span><span class="lineNoCov">          0 :                                 *(filename_withoutpath-1)=c;</span>
+<span class="lineNum">    1272 </span><span class="lineNoCov">          0 :                                 fout = gf_fopen(write_filename,&quot;wb&quot;);</span>
+<span class="lineNum">    1273 </span><span class="lineNoCov">          0 :                         }</span>
+<span class="lineNum">    1274 </span>            : 
+<span class="lineNum">    1275 </span><span class="lineNoCov">          0 :                         if (fout==NULL)</span>
+<span class="lineNum">    1276 </span>            :                         {
+<span class="lineNum">    1277 </span><span class="lineNoCov">          0 :                                 fprintf(stderr, &quot;error opening %s\n&quot;,write_filename);</span>
+<span class="lineNum">    1278 </span><span class="lineNoCov">          0 :                         }</span>
+<span class="lineNum">    1279 </span>            :                 }
+<span class="lineNum">    1280 </span>            : 
+<span class="lineNum">    1281 </span><span class="lineNoCov">          0 :                 if (fout!=NULL)</span>
+<span class="lineNum">    1282 </span>            :                 {
+<span class="lineNum">    1283 </span><span class="lineNoCov">          0 :                         fprintf(stderr, &quot; extracting: %s\n&quot;,write_filename);</span>
+<span class="lineNum">    1284 </span>            : 
+<span class="lineNum">    1285 </span><span class="lineNoCov">          0 :                         do</span>
+<span class="lineNum">    1286 </span>            :                         {
+<span class="lineNum">    1287 </span><span class="lineNoCov">          0 :                                 err = unzReadCurrentFile(uf,buf,size_buf);</span>
+<span class="lineNum">    1288 </span><span class="lineNoCov">          0 :                                 if (err&lt;0)</span>
+<span class="lineNum">    1289 </span>            :                                 {
+<span class="lineNum">    1290 </span><span class="lineNoCov">          0 :                                         fprintf(stderr, &quot;error %d with zipfile in unzReadCurrentFile\n&quot;,err);</span>
+<span class="lineNum">    1291 </span><span class="lineNoCov">          0 :                                         break;</span>
+<span class="lineNum">    1292 </span>            :                                 }
+<span class="lineNum">    1293 </span><span class="lineNoCov">          0 :                                 if (err&gt;0)</span>
+<span class="lineNum">    1294 </span><span class="lineNoCov">          0 :                                         if (gf_fwrite(buf,err,1,fout)!=1)</span>
+<span class="lineNum">    1295 </span>            :                                         {
+<span class="lineNum">    1296 </span><span class="lineNoCov">          0 :                                                 fprintf(stderr, &quot;error in writing extracted file\n&quot;);</span>
+<span class="lineNum">    1297 </span>            :                                                 err=UNZ_ERRNO;
+<span class="lineNum">    1298 </span><span class="lineNoCov">          0 :                                                 break;</span>
+<span class="lineNum">    1299 </span>            :                                         }
+<span class="lineNum">    1300 </span><span class="lineNoCov">          0 :                         }</span>
+<span class="lineNum">    1301 </span>            :                         while (err&gt;0);
+<span class="lineNum">    1302 </span><span class="lineNoCov">          0 :                         if (fout)</span>
+<span class="lineNum">    1303 </span><span class="lineNoCov">          0 :                                 gf_fclose(fout);</span>
+<span class="lineNum">    1304 </span>            :                 }
+<span class="lineNum">    1305 </span>            : 
+<span class="lineNum">    1306 </span><span class="lineNoCov">          0 :                 if (err==UNZ_OK)</span>
+<span class="lineNum">    1307 </span>            :                 {
+<span class="lineNum">    1308 </span><span class="lineNoCov">          0 :                         err = unzCloseCurrentFile (uf);</span>
+<span class="lineNum">    1309 </span><span class="lineNoCov">          0 :                         if (err!=UNZ_OK)</span>
+<span class="lineNum">    1310 </span>            :                         {
+<span class="lineNum">    1311 </span><span class="lineNoCov">          0 :                                 fprintf(stderr, &quot;error %d with zipfile in unzCloseCurrentFile\n&quot;,err);</span>
+<span class="lineNum">    1312 </span><span class="lineNoCov">          0 :                         }</span>
+<span class="lineNum">    1313 </span>            :                 }
+<span class="lineNum">    1314 </span>            :                 else
+<span class="lineNum">    1315 </span>            :                         unzCloseCurrentFile(uf); /* don't lose the error */
+<span class="lineNum">    1316 </span>            :         }
+<span class="lineNum">    1317 </span>            : 
+<span class="lineNum">    1318 </span><span class="lineNoCov">          0 :         gf_free(buf);</span>
+<span class="lineNum">    1319 </span><span class="lineNoCov">          0 :         return err;</span>
+<span class="lineNum">    1320 </span><span class="lineNoCov">          0 : }</span>
+<a name="1321"><span class="lineNum">    1321 </span>            : </a>
+<span class="lineNum">    1322 </span>            : 
+<span class="lineNum">    1323 </span>            : int gf_unzip_archive(const char *zipfilename, const char *dirname)
+<span class="lineNum">    1324 </span>            : {
+<span class="lineNum">    1325 </span>            :         uLong i;
+<span class="lineNum">    1326 </span>            :         unz_global_info gi;
+<span class="lineNum">    1327 </span>            :         int err;
+<span class="lineNum">    1328 </span>            : 
+<span class="lineNum">    1329 </span>            :         unzFile uf=NULL;
+<span class="lineNum">    1330 </span>            : 
+<span class="lineNum">    1331 </span><span class="lineNoCov">          0 :         uf = unzOpen2(zipfilename, NULL);</span>
+<span class="lineNum">    1332 </span><span class="lineNoCov">          0 :         if (uf==NULL)</span>
+<span class="lineNum">    1333 </span>            :         {
+<span class="lineNum">    1334 </span><span class="lineNoCov">          0 :                 fprintf(stderr, &quot;Cannot open %s\n&quot;, zipfilename);</span>
+<span class="lineNum">    1335 </span><span class="lineNoCov">          0 :                 return 1;</span>
+<span class="lineNum">    1336 </span>            :         }
+<span class="lineNum">    1337 </span>            : #ifndef _WIN32_WCE
+<span class="lineNum">    1338 </span><span class="lineNoCov">          0 :         if (chdir(dirname))</span>
+<span class="lineNum">    1339 </span>            :         {
+<span class="lineNum">    1340 </span><span class="lineNoCov">          0 :                 fprintf(stderr, &quot;Error changing into %s, aborting\n&quot;, dirname);</span>
+<span class="lineNum">    1341 </span><span class="lineNoCov">          0 :                 exit(-1);</span>
+<span class="lineNum">    1342 </span>            :         }
+<span class="lineNum">    1343 </span>            : #endif
+<span class="lineNum">    1344 </span>            : 
+<span class="lineNum">    1345 </span><span class="lineNoCov">          0 :         err = unzGetGlobalInfo (uf,&amp;gi);</span>
+<span class="lineNum">    1346 </span><span class="lineNoCov">          0 :         if (err!=UNZ_OK)</span>
+<span class="lineNum">    1347 </span><span class="lineNoCov">          0 :                 fprintf(stderr, &quot;error %d with zipfile in unzGetGlobalInfo \n&quot;,err);</span>
+<span class="lineNum">    1348 </span>            : 
+<span class="lineNum">    1349 </span><span class="lineNoCov">          0 :         for (i=0; i&lt;gi.number_entry; i++)</span>
+<span class="lineNum">    1350 </span>            :         {
+<span class="lineNum">    1351 </span><span class="lineNoCov">          0 :                 if (do_extract_currentfile(uf) != UNZ_OK)</span>
+<span class="lineNum">    1352 </span>            :                         break;
+<span class="lineNum">    1353 </span>            : 
+<span class="lineNum">    1354 </span><span class="lineNoCov">          0 :                 if ((i+1)&lt;gi.number_entry)</span>
+<span class="lineNum">    1355 </span>            :                 {
+<span class="lineNum">    1356 </span><span class="lineNoCov">          0 :                         err = unzGoToNextFile(uf);</span>
+<span class="lineNum">    1357 </span><span class="lineNoCov">          0 :                         if (err!=UNZ_OK)</span>
+<span class="lineNum">    1358 </span>            :                         {
+<span class="lineNum">    1359 </span><span class="lineNoCov">          0 :                                 fprintf(stderr, &quot;error %d with zipfile in unzGoToNextFile\n&quot;,err);</span>
+<span class="lineNum">    1360 </span><span class="lineNoCov">          0 :                                 break;</span>
+<span class="lineNum">    1361 </span>            :                         }
+<span class="lineNum">    1362 </span>            :                 }
+<span class="lineNum">    1363 </span>            :         }
+<span class="lineNum">    1364 </span><span class="lineNoCov">          0 :         unzClose(uf);</span>
+<span class="lineNum">    1365 </span>            : 
+<span class="lineNum">    1366 </span><span class="lineNoCov">          0 :         return 0;</span>
+<a name="1367"><span class="lineNum">    1367 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">    1368 </span>            : 
+<span class="lineNum">    1369 </span>            : int gf_unzip_probe(const char *zipfilename)
+<span class="lineNum">    1370 </span>            : {
+<span class="lineNum">    1371 </span>            :         int ret = 0;
+<span class="lineNum">    1372 </span><span class="lineNoCov">          0 :         FILE *f = gf_fopen(zipfilename, &quot;r&quot;);</span>
+<span class="lineNum">    1373 </span><span class="lineNoCov">          0 :         if (!f) return 0;</span>
+<span class="lineNum">    1374 </span><span class="lineNoCov">          0 :         if (fgetc(f)=='P')</span>
+<span class="lineNum">    1375 </span><span class="lineNoCov">          0 :                 if (fgetc(f)=='K')</span>
+<span class="lineNum">    1376 </span><span class="lineNoCov">          0 :                         if (fgetc(f)==3)</span>
+<span class="lineNum">    1377 </span><span class="lineNoCov">          0 :                                 if (fgetc(f)==4)</span>
+<span class="lineNum">    1378 </span><span class="lineNoCov">          0 :                                         ret = 1;</span>
+<span class="lineNum">    1379 </span><span class="lineNoCov">          0 :         gf_fclose(f);</span>
+<span class="lineNum">    1380 </span><span class="lineNoCov">          0 :         return ret;</span>
+<span class="lineNum">    1381 </span><span class="lineNoCov">          0 : }</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.12</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

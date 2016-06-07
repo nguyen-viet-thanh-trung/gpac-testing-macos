@@ -1,0 +1,15 @@
+ <test name="laser-stz_animate_font-weight2" result="OK" date="07/06/2016 10:27:03">
+
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44367872" cpu_percent="15%" cpu_elapsed_time="0:00.30" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track  -mp4 /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/laser/stz_animate_font-weight2.xml</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44367872" cpu_percent="13%" cpu_elapsed_time="0:00.35" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track  -saf /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/laser/stz_animate_font-weight2.xml</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43925504" cpu_percent="10%" cpu_elapsed_time="0:00.43" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -lsr /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/laser/stz_animate_font-weight2.mp4 -out test1.lsr</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44515328" cpu_percent="10%" cpu_elapsed_time="0:00.45" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -lsr /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/laser/stz_animate_font-weight2.saf -out test2.lsr</command_line>
+  </stat>
+ </test>

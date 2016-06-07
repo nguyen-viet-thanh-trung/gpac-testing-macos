@@ -1,0 +1,2 @@
+*** compositor-glonly-bifs-2D-painting-xlineproperties-lineargradient logs (GPAC version 0.6.2-DEV-revUNKNOWN-HEAD ) - test date 07/06/2016 10:25:02 ***
+

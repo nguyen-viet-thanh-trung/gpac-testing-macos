@@ -1,0 +1,37 @@
+*** xmlin-swf-stxt logs (GPAC version 0.6.2-DEV-revUNKNOWN-HEAD ) - test date 07/06/2016 10:35:52 ***
+
+
+*** Subtest "import": executing "MP4Box -noprog -for-test  -mem-track -add /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/xmlin4/anim.swf:fmt=svg -new /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/text-stxt-svg.mp4" ***
+[32mSWF import (as text - type: svg)
+[0m[32mSWF Import - Scene Size 0x0 - 0 frames @ 0 FPS
+[0mSaving /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/text-stxt-svg.mp4: 0.500 secs Interleaving
+
+
+*** Subtest "info": executing "MP4Box -noprog -for-test  -mem-track -info /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/text-stxt-svg.mp4" ***
+* Movie Info *
+	Timescale 600 - 1 track
+	Computed Duration 00:00:00.000 - Indicated Duration 00:00:00.000
+	Fragmented File: no
+	File suitable for progressive download (moov before mdat)
+	File Brand isom - version 1
+	Created: UNKNOWN DATE	Modified: UNKNOWN DATE
+File has no MPEG4 IOD/OD
+
+Track # 1 Info - TrackID 1 - TimeScale 1000
+Media Duration 00:00:00.000 - Indicated Duration 00:00:00.000
+Media Info: Language "Undetermined (und)" - Type "text:stxt" - 0 samples
+Simple Timed Text Stream - mime image/svg+xml - 202 bytes config
+ Size 400 x 60 - Translation X=0 Y=0 - Layer 0
+	RFC6381 Codec Parameters: stxt
+	All samples are sync
+
+
+
+*** Subtest "export-track": executing "MP4Box -noprog -for-test  -mem-track -raw 1 /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/text-stxt-svg.mp4" ***
+[33mExtracting Simple Text Stream
+[0m[33mas SVG file
+[0m
+
+*** Subtest "export-samples": executing "MP4Box -noprog -for-test  -mem-track -raws 1 /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/text-stxt-svg.mp4" ***
+[33mExtracting Simple Text samples
+[0m

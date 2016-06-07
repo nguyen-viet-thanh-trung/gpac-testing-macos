@@ -1,0 +1,30 @@
+ <test name="bifs-2D-texturing-compositetexture2D-background" result="OK" date="07/06/2016 10:20:26">
+
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="45383680" cpu_percent="18%" cpu_elapsed_time="0:00.28" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -mp4 /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-texturing-compositetexture2D-background.bt</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44138496" cpu_percent="9%" cpu_elapsed_time="0:00.59" cpu_user_time="0.01" cpu_kernel_time="0.04" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -xmt /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-texturing-compositetexture2D-background.bt</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44711936" cpu_percent="7%" cpu_elapsed_time="0:00.70" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -bt /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-texturing-compositetexture2D-background.mp4 -out test2.bt</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44728320" cpu_percent="5%" cpu_elapsed_time="0:00.95" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -xmt /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-texturing-compositetexture2D-background.mp4 -out test.xmt</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44302336" cpu_percent="5%" cpu_elapsed_time="0:00.90" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -stat /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-texturing-compositetexture2D-background.mp4 -std</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44318720" cpu_percent="5%" cpu_elapsed_time="0:01.00" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -stats /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-texturing-compositetexture2D-background.mp4 -std</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44351488" cpu_percent="4%" cpu_elapsed_time="0:01.09" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -statx /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-texturing-compositetexture2D-background.mp4 -std</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44236800" cpu_percent="4%" cpu_elapsed_time="0:01.07" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -bt /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-texturing-compositetexture2D-background.xmt -out test1.bt</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="45481984" cpu_percent="4%" cpu_elapsed_time="0:01.10" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -mp4 /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-texturing-compositetexture2D-background.xmt -out /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-texturing-compositetexture2D-background.mp4.tmp</command_line>
+  </stat>
+ </test>

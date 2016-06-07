@@ -1,0 +1,30 @@
+ <test name="bifs-3D-positioning-transform" result="OK" date="07/06/2016 10:21:49">
+
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="45121536" cpu_percent="21%" cpu_elapsed_time="0:00.22" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -mp4 /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-3D-positioning-transform.bt</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43876352" cpu_percent="20%" cpu_elapsed_time="0:00.23" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -xmt /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-3D-positioning-transform.bt</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44548096" cpu_percent="3%" cpu_elapsed_time="0:01.32" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -bt /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-3D-positioning-transform.mp4 -out test2.bt</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44498944" cpu_percent="4%" cpu_elapsed_time="0:01.21" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -xmt /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-3D-positioning-transform.mp4 -out test.xmt</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44089344" cpu_percent="4%" cpu_elapsed_time="0:01.13" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -stat /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-3D-positioning-transform.mp4 -std</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44105728" cpu_percent="3%" cpu_elapsed_time="0:01.28" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -stats /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-3D-positioning-transform.mp4 -std</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44154880" cpu_percent="3%" cpu_elapsed_time="0:01.32" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -statx /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-3D-positioning-transform.mp4 -std</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44089344" cpu_percent="6%" cpu_elapsed_time="0:00.82" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -bt /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-3D-positioning-transform.xmt -out test1.bt</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="45285376" cpu_percent="3%" cpu_elapsed_time="0:01.25" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -mp4 /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-3D-positioning-transform.xmt -out /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-3D-positioning-transform.mp4.tmp</command_line>
+  </stat>
+ </test>

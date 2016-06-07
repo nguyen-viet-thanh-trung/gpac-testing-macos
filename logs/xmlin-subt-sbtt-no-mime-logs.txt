@@ -1,0 +1,44 @@
+*** xmlin-subt-sbtt-no-mime logs (GPAC version 0.6.2-DEV-revUNKNOWN-HEAD ) - test date 07/06/2016 10:35:43 ***
+
+
+*** Subtest "import": executing "MP4Box -noprog -for-test  -mem-track -add /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/xmlin4/subt-sbtt-no-mime.nhml -new /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/subt-sbtt-no-mime.mp4" ***
+[33mText (Metadata, Subtitle or SimpleText) SampleEntry: mime is mandatory. Using text/plain.
+[0mSaving /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/subt-sbtt-no-mime.mp4: 0.500 secs Interleaving
+
+
+*** Subtest "info": executing "MP4Box -noprog -for-test  -mem-track -info /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/subt-sbtt-no-mime.mp4" ***
+* Movie Info *
+	Timescale 600 - 1 track
+	Computed Duration 00:00:30.000 - Indicated Duration 00:00:30.000
+	Fragmented File: no
+	File suitable for progressive download (moov before mdat)
+	File Brand isom - version 1
+	Created: UNKNOWN DATE	Modified: UNKNOWN DATE
+File has no MPEG4 IOD/OD
+
+Track # 1 Info - TrackID 1 - TimeScale 1000
+Media Duration 00:00:30.000 - Indicated Duration 00:00:30.000
+Media Info: Language "Undetermined (und)" - Type "subt:sbtt" - 3 samples
+Textual Subtitle Stream - mime text/plain
+ Size 0 x 0 - Translation X=0 Y=0 - Layer 0
+	RFC6381 Codec Parameters: sbtt
+	All samples are sync
+
+
+
+*** Subtest "export-track": executing "MP4Box -noprog -for-test  -mem-track -raw 1 /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/subt-sbtt-no-mime.mp4" ***
+[33mExtracting Text-based Subtitle Stream
+[0m
+
+*** Subtest "export-samples": executing "MP4Box -noprog -for-test  -mem-track -raws 1 /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/subt-sbtt-no-mime.mp4" ***
+[33mExtracting Subtitle Text samples
+[0m
+
+*** Subtest "export-nhml": executing "MP4Box -noprog -for-test  -mem-track -nhml 1 /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/subt-sbtt-no-mime.mp4" ***
+[33mExporting NHML for track sbtt
+[0m
+
+*** Subtest "nhml-reimport": executing "MP4Box -noprog -for-test  -mem-track -add /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/subt-sbtt-no-mime_track1.nhml -new /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/subt-sbtt-no-mime_track1.mp4" ***
+[33mText (Metadata, Subtitle or SimpleText) SampleEntry: mime is mandatory. Using text/plain.
+[0mSaving /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/subt-sbtt-no-mime_track1.mp4: 0.500 secs Interleaving
+

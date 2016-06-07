@@ -1,0 +1,546 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - modules/timedtext/timedtext_in.c</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">modules/timedtext</a> - timedtext_in.c<span style="font-size: 80%;"> (source / <a href="timedtext_in.c.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">48</td>
+            <td class="headerCovTableEntry">255</td>
+            <td class="headerCovTableEntryLo">18.8 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2016-06-07 10:36:32</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">4</td>
+            <td class="headerCovTableEntry">18</td>
+            <td class="headerCovTableEntryLo">22.2 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*</a>
+<span class="lineNum">       2 </span>            :  *                      GPAC - Multimedia Framework C SDK
+<span class="lineNum">       3 </span>            :  *
+<span class="lineNum">       4 </span>            :  *                      Authors: Jean Le Feuvre
+<span class="lineNum">       5 </span>            :  *                      Copyright (c) Telecom ParisTech 2000-2012
+<span class="lineNum">       6 </span>            :  *                                      All rights reserved
+<span class="lineNum">       7 </span>            :  *
+<span class="lineNum">       8 </span>            :  *  This file is part of GPAC / 3GPP/MPEG4 timed text module
+<span class="lineNum">       9 </span>            :  *
+<span class="lineNum">      10 </span>            :  *  GPAC is free software; you can redistribute it and/or modify
+<span class="lineNum">      11 </span>            :  *  it under the terms of the GNU Lesser General Public License as published by
+<span class="lineNum">      12 </span>            :  *  the Free Software Foundation; either version 2, or (at your option)
+<span class="lineNum">      13 </span>            :  *  any later version.
+<span class="lineNum">      14 </span>            :  *
+<span class="lineNum">      15 </span>            :  *  GPAC is distributed in the hope that it will be useful,
+<span class="lineNum">      16 </span>            :  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+<span class="lineNum">      17 </span>            :  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+<span class="lineNum">      18 </span>            :  *  GNU Lesser General Public License for more details.
+<span class="lineNum">      19 </span>            :  *
+<span class="lineNum">      20 </span>            :  *  You should have received a copy of the GNU Lesser General Public
+<span class="lineNum">      21 </span>            :  *  License along with this library; see the file COPYING.  If not, write to
+<span class="lineNum">      22 </span>            :  *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+<span class="lineNum">      23 </span>            :  *
+<span class="lineNum">      24 </span>            :  */
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : #include &lt;gpac/modules/service.h&gt;
+<span class="lineNum">      27 </span>            : #include &lt;gpac/modules/codec.h&gt;
+<span class="lineNum">      28 </span>            : #include &lt;gpac/constants.h&gt;
+<span class="lineNum">      29 </span>            : 
+<span class="lineNum">      30 </span>            : #if !defined(GPAC_DISABLE_ISOM_WRITE) &amp;&amp; !defined(GPAC_DISABLE_MEDIA_IMPORT)
+<span class="lineNum">      31 </span>            : 
+<span class="lineNum">      32 </span>            : #include &lt;gpac/media_tools.h&gt;
+<span class="lineNum">      33 </span>            : 
+<span class="lineNum">      34 </span>            : typedef struct
+<span class="lineNum">      35 </span>            : {
+<span class="lineNum">      36 </span>            :         GF_ClientService *service;
+<span class="lineNum">      37 </span>            :         Bool od_done;
+<span class="lineNum">      38 </span>            :         Bool needs_connection;
+<span class="lineNum">      39 </span>            :         u32 status;
+<span class="lineNum">      40 </span>            :         LPNETCHANNEL ch;
+<span class="lineNum">      41 </span>            : 
+<span class="lineNum">      42 </span>            :         GF_SLHeader sl_hdr;
+<span class="lineNum">      43 </span>            : 
+<span class="lineNum">      44 </span>            :         GF_ISOFile *mp4;
+<span class="lineNum">      45 </span>            :         char *szFile;
+<span class="lineNum">      46 </span>            :         u32 tt_track;
+<span class="lineNum">      47 </span>            :         GF_ISOSample *samp;
+<span class="lineNum">      48 </span>            :         u32 samp_num;
+<span class="lineNum">      49 </span>            : 
+<span class="lineNum">      50 </span>            :         u32 start_range;
+<span class="lineNum">      51 </span>            :         /*file downloader*/
+<span class="lineNum">      52 </span>            :         GF_DownloadSession * dnload;
+<span class="lineNum">      53 </span>            : } TTIn;
+<span class="lineNum">      54 </span>            : 
+<span class="lineNum">      55 </span>            : 
+<span class="lineNum">      56 </span>            : const char * TTIN_MIME_TYPES[] = {
+<span class="lineNum">      57 </span>            :         &quot;x-subtitle/srt&quot;, &quot;srt&quot;, &quot;SRT SubTitles&quot;,
+<span class="lineNum">      58 </span>            :         &quot;x-subtitle/sub&quot;, &quot;sub&quot;, &quot;SUB SubTitles&quot;,
+<span class="lineNum">      59 </span>            :         &quot;x-subtitle/ttxt&quot;, &quot;ttxt&quot;, &quot;3GPP TimedText&quot;,
+<span class="lineNum">      60 </span>            :         &quot;text/vtt&quot;, &quot;vtt&quot;, &quot;VTT SubTitles&quot;,
+<span class="lineNum">      61 </span>            :         NULL
+<a name="62"><span class="lineNum">      62 </span>            : };</a>
+<span class="lineNum">      63 </span>            : 
+<span class="lineNum">      64 </span>            : static u32 TTIN_RegisterMimeTypes(const GF_InputService *plug) {
+<span class="lineNum">      65 </span>            :         u32 i;
+<span class="lineNum">      66 </span><span class="lineCov">          1 :         if (!plug)</span>
+<span class="lineNum">      67 </span><span class="lineNoCov">          0 :                 return 0;</span>
+<span class="lineNum">      68 </span><span class="lineCov">         10 :         for (i = 0 ; TTIN_MIME_TYPES[i]; i+=3) {</span>
+<span class="lineNum">      69 </span><span class="lineCov">          4 :                 gf_service_register_mime(plug, TTIN_MIME_TYPES[i], TTIN_MIME_TYPES[i+1], TTIN_MIME_TYPES[i+2]);</span>
+<span class="lineNum">      70 </span>            :         }
+<span class="lineNum">      71 </span><span class="lineCov">          1 :         return i/3;</span>
+<a name="72"><span class="lineNum">      72 </span><span class="lineCov">          1 : }</span></a>
+<span class="lineNum">      73 </span>            : 
+<span class="lineNum">      74 </span>            : static Bool TTIn_CanHandleURL(GF_InputService *plug, const char *url)
+<span class="lineNum">      75 </span>            : {
+<span class="lineNum">      76 </span>            :         char *sExt;
+<span class="lineNum">      77 </span>            :         u32 i;
+<span class="lineNum">      78 </span><span class="lineNoCov">          0 :         if (!plug || !url)</span>
+<span class="lineNum">      79 </span><span class="lineNoCov">          0 :                 return GF_FALSE;</span>
+<span class="lineNum">      80 </span><span class="lineNoCov">          0 :         sExt = strrchr(url, '.');</span>
+<span class="lineNum">      81 </span><span class="lineNoCov">          0 :         if (!sExt)</span>
+<span class="lineNum">      82 </span><span class="lineNoCov">          0 :                 return GF_FALSE;</span>
+<span class="lineNum">      83 </span><span class="lineNoCov">          0 :         for (i = 0 ; TTIN_MIME_TYPES[i]; i+=3) {</span>
+<span class="lineNum">      84 </span><span class="lineNoCov">          0 :                 if (gf_service_check_mime_register(plug, TTIN_MIME_TYPES[i], TTIN_MIME_TYPES[i+1], TTIN_MIME_TYPES[i+2], sExt))</span>
+<span class="lineNum">      85 </span><span class="lineNoCov">          0 :                         return GF_TRUE;</span>
+<span class="lineNum">      86 </span>            :         }
+<span class="lineNum">      87 </span><span class="lineNoCov">          0 :         return GF_FALSE;</span>
+<a name="88"><span class="lineNum">      88 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">      89 </span>            : 
+<span class="lineNum">      90 </span>            : static Bool TTIn_is_local(const char *url)
+<span class="lineNum">      91 </span>            : {
+<span class="lineNum">      92 </span><span class="lineNoCov">          0 :         if (!url)</span>
+<span class="lineNum">      93 </span><span class="lineNoCov">          0 :                 return GF_FALSE;</span>
+<span class="lineNum">      94 </span><span class="lineNoCov">          0 :         if (!strnicmp(url, &quot;file://&quot;, 7)) return GF_TRUE;</span>
+<span class="lineNum">      95 </span><span class="lineNoCov">          0 :         if (!strnicmp(url, &quot;gmem://&quot;, 7)) return GF_TRUE;</span>
+<span class="lineNum">      96 </span><span class="lineNoCov">          0 :         if (strstr(url, &quot;://&quot;)) return GF_FALSE;</span>
+<span class="lineNum">      97 </span><span class="lineNoCov">          0 :         return GF_TRUE;</span>
+<a name="98"><span class="lineNum">      98 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">      99 </span>            : 
+<span class="lineNum">     100 </span>            : static GF_ESD *tti_get_esd(TTIn *tti)
+<span class="lineNum">     101 </span>            : {
+<span class="lineNum">     102 </span><span class="lineNoCov">          0 :         return gf_media_map_esd(tti-&gt;mp4, tti-&gt;tt_track);</span>
+<a name="103"><span class="lineNum">     103 </span>            : }</a>
+<span class="lineNum">     104 </span>            : 
+<span class="lineNum">     105 </span>            : static void tti_setup_object(TTIn *tti, GF_InputService *plug)
+<span class="lineNum">     106 </span>            : {
+<span class="lineNum">     107 </span><span class="lineNoCov">          0 :         GF_ObjectDescriptor *od = (GF_ObjectDescriptor *) gf_odf_desc_new(GF_ODF_OD_TAG);</span>
+<span class="lineNum">     108 </span><span class="lineNoCov">          0 :         GF_ESD *esd = tti_get_esd(tti);</span>
+<span class="lineNum">     109 </span><span class="lineNoCov">          0 :         od-&gt;objectDescriptorID = 0;</span>
+<span class="lineNum">     110 </span><span class="lineNoCov">          0 :         od-&gt;service_ifce = plug;</span>
+<span class="lineNum">     111 </span><span class="lineNoCov">          0 :         gf_list_add(od-&gt;ESDescriptors, esd);</span>
+<span class="lineNum">     112 </span><span class="lineNoCov">          0 :         gf_service_declare_media(tti-&gt;service, (GF_Descriptor *)od, GF_FALSE);</span>
+<span class="lineNum">     113 </span><span class="lineNoCov">          0 : }</span>
+<a name="114"><span class="lineNum">     114 </span>            : </a>
+<span class="lineNum">     115 </span>            : 
+<span class="lineNum">     116 </span>            : GF_Err TTIn_LoadFile(GF_InputService *plug, const char *url, Bool is_cache)
+<span class="lineNum">     117 </span>            : {
+<span class="lineNum">     118 </span>            :         GF_Err e;
+<span class="lineNum">     119 </span><span class="lineNoCov">          0 :         GF_MediaImporter import;</span>
+<span class="lineNum">     120 </span><span class="lineNoCov">          0 :         char szFILE[GF_MAX_PATH];</span>
+<span class="lineNum">     121 </span><span class="lineNoCov">          0 :         TTIn *tti = (TTIn *)plug-&gt;priv;</span>
+<span class="lineNum">     122 </span>            :         const char *cache_dir;
+<span class="lineNum">     123 </span><span class="lineNoCov">          0 :         if (!tti || !url)</span>
+<span class="lineNum">     124 </span><span class="lineNoCov">          0 :                 return GF_BAD_PARAM;</span>
+<span class="lineNum">     125 </span><span class="lineNoCov">          0 :         cache_dir = gf_modules_get_option((GF_BaseInterface *)plug, &quot;General&quot;, &quot;CacheDirectory&quot;);</span>
+<span class="lineNum">     126 </span><span class="lineNoCov">          0 :         if (cache_dir &amp;&amp; strlen(cache_dir)) {</span>
+<span class="lineNum">     127 </span><span class="lineNoCov">          0 :                 if (cache_dir[strlen(cache_dir)-1] != GF_PATH_SEPARATOR) {</span>
+<span class="lineNum">     128 </span><span class="lineNoCov">          0 :                         sprintf(szFILE, &quot;%s%csrt_%p_mp4&quot;, cache_dir, GF_PATH_SEPARATOR, tti);</span>
+<span class="lineNum">     129 </span><span class="lineNoCov">          0 :                 } else {</span>
+<span class="lineNum">     130 </span><span class="lineNoCov">          0 :                         sprintf(szFILE, &quot;%ssrt_%p_mp4&quot;, cache_dir, tti);</span>
+<span class="lineNum">     131 </span>            :                 }
+<span class="lineNum">     132 </span>            :         } else {
+<span class="lineNum">     133 </span><span class="lineNoCov">          0 :                 sprintf(szFILE, &quot;%p_temp_mp4&quot;, tti);</span>
+<span class="lineNum">     134 </span>            :         }
+<span class="lineNum">     135 </span><span class="lineNoCov">          0 :         tti-&gt;mp4 = gf_isom_open(szFILE, GF_ISOM_OPEN_WRITE, NULL);</span>
+<span class="lineNum">     136 </span><span class="lineNoCov">          0 :         if (!tti-&gt;mp4) return gf_isom_last_error(NULL);</span>
+<span class="lineNum">     137 </span><span class="lineNoCov">          0 :         if (tti-&gt;szFile)</span>
+<span class="lineNum">     138 </span><span class="lineNoCov">          0 :                 gf_free(tti-&gt;szFile);</span>
+<span class="lineNum">     139 </span><span class="lineNoCov">          0 :         tti-&gt;szFile = gf_strdup(szFILE);</span>
+<span class="lineNum">     140 </span>            : 
+<span class="lineNum">     141 </span><span class="lineNoCov">          0 :         memset(&amp;import, 0, sizeof(GF_MediaImporter));</span>
+<span class="lineNum">     142 </span><span class="lineNoCov">          0 :         import.dest = tti-&gt;mp4;</span>
+<span class="lineNum">     143 </span>            :         /*override layout from sub file*/
+<span class="lineNum">     144 </span><span class="lineNoCov">          0 :         import.flags = GF_IMPORT_SKIP_TXT_BOX;</span>
+<span class="lineNum">     145 </span>            : 
+<span class="lineNum">     146 </span><span class="lineNoCov">          0 :         if (!strnicmp(url, &quot;gmem://&quot;, 7)) {</span>
+<span class="lineNum">     147 </span>            :                 u8 *mem_address;
+<span class="lineNum">     148 </span>            :                 u32 size;
+<span class="lineNum">     149 </span>            :                 FILE *tmp_txt;
+<span class="lineNum">     150 </span><span class="lineNoCov">          0 :                 import.streamFormat = &quot;TEXT&quot;;</span>
+<span class="lineNum">     151 </span>            : 
+<span class="lineNum">     152 </span><span class="lineNoCov">          0 :                 if (sscanf(url, &quot;gmem://%d@%p&quot;, &amp;size, &amp;mem_address) != 2) {</span>
+<span class="lineNum">     153 </span><span class="lineNoCov">          0 :                         return GF_BAD_PARAM;</span>
+<span class="lineNum">     154 </span>            :                 }
+<span class="lineNum">     155 </span><span class="lineNoCov">          0 :                 strcat(szFILE, &quot;_tmptxt&quot;);</span>
+<span class="lineNum">     156 </span><span class="lineNoCov">          0 :                 tmp_txt = gf_fopen(szFILE, &quot;w&quot;);</span>
+<span class="lineNum">     157 </span><span class="lineNoCov">          0 :                 if (!tmp_txt) return GF_IO_ERR;</span>
+<span class="lineNum">     158 </span><span class="lineNoCov">          0 :                 fwrite(mem_address, size, 1, tmp_txt);</span>
+<span class="lineNum">     159 </span><span class="lineNoCov">          0 :                 gf_fclose(tmp_txt);</span>
+<span class="lineNum">     160 </span>            : 
+<span class="lineNum">     161 </span><span class="lineNoCov">          0 :                 import.in_name = szFILE;</span>
+<span class="lineNum">     162 </span><span class="lineNoCov">          0 :                 e = gf_media_import(&amp;import);</span>
+<span class="lineNum">     163 </span>            : 
+<span class="lineNum">     164 </span><span class="lineNoCov">          0 :                 gf_delete_file(szFILE);</span>
+<span class="lineNum">     165 </span>            : 
+<span class="lineNum">     166 </span><span class="lineNoCov">          0 :         } else {</span>
+<span class="lineNum">     167 </span><span class="lineNoCov">          0 :                 import.in_name = (char *) url;</span>
+<span class="lineNum">     168 </span><span class="lineNoCov">          0 :                 e = gf_media_import(&amp;import);</span>
+<span class="lineNum">     169 </span>            :         }
+<span class="lineNum">     170 </span><span class="lineNoCov">          0 :         if (!e) {</span>
+<span class="lineNum">     171 </span><span class="lineNoCov">          0 :                 tti-&gt;tt_track = 1;</span>
+<span class="lineNum">     172 </span><span class="lineNoCov">          0 :                 gf_isom_text_set_streaming_mode(tti-&gt;mp4, GF_TRUE);</span>
+<span class="lineNum">     173 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     174 </span><span class="lineNoCov">          0 :         return e;</span>
+<a name="175"><span class="lineNum">     175 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     176 </span>            : 
+<span class="lineNum">     177 </span>            : void TTIn_NetIO(void *cbk, GF_NETIO_Parameter *param)
+<span class="lineNum">     178 </span>            : {
+<span class="lineNum">     179 </span>            :         GF_Err e;
+<span class="lineNum">     180 </span>            :         const char *szCache;
+<span class="lineNum">     181 </span><span class="lineNoCov">          0 :         GF_InputService *plug = (GF_InputService *)cbk;</span>
+<span class="lineNum">     182 </span><span class="lineNoCov">          0 :         TTIn *tti = (TTIn *) plug-&gt;priv;</span>
+<span class="lineNum">     183 </span><span class="lineNoCov">          0 :         if (!tti)</span>
+<span class="lineNum">     184 </span>            :                 return;
+<span class="lineNum">     185 </span><span class="lineNoCov">          0 :         gf_service_download_update_stats(tti-&gt;dnload);</span>
+<span class="lineNum">     186 </span>            : 
+<span class="lineNum">     187 </span><span class="lineNoCov">          0 :         e = param-&gt;error;</span>
+<span class="lineNum">     188 </span>            :         /*done*/
+<span class="lineNum">     189 </span><span class="lineNoCov">          0 :         if (param-&gt;msg_type==GF_NETIO_DATA_TRANSFERED) {</span>
+<span class="lineNum">     190 </span><span class="lineNoCov">          0 :                 szCache = gf_dm_sess_get_cache_name(tti-&gt;dnload);</span>
+<span class="lineNum">     191 </span><span class="lineNoCov">          0 :                 if (!szCache) e = GF_IO_ERR;</span>
+<span class="lineNum">     192 </span>            :                 else {
+<span class="lineNum">     193 </span><span class="lineNoCov">          0 :                         e = TTIn_LoadFile(plug, szCache, GF_TRUE);</span>
+<span class="lineNum">     194 </span>            :                 }
+<span class="lineNum">     195 </span>            :         }
+<span class="lineNum">     196 </span><span class="lineNoCov">          0 :         else if (!e || (param-&gt;msg_type==GF_NETIO_DATA_EXCHANGE))</span>
+<span class="lineNum">     197 </span>            :                 return;
+<span class="lineNum">     198 </span>            : 
+<span class="lineNum">     199 </span>            :         /*OK confirm*/
+<span class="lineNum">     200 </span><span class="lineNoCov">          0 :         if (tti-&gt;needs_connection) {</span>
+<span class="lineNum">     201 </span><span class="lineNoCov">          0 :                 tti-&gt;needs_connection = GF_FALSE;</span>
+<span class="lineNum">     202 </span><span class="lineNoCov">          0 :                 gf_service_connect_ack(tti-&gt;service, NULL, e);</span>
+<span class="lineNum">     203 </span><span class="lineNoCov">          0 :                 if (!e &amp;&amp; !tti-&gt;od_done) tti_setup_object(tti, plug);</span>
+<span class="lineNum">     204 </span>            :         }
+<a name="205"><span class="lineNum">     205 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     206 </span>            : 
+<span class="lineNum">     207 </span>            : void TTIn_download_file(GF_InputService *plug, const char *url)
+<span class="lineNum">     208 </span>            : {
+<span class="lineNum">     209 </span><span class="lineNoCov">          0 :         TTIn *tti = (TTIn *) plug-&gt;priv;</span>
+<span class="lineNum">     210 </span><span class="lineNoCov">          0 :         if (!plug || !url)</span>
+<span class="lineNum">     211 </span>            :                 return;
+<span class="lineNum">     212 </span><span class="lineNoCov">          0 :         tti-&gt;needs_connection = GF_TRUE;</span>
+<span class="lineNum">     213 </span><span class="lineNoCov">          0 :         tti-&gt;dnload = gf_service_download_new(tti-&gt;service, url, 0, TTIn_NetIO, plug);</span>
+<span class="lineNum">     214 </span><span class="lineNoCov">          0 :         if (!tti-&gt;dnload) {</span>
+<span class="lineNum">     215 </span><span class="lineNoCov">          0 :                 tti-&gt;needs_connection = GF_FALSE;</span>
+<span class="lineNum">     216 </span><span class="lineNoCov">          0 :                 gf_service_connect_ack(tti-&gt;service, NULL, GF_NOT_SUPPORTED);</span>
+<span class="lineNum">     217 </span><span class="lineNoCov">          0 :         } else {</span>
+<span class="lineNum">     218 </span>            :                 /*start our download (threaded)*/
+<span class="lineNum">     219 </span><span class="lineNoCov">          0 :                 gf_dm_sess_process(tti-&gt;dnload);</span>
+<span class="lineNum">     220 </span>            :         }
+<span class="lineNum">     221 </span>            :         /*service confirm is done once fetched*/
+<a name="222"><span class="lineNum">     222 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     223 </span>            : 
+<span class="lineNum">     224 </span>            : static GF_Err TTIn_ConnectService(GF_InputService *plug, GF_ClientService *serv, const char *url)
+<span class="lineNum">     225 </span>            : {
+<span class="lineNum">     226 </span>            :         GF_Err e;
+<span class="lineNum">     227 </span><span class="lineNoCov">          0 :         TTIn *tti = (TTIn *)plug-&gt;priv;</span>
+<span class="lineNum">     228 </span><span class="lineNoCov">          0 :         if (!plug || !url)</span>
+<span class="lineNum">     229 </span><span class="lineNoCov">          0 :                 return GF_BAD_PARAM;</span>
+<span class="lineNum">     230 </span><span class="lineNoCov">          0 :         tti-&gt;service = serv;</span>
+<span class="lineNum">     231 </span>            : 
+<span class="lineNum">     232 </span><span class="lineNoCov">          0 :         if (tti-&gt;dnload) gf_service_download_del(tti-&gt;dnload);</span>
+<span class="lineNum">     233 </span><span class="lineNoCov">          0 :         tti-&gt;dnload = NULL;</span>
+<span class="lineNum">     234 </span>            : 
+<span class="lineNum">     235 </span>            :         /*remote fetch*/
+<span class="lineNum">     236 </span><span class="lineNoCov">          0 :         if (!TTIn_is_local(url)) {</span>
+<span class="lineNum">     237 </span><span class="lineNoCov">          0 :                 TTIn_download_file(plug, url);</span>
+<span class="lineNum">     238 </span><span class="lineNoCov">          0 :                 return GF_OK;</span>
+<span class="lineNum">     239 </span>            :         }
+<span class="lineNum">     240 </span><span class="lineNoCov">          0 :         e = TTIn_LoadFile(plug, url, GF_FALSE);</span>
+<span class="lineNum">     241 </span><span class="lineNoCov">          0 :         gf_service_connect_ack(serv, NULL, e);</span>
+<span class="lineNum">     242 </span><span class="lineNoCov">          0 :         if (!e &amp;&amp; !tti-&gt;od_done) tti_setup_object(tti, plug);</span>
+<span class="lineNum">     243 </span><span class="lineNoCov">          0 :         return GF_OK;</span>
+<a name="244"><span class="lineNum">     244 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     245 </span>            : 
+<span class="lineNum">     246 </span>            : static GF_Err TTIn_CloseService(GF_InputService *plug)
+<span class="lineNum">     247 </span>            : {
+<span class="lineNum">     248 </span>            :         TTIn *tti;
+<span class="lineNum">     249 </span><span class="lineCov">          1 :         if (!plug)</span>
+<span class="lineNum">     250 </span><span class="lineNoCov">          0 :                 return GF_BAD_PARAM;</span>
+<span class="lineNum">     251 </span><span class="lineCov">          1 :         tti = (TTIn *)plug-&gt;priv;</span>
+<span class="lineNum">     252 </span><span class="lineCov">          1 :         if (!tti)</span>
+<span class="lineNum">     253 </span><span class="lineNoCov">          0 :                 return GF_BAD_PARAM;</span>
+<span class="lineNum">     254 </span><span class="lineCov">          1 :         if (tti-&gt;samp)</span>
+<span class="lineNum">     255 </span><span class="lineNoCov">          0 :                 gf_isom_sample_del(&amp;tti-&gt;samp);</span>
+<span class="lineNum">     256 </span><span class="lineCov">          1 :         tti-&gt;samp = NULL;</span>
+<span class="lineNum">     257 </span><span class="lineCov">          1 :         if (tti-&gt;mp4)</span>
+<span class="lineNum">     258 </span><span class="lineNoCov">          0 :                 gf_isom_delete(tti-&gt;mp4);</span>
+<span class="lineNum">     259 </span><span class="lineCov">          1 :         tti-&gt;mp4 = NULL;</span>
+<span class="lineNum">     260 </span><span class="lineCov">          1 :         if (tti-&gt;szFile) {</span>
+<span class="lineNum">     261 </span><span class="lineNoCov">          0 :                 gf_delete_file(tti-&gt;szFile);</span>
+<span class="lineNum">     262 </span><span class="lineNoCov">          0 :                 gf_free(tti-&gt;szFile);</span>
+<span class="lineNum">     263 </span><span class="lineNoCov">          0 :                 tti-&gt;szFile = NULL;</span>
+<span class="lineNum">     264 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     265 </span><span class="lineCov">          1 :         if (tti-&gt;dnload)</span>
+<span class="lineNum">     266 </span><span class="lineNoCov">          0 :                 gf_service_download_del(tti-&gt;dnload);</span>
+<span class="lineNum">     267 </span><span class="lineCov">          1 :         tti-&gt;dnload = NULL;</span>
+<span class="lineNum">     268 </span><span class="lineCov">          1 :         if (tti-&gt;service)</span>
+<span class="lineNum">     269 </span><span class="lineNoCov">          0 :                 gf_service_disconnect_ack(tti-&gt;service, NULL, GF_OK);</span>
+<span class="lineNum">     270 </span><span class="lineCov">          1 :         tti-&gt;service = NULL;</span>
+<span class="lineNum">     271 </span><span class="lineCov">          1 :         return GF_OK;</span>
+<a name="272"><span class="lineNum">     272 </span><span class="lineCov">          1 : }</span></a>
+<span class="lineNum">     273 </span>            : 
+<span class="lineNum">     274 </span>            : static GF_Descriptor *TTIn_GetServiceDesc(GF_InputService *plug, u32 expect_type, const char *sub_url)
+<span class="lineNum">     275 </span>            : {
+<span class="lineNum">     276 </span>            :         TTIn *tti;
+<span class="lineNum">     277 </span><span class="lineNoCov">          0 :         if (!plug)</span>
+<span class="lineNum">     278 </span><span class="lineNoCov">          0 :                 return NULL;</span>
+<span class="lineNum">     279 </span><span class="lineNoCov">          0 :         tti = (TTIn *)plug-&gt;priv;</span>
+<span class="lineNum">     280 </span><span class="lineNoCov">          0 :         if (!tti)</span>
+<span class="lineNum">     281 </span><span class="lineNoCov">          0 :                 return NULL;</span>
+<span class="lineNum">     282 </span>            :         /*visual object*/
+<span class="lineNum">     283 </span><span class="lineNoCov">          0 :         switch (expect_type) {</span>
+<span class="lineNum">     284 </span>            :         case GF_MEDIA_OBJECT_UNDEF:
+<span class="lineNum">     285 </span>            :         case GF_MEDIA_OBJECT_UPDATES:
+<span class="lineNum">     286 </span>            :         case GF_MEDIA_OBJECT_TEXT:
+<span class="lineNum">     287 </span>            :         {
+<span class="lineNum">     288 </span><span class="lineNoCov">          0 :                 GF_ObjectDescriptor *od = (GF_ObjectDescriptor *) gf_odf_desc_new(GF_ODF_OD_TAG);</span>
+<span class="lineNum">     289 </span><span class="lineNoCov">          0 :                 GF_ESD *esd = tti_get_esd(tti);</span>
+<span class="lineNum">     290 </span><span class="lineNoCov">          0 :                 od-&gt;objectDescriptorID = esd-&gt;ESID;</span>
+<span class="lineNum">     291 </span><span class="lineNoCov">          0 :                 gf_list_add(od-&gt;ESDescriptors, esd);</span>
+<span class="lineNum">     292 </span><span class="lineNoCov">          0 :                 tti-&gt;od_done = GF_TRUE;</span>
+<span class="lineNum">     293 </span><span class="lineNoCov">          0 :                 return (GF_Descriptor *) od;</span>
+<span class="lineNum">     294 </span>            :         }
+<span class="lineNum">     295 </span>            :         default:
+<span class="lineNum">     296 </span><span class="lineNoCov">          0 :                 return NULL;</span>
+<span class="lineNum">     297 </span>            :         }
+<span class="lineNum">     298 </span>            :         return NULL;
+<a name="299"><span class="lineNum">     299 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     300 </span>            : 
+<span class="lineNum">     301 </span>            : static GF_Err TTIn_ConnectChannel(GF_InputService *plug, LPNETCHANNEL channel, const char *url, Bool upstream)
+<span class="lineNum">     302 </span>            : {
+<span class="lineNum">     303 </span>            :         u32 ES_ID;
+<span class="lineNum">     304 </span>            :         GF_Err e;
+<span class="lineNum">     305 </span><span class="lineNoCov">          0 :         TTIn *tti = (TTIn *)plug-&gt;priv;</span>
+<span class="lineNum">     306 </span><span class="lineNoCov">          0 :         if (!tti)</span>
+<span class="lineNum">     307 </span><span class="lineNoCov">          0 :                 return GF_BAD_PARAM;</span>
+<span class="lineNum">     308 </span>            :         e = GF_SERVICE_ERROR;
+<span class="lineNum">     309 </span><span class="lineNoCov">          0 :         if (!tti || tti-&gt;ch==channel) goto exit;</span>
+<span class="lineNum">     310 </span>            : 
+<span class="lineNum">     311 </span>            :         e = GF_STREAM_NOT_FOUND;
+<span class="lineNum">     312 </span><span class="lineNoCov">          0 :         ES_ID = 0;</span>
+<span class="lineNum">     313 </span><span class="lineNoCov">          0 :         if (strstr(url, &quot;ES_ID&quot;)) sscanf(url, &quot;ES_ID=%ud&quot;, &amp;ES_ID);</span>
+<span class="lineNum">     314 </span>            : 
+<span class="lineNum">     315 </span><span class="lineNoCov">          0 :         if (ES_ID==1) {</span>
+<span class="lineNum">     316 </span><span class="lineNoCov">          0 :                 tti-&gt;ch = channel;</span>
+<span class="lineNum">     317 </span>            :                 e = GF_OK;
+<span class="lineNum">     318 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     319 </span>            : 
+<span class="lineNum">     320 </span>            : exit:
+<span class="lineNum">     321 </span><span class="lineNoCov">          0 :         gf_service_connect_ack(tti-&gt;service, channel, e);</span>
+<span class="lineNum">     322 </span><span class="lineNoCov">          0 :         return e;</span>
+<a name="323"><span class="lineNum">     323 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     324 </span>            : 
+<span class="lineNum">     325 </span>            : static GF_Err TTIn_DisconnectChannel(GF_InputService *plug, LPNETCHANNEL channel)
+<span class="lineNum">     326 </span>            : {
+<span class="lineNum">     327 </span><span class="lineNoCov">          0 :         TTIn *tti = (TTIn *)plug-&gt;priv;</span>
+<span class="lineNum">     328 </span>            :         GF_Err e = GF_STREAM_NOT_FOUND;
+<span class="lineNum">     329 </span>            : 
+<span class="lineNum">     330 </span><span class="lineNoCov">          0 :         if (tti-&gt;ch == channel) {</span>
+<span class="lineNum">     331 </span><span class="lineNoCov">          0 :                 tti-&gt;ch = NULL;</span>
+<span class="lineNum">     332 </span>            :                 e = GF_OK;
+<span class="lineNum">     333 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     334 </span><span class="lineNoCov">          0 :         gf_service_disconnect_ack(tti-&gt;service, channel, e);</span>
+<span class="lineNum">     335 </span><span class="lineNoCov">          0 :         return GF_OK;</span>
+<a name="336"><span class="lineNum">     336 </span>            : }</a>
+<span class="lineNum">     337 </span>            : 
+<span class="lineNum">     338 </span>            : static GF_Err TTIn_ServiceCommand(GF_InputService *plug, GF_NetworkCommand *com)
+<span class="lineNum">     339 </span>            : {
+<span class="lineNum">     340 </span><span class="lineNoCov">          0 :         TTIn *tti = (TTIn *)plug-&gt;priv;</span>
+<span class="lineNum">     341 </span><span class="lineNoCov">          0 :         if (!tti)</span>
+<span class="lineNum">     342 </span><span class="lineNoCov">          0 :                 return GF_BAD_PARAM;</span>
+<span class="lineNum">     343 </span><span class="lineNoCov">          0 :         if (!com-&gt;base.on_channel) return GF_NOT_SUPPORTED;</span>
+<span class="lineNum">     344 </span><span class="lineNoCov">          0 :         switch (com-&gt;command_type) {</span>
+<span class="lineNum">     345 </span>            :         case GF_NET_CHAN_SET_PADDING:
+<span class="lineNum">     346 </span><span class="lineNoCov">          0 :                 gf_isom_set_sample_padding(tti-&gt;mp4, tti-&gt;tt_track, com-&gt;pad.padding_bytes);</span>
+<span class="lineNum">     347 </span><span class="lineNoCov">          0 :                 return GF_OK;</span>
+<span class="lineNum">     348 </span>            :         case GF_NET_CHAN_DURATION:
+<span class="lineNum">     349 </span><span class="lineNoCov">          0 :                 com-&gt;duration.duration = (Double) (s64) gf_isom_get_media_duration(tti-&gt;mp4, tti-&gt;tt_track);</span>
+<span class="lineNum">     350 </span><span class="lineNoCov">          0 :                 com-&gt;duration.duration /= gf_isom_get_media_timescale(tti-&gt;mp4, tti-&gt;tt_track);</span>
+<span class="lineNum">     351 </span><span class="lineNoCov">          0 :                 return GF_OK;</span>
+<span class="lineNum">     352 </span>            :         case GF_NET_CHAN_PLAY:
+<span class="lineNum">     353 </span><span class="lineNoCov">          0 :                 tti-&gt;start_range = (com-&gt;play.start_range&gt;0) ? (u32) (com-&gt;play.start_range * 1000) : 0;</span>
+<span class="lineNum">     354 </span><span class="lineNoCov">          0 :                 if (tti-&gt;ch == com-&gt;base.on_channel) {</span>
+<span class="lineNum">     355 </span><span class="lineNoCov">          0 :                         tti-&gt;samp_num = 0;</span>
+<span class="lineNum">     356 </span><span class="lineNoCov">          0 :                         if (tti-&gt;samp) gf_isom_sample_del(&amp;tti-&gt;samp);</span>
+<span class="lineNum">     357 </span>            :                 }
+<span class="lineNum">     358 </span><span class="lineNoCov">          0 :                 return GF_OK;</span>
+<span class="lineNum">     359 </span>            :         case GF_NET_CHAN_STOP:
+<span class="lineNum">     360 </span><span class="lineNoCov">          0 :                 return GF_OK;</span>
+<span class="lineNum">     361 </span>            :         default:
+<span class="lineNum">     362 </span><span class="lineNoCov">          0 :                 return GF_OK;</span>
+<span class="lineNum">     363 </span>            :         }
+<span class="lineNum">     364 </span><span class="lineNoCov">          0 : }</span>
+<a name="365"><span class="lineNum">     365 </span>            : </a>
+<span class="lineNum">     366 </span>            : 
+<span class="lineNum">     367 </span>            : static GF_Err TTIn_ChannelGetSLP(GF_InputService *plug, LPNETCHANNEL channel, char **out_data_ptr, u32 *out_data_size, GF_SLHeader *out_sl_hdr, Bool *sl_compressed, GF_Err *out_reception_status, Bool *is_new_data)
+<span class="lineNum">     368 </span>            : {
+<span class="lineNum">     369 </span><span class="lineNoCov">          0 :         TTIn *tti = (TTIn *)plug-&gt;priv;</span>
+<span class="lineNum">     370 </span>            : 
+<span class="lineNum">     371 </span><span class="lineNoCov">          0 :         *out_reception_status = GF_OK;</span>
+<span class="lineNum">     372 </span><span class="lineNoCov">          0 :         *sl_compressed = GF_FALSE;</span>
+<span class="lineNum">     373 </span><span class="lineNoCov">          0 :         *is_new_data = GF_FALSE;</span>
+<span class="lineNum">     374 </span>            : 
+<span class="lineNum">     375 </span><span class="lineNoCov">          0 :         memset(&amp;tti-&gt;sl_hdr, 0, sizeof(GF_SLHeader));</span>
+<span class="lineNum">     376 </span><span class="lineNoCov">          0 :         tti-&gt;sl_hdr.randomAccessPointFlag = 1;</span>
+<span class="lineNum">     377 </span><span class="lineNoCov">          0 :         tti-&gt;sl_hdr.compositionTimeStampFlag = 1;</span>
+<span class="lineNum">     378 </span><span class="lineNoCov">          0 :         tti-&gt;sl_hdr.accessUnitStartFlag = tti-&gt;sl_hdr.accessUnitEndFlag = 1;</span>
+<span class="lineNum">     379 </span>            : 
+<span class="lineNum">     380 </span>            :         /*fetching es data*/
+<span class="lineNum">     381 </span><span class="lineNoCov">          0 :         if (tti-&gt;ch == channel) {</span>
+<span class="lineNum">     382 </span><span class="lineNoCov">          0 :                 if (tti-&gt;samp_num&gt;=gf_isom_get_sample_count(tti-&gt;mp4, tti-&gt;tt_track)) {</span>
+<span class="lineNum">     383 </span><span class="lineNoCov">          0 :                         *out_reception_status = GF_EOS;</span>
+<span class="lineNum">     384 </span><span class="lineNoCov">          0 :                         return GF_OK;</span>
+<span class="lineNum">     385 </span>            :                 }
+<span class="lineNum">     386 </span>            : 
+<span class="lineNum">     387 </span><span class="lineNoCov">          0 :                 if (!tti-&gt;samp) {</span>
+<span class="lineNum">     388 </span>            :                         u32 di;
+<span class="lineNum">     389 </span><span class="lineNoCov">          0 :                         if (tti-&gt;start_range) {</span>
+<span class="lineNum">     390 </span>            :                                 u32 di;
+<span class="lineNum">     391 </span><span class="lineNoCov">          0 :                                 *out_reception_status = gf_isom_get_sample_for_movie_time(tti-&gt;mp4, tti-&gt;tt_track, tti-&gt;start_range, &amp;di, GF_ISOM_SEARCH_SYNC_BACKWARD, &amp;tti-&gt;samp, &amp;tti-&gt;samp_num);</span>
+<span class="lineNum">     392 </span><span class="lineNoCov">          0 :                                 tti-&gt;start_range = 0;</span>
+<span class="lineNum">     393 </span><span class="lineNoCov">          0 :                         } else {</span>
+<span class="lineNum">     394 </span><span class="lineNoCov">          0 :                                 tti-&gt;samp = gf_isom_get_sample(tti-&gt;mp4, tti-&gt;tt_track, tti-&gt;samp_num+1, &amp;di);</span>
+<span class="lineNum">     395 </span>            :                         }
+<span class="lineNum">     396 </span><span class="lineNoCov">          0 :                         if (!tti-&gt;samp) {</span>
+<span class="lineNum">     397 </span><span class="lineNoCov">          0 :                                 *out_reception_status = GF_CORRUPTED_DATA;</span>
+<span class="lineNum">     398 </span><span class="lineNoCov">          0 :                                 return GF_OK;</span>
+<span class="lineNum">     399 </span>            :                         }
+<span class="lineNum">     400 </span><span class="lineNoCov">          0 :                         *is_new_data = GF_TRUE;</span>
+<span class="lineNum">     401 </span><span class="lineNoCov">          0 :                 }</span>
+<span class="lineNum">     402 </span><span class="lineNoCov">          0 :                 tti-&gt;sl_hdr.compositionTimeStamp = tti-&gt;sl_hdr.decodingTimeStamp = tti-&gt;samp-&gt;DTS;</span>
+<span class="lineNum">     403 </span><span class="lineNoCov">          0 :                 *out_data_ptr = tti-&gt;samp-&gt;data;</span>
+<span class="lineNum">     404 </span><span class="lineNoCov">          0 :                 *out_data_size = tti-&gt;samp-&gt;dataLength;</span>
+<span class="lineNum">     405 </span><span class="lineNoCov">          0 :                 *out_sl_hdr = tti-&gt;sl_hdr;</span>
+<span class="lineNum">     406 </span><span class="lineNoCov">          0 :                 return GF_OK;</span>
+<span class="lineNum">     407 </span>            :         }
+<span class="lineNum">     408 </span><span class="lineNoCov">          0 :         return GF_STREAM_NOT_FOUND;</span>
+<a name="409"><span class="lineNum">     409 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     410 </span>            : 
+<span class="lineNum">     411 </span>            : static GF_Err TTIn_ChannelReleaseSLP(GF_InputService *plug, LPNETCHANNEL channel)
+<span class="lineNum">     412 </span>            : {
+<span class="lineNum">     413 </span><span class="lineNoCov">          0 :         TTIn *tti = (TTIn *)plug-&gt;priv;</span>
+<span class="lineNum">     414 </span>            : 
+<span class="lineNum">     415 </span><span class="lineNoCov">          0 :         if (tti-&gt;ch == channel) {</span>
+<span class="lineNum">     416 </span><span class="lineNoCov">          0 :                 if (!tti-&gt;samp) return GF_BAD_PARAM;</span>
+<span class="lineNum">     417 </span><span class="lineNoCov">          0 :                 gf_isom_sample_del(&amp;tti-&gt;samp);</span>
+<span class="lineNum">     418 </span><span class="lineNoCov">          0 :                 tti-&gt;samp = NULL;</span>
+<span class="lineNum">     419 </span><span class="lineNoCov">          0 :                 tti-&gt;samp_num++;</span>
+<span class="lineNum">     420 </span><span class="lineNoCov">          0 :                 return GF_OK;</span>
+<span class="lineNum">     421 </span>            :         }
+<span class="lineNum">     422 </span><span class="lineNoCov">          0 :         return GF_OK;</span>
+<span class="lineNum">     423 </span><span class="lineNoCov">          0 : }</span>
+<a name="424"><span class="lineNum">     424 </span>            : </a>
+<span class="lineNum">     425 </span>            : 
+<span class="lineNum">     426 </span>            : void *NewTTReader()
+<span class="lineNum">     427 </span>            : {
+<span class="lineNum">     428 </span>            :         TTIn *priv;
+<span class="lineNum">     429 </span>            :         GF_InputService *plug;
+<span class="lineNum">     430 </span><span class="lineCov">          2 :         GF_SAFEALLOC(plug, GF_InputService);</span>
+<span class="lineNum">     431 </span><span class="lineCov">          1 :         if (!plug) return NULL;</span>
+<span class="lineNum">     432 </span><span class="lineCov">          1 :         GF_REGISTER_MODULE_INTERFACE(plug, GF_NET_CLIENT_INTERFACE, &quot;GPAC TimedText Reader&quot;, &quot;gpac distribution&quot;)</span>
+<span class="lineNum">     433 </span>            : 
+<span class="lineNum">     434 </span><span class="lineCov">          2 :         GF_SAFEALLOC(priv, TTIn);</span>
+<span class="lineNum">     435 </span><span class="lineCov">          1 :         if (!priv) {</span>
+<span class="lineNum">     436 </span><span class="lineNoCov">          0 :                 gf_free(plug);</span>
+<span class="lineNum">     437 </span><span class="lineNoCov">          0 :                 return NULL;</span>
+<span class="lineNum">     438 </span>            :         }
+<span class="lineNum">     439 </span><span class="lineCov">          1 :         plug-&gt;priv = priv;</span>
+<span class="lineNum">     440 </span>            : 
+<span class="lineNum">     441 </span><span class="lineCov">          1 :         plug-&gt;RegisterMimeTypes = TTIN_RegisterMimeTypes;</span>
+<span class="lineNum">     442 </span><span class="lineCov">          1 :         plug-&gt;CanHandleURL = TTIn_CanHandleURL;</span>
+<span class="lineNum">     443 </span><span class="lineCov">          1 :         plug-&gt;CanHandleURLInService = NULL;</span>
+<span class="lineNum">     444 </span><span class="lineCov">          1 :         plug-&gt;ConnectService = TTIn_ConnectService;</span>
+<span class="lineNum">     445 </span><span class="lineCov">          1 :         plug-&gt;CloseService = TTIn_CloseService;</span>
+<span class="lineNum">     446 </span><span class="lineCov">          1 :         plug-&gt;GetServiceDescriptor = TTIn_GetServiceDesc;</span>
+<span class="lineNum">     447 </span><span class="lineCov">          1 :         plug-&gt;ConnectChannel = TTIn_ConnectChannel;</span>
+<span class="lineNum">     448 </span><span class="lineCov">          1 :         plug-&gt;DisconnectChannel = TTIn_DisconnectChannel;</span>
+<span class="lineNum">     449 </span><span class="lineCov">          1 :         plug-&gt;ChannelGetSLP = TTIn_ChannelGetSLP;</span>
+<span class="lineNum">     450 </span><span class="lineCov">          1 :         plug-&gt;ChannelReleaseSLP = TTIn_ChannelReleaseSLP;</span>
+<span class="lineNum">     451 </span><span class="lineCov">          1 :         plug-&gt;ServiceCommand = TTIn_ServiceCommand;</span>
+<span class="lineNum">     452 </span><span class="lineCov">          1 :         return plug;</span>
+<a name="453"><span class="lineNum">     453 </span><span class="lineCov">          1 : }</span></a>
+<span class="lineNum">     454 </span>            : 
+<span class="lineNum">     455 </span>            : void DeleteTTReader(void *ifce)
+<span class="lineNum">     456 </span>            : {
+<span class="lineNum">     457 </span>            :         TTIn *tti;
+<span class="lineNum">     458 </span><span class="lineCov">          1 :         GF_InputService *plug = (GF_InputService *) ifce;</span>
+<span class="lineNum">     459 </span><span class="lineCov">          1 :         if (!plug)</span>
+<span class="lineNum">     460 </span>            :                 return;
+<span class="lineNum">     461 </span><span class="lineCov">          1 :         tti = (TTIn *)plug-&gt;priv;</span>
+<span class="lineNum">     462 </span><span class="lineCov">          1 :         if (tti) {</span>
+<span class="lineNum">     463 </span><span class="lineCov">          1 :                 TTIn_CloseService(plug);</span>
+<span class="lineNum">     464 </span><span class="lineCov">          1 :                 gf_free(tti);</span>
+<span class="lineNum">     465 </span><span class="lineCov">          1 :         }</span>
+<span class="lineNum">     466 </span><span class="lineCov">          1 :         plug-&gt;priv = NULL;</span>
+<span class="lineNum">     467 </span><span class="lineCov">          1 :         gf_free(plug);</span>
+<span class="lineNum">     468 </span><span class="lineCov">          2 : }</span>
+<span class="lineNum">     469 </span>            : 
+<span class="lineNum">     470 </span>            : #endif /* !defined(GPAC_DISABLE_ISOM_WRITE) &amp;&amp; !defined(GPAC_DISABLE_MEDIA_IMPORT)*/
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.12</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

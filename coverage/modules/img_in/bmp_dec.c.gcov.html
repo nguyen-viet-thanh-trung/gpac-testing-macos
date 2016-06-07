@@ -1,0 +1,286 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - modules/img_in/bmp_dec.c</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">modules/img_in</a> - bmp_dec.c<span style="font-size: 80%;"> (source / <a href="bmp_dec.c.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">101</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2016-06-07 10:36:32</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">8</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*</a>
+<span class="lineNum">       2 </span>            :  *                      GPAC - Multimedia Framework C SDK
+<span class="lineNum">       3 </span>            :  *
+<span class="lineNum">       4 </span>            :  *                      Authors: Jean Le Feuvre
+<span class="lineNum">       5 </span>            :  *                      Copyright (c) Telecom ParisTech 2000-2012
+<span class="lineNum">       6 </span>            :  *                                      All rights reserved
+<span class="lineNum">       7 </span>            :  *
+<span class="lineNum">       8 </span>            :  *  This file is part of GPAC / image format module
+<span class="lineNum">       9 </span>            :  *
+<span class="lineNum">      10 </span>            :  *  GPAC is free software; you can redistribute it and/or modify
+<span class="lineNum">      11 </span>            :  *  it under the terms of the GNU Lesser General Public License as published by
+<span class="lineNum">      12 </span>            :  *  the Free Software Foundation; either version 2, or (at your option)
+<span class="lineNum">      13 </span>            :  *  any later version.
+<span class="lineNum">      14 </span>            :  *
+<span class="lineNum">      15 </span>            :  *  GPAC is distributed in the hope that it will be useful,
+<span class="lineNum">      16 </span>            :  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+<span class="lineNum">      17 </span>            :  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+<span class="lineNum">      18 </span>            :  *  GNU Lesser General Public License for more details.
+<span class="lineNum">      19 </span>            :  *
+<span class="lineNum">      20 </span>            :  *  You should have received a copy of the GNU Lesser General Public
+<span class="lineNum">      21 </span>            :  *  License along with this library; see the file COPYING.  If not, write to
+<span class="lineNum">      22 </span>            :  *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+<span class="lineNum">      23 </span>            :  *
+<span class="lineNum">      24 </span>            :  */
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : 
+<span class="lineNum">      27 </span>            : #include &quot;img_in.h&quot;
+<span class="lineNum">      28 </span>            : 
+<span class="lineNum">      29 </span>            : #if defined(WIN32) || defined(_WIN32_WCE) || defined(__SYMBIAN32__)
+<span class="lineNum">      30 </span>            : #else
+<span class="lineNum">      31 </span>            : #include &lt;netinet/in.h&gt;
+<span class="lineNum">      32 </span>            : #endif
+<span class="lineNum">      33 </span>            : 
+<span class="lineNum">      34 </span>            : typedef struct
+<span class="lineNum">      35 </span>            : {
+<span class="lineNum">      36 </span>            :         u16 ES_ID;
+<span class="lineNum">      37 </span>            :         u32 width, height, out_size, pixel_format;
+<span class="lineNum">      38 </span>            : } BMPDec;
+<span class="lineNum">      39 </span>            : 
+<span class="lineNum">      40 </span>            : #define BMPCTX()        BMPDec *ctx = (BMPDec *) ((IMGDec *)ifcg-&gt;privateStack)-&gt;opaque
+<a name="41"><span class="lineNum">      41 </span>            : </a>
+<span class="lineNum">      42 </span>            : 
+<span class="lineNum">      43 </span>            : static GF_Err BMP_AttachStream(GF_BaseDecoder *ifcg, GF_ESD *esd)
+<span class="lineNum">      44 </span>            : {
+<span class="lineNum">      45 </span><span class="lineNoCov">          0 :         BMPCTX();</span>
+<span class="lineNum">      46 </span><span class="lineNoCov">          0 :         if (ctx-&gt;ES_ID &amp;&amp; ctx-&gt;ES_ID!=esd-&gt;ESID) return GF_NOT_SUPPORTED;</span>
+<span class="lineNum">      47 </span><span class="lineNoCov">          0 :         if (esd-&gt;decoderConfig-&gt;upstream) return GF_NOT_SUPPORTED;</span>
+<span class="lineNum">      48 </span><span class="lineNoCov">          0 :         ctx-&gt;ES_ID = esd-&gt;ESID;</span>
+<a name="49"><span class="lineNum">      49 </span><span class="lineNoCov">          0 :         return GF_OK;</span></a>
+<span class="lineNum">      50 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">      51 </span>            : static GF_Err BMP_DetachStream(GF_BaseDecoder *ifcg, u16 ES_ID)
+<span class="lineNum">      52 </span>            : {
+<span class="lineNum">      53 </span><span class="lineNoCov">          0 :         BMPCTX();</span>
+<span class="lineNum">      54 </span><span class="lineNoCov">          0 :         if (ctx-&gt;ES_ID != ES_ID) return GF_BAD_PARAM;</span>
+<span class="lineNum">      55 </span><span class="lineNoCov">          0 :         ctx-&gt;ES_ID = ES_ID;</span>
+<a name="56"><span class="lineNum">      56 </span><span class="lineNoCov">          0 :         return GF_OK;</span></a>
+<span class="lineNum">      57 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">      58 </span>            : static GF_Err BMP_GetCapabilities(GF_BaseDecoder *ifcg, GF_CodecCapability *capability)
+<span class="lineNum">      59 </span>            : {
+<span class="lineNum">      60 </span><span class="lineNoCov">          0 :         BMPCTX();</span>
+<span class="lineNum">      61 </span><span class="lineNoCov">          0 :         switch (capability-&gt;CapCode) {</span>
+<span class="lineNum">      62 </span>            :         case GF_CODEC_WIDTH:
+<span class="lineNum">      63 </span><span class="lineNoCov">          0 :                 capability-&gt;cap.valueInt = ctx-&gt;width;</span>
+<span class="lineNum">      64 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">      65 </span>            :         case GF_CODEC_HEIGHT:
+<span class="lineNum">      66 </span><span class="lineNoCov">          0 :                 capability-&gt;cap.valueInt = ctx-&gt;height;</span>
+<span class="lineNum">      67 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">      68 </span>            :         case GF_CODEC_STRIDE:
+<span class="lineNum">      69 </span><span class="lineNoCov">          0 :                 capability-&gt;cap.valueInt = (ctx-&gt;pixel_format == GF_PIXEL_RGB_24) ? 3 : 4;</span>
+<span class="lineNum">      70 </span><span class="lineNoCov">          0 :                 capability-&gt;cap.valueInt *= ctx-&gt;width;</span>
+<span class="lineNum">      71 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">      72 </span>            :         case GF_CODEC_FPS:
+<span class="lineNum">      73 </span><span class="lineNoCov">          0 :                 capability-&gt;cap.valueFloat = 0;</span>
+<span class="lineNum">      74 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">      75 </span>            :         case GF_CODEC_PIXEL_FORMAT:
+<span class="lineNum">      76 </span><span class="lineNoCov">          0 :                 capability-&gt;cap.valueInt = ctx-&gt;pixel_format;</span>
+<span class="lineNum">      77 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">      78 </span>            :         case GF_CODEC_OUTPUT_SIZE:
+<span class="lineNum">      79 </span><span class="lineNoCov">          0 :                 capability-&gt;cap.valueInt =   ctx-&gt;out_size;</span>
+<span class="lineNum">      80 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">      81 </span>            :         case GF_CODEC_BUFFER_MIN:
+<span class="lineNum">      82 </span><span class="lineNoCov">          0 :                 capability-&gt;cap.valueInt = 0;</span>
+<span class="lineNum">      83 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">      84 </span>            :         case GF_CODEC_BUFFER_MAX:
+<span class="lineNum">      85 </span><span class="lineNoCov">          0 :                 capability-&gt;cap.valueInt = IMG_CM_SIZE;</span>
+<span class="lineNum">      86 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">      87 </span>            :         case GF_CODEC_PADDING_BYTES:
+<span class="lineNum">      88 </span><span class="lineNoCov">          0 :                 capability-&gt;cap.valueInt = 0;</span>
+<span class="lineNum">      89 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">      90 </span>            :         case GF_CODEC_PAR:
+<span class="lineNum">      91 </span><span class="lineNoCov">          0 :                 capability-&gt;cap.valueInt = 0;</span>
+<span class="lineNum">      92 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">      93 </span>            :         case GF_CODEC_REORDER:
+<span class="lineNum">      94 </span><span class="lineNoCov">          0 :                 capability-&gt;cap.valueInt = 0;</span>
+<span class="lineNum">      95 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">      96 </span>            :         default:
+<span class="lineNum">      97 </span><span class="lineNoCov">          0 :                 return GF_NOT_SUPPORTED;</span>
+<span class="lineNum">      98 </span>            :         }
+<a name="99"><span class="lineNum">      99 </span><span class="lineNoCov">          0 :         return GF_OK;</span></a>
+<span class="lineNum">     100 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     101 </span>            : static GF_Err BMP_SetCapabilities(GF_BaseDecoder *ifcg, GF_CodecCapability capability)
+<span class="lineNum">     102 </span>            : {
+<span class="lineNum">     103 </span>            :         /*return unsupported to avoid confusion by the player (like color space changing ...) */
+<span class="lineNum">     104 </span><span class="lineNoCov">          0 :         return GF_NOT_SUPPORTED;</span>
+<a name="105"><span class="lineNum">     105 </span>            : }</a>
+<span class="lineNum">     106 </span>            : 
+<span class="lineNum">     107 </span>            : static GF_Err BMP_ProcessData(GF_MediaDecoder *ifcg,
+<span class="lineNum">     108 </span>            :                               char *inBuffer, u32 inBufferLength,
+<span class="lineNum">     109 </span>            :                               u16 ES_ID, u32 *CTS,
+<span class="lineNum">     110 </span>            :                               char *outBuffer, u32 *outBufferLength,
+<span class="lineNum">     111 </span>            :                               u8 PaddingBits, u32 mmlevel)
+<span class="lineNum">     112 </span>            : {
+<span class="lineNum">     113 </span>            :         char *pix;
+<span class="lineNum">     114 </span>            :         u32 i, j, irow, in_stride, out_stride, BPP;
+<span class="lineNum">     115 </span>            :         GF_BitStream *bs;
+<span class="lineNum">     116 </span>            :         BITMAPFILEHEADER fh;
+<span class="lineNum">     117 </span><span class="lineNoCov">          0 :         BITMAPINFOHEADER fi;</span>
+<span class="lineNum">     118 </span>            : 
+<span class="lineNum">     119 </span><span class="lineNoCov">          0 :         BMPCTX();</span>
+<span class="lineNum">     120 </span><span class="lineNoCov">          0 :         if (inBufferLength&lt;54) return GF_NON_COMPLIANT_BITSTREAM;</span>
+<span class="lineNum">     121 </span><span class="lineNoCov">          0 :         bs = gf_bs_new(inBuffer, inBufferLength, GF_BITSTREAM_READ);</span>
+<span class="lineNum">     122 </span>            : 
+<span class="lineNum">     123 </span>            : #if defined(WIN32) || defined(_WIN32_WCE) || defined(__SYMBIAN32__)
+<span class="lineNum">     124 </span>            :         gf_bs_read_data(bs, (char *) &amp;fh, 14);
+<span class="lineNum">     125 </span>            : #else
+<span class="lineNum">     126 </span><span class="lineNoCov">          0 :         fh.bfType = gf_bs_read_u16(bs);</span>
+<span class="lineNum">     127 </span><span class="lineNoCov">          0 :         fh.bfSize = gf_bs_read_u32(bs);</span>
+<span class="lineNum">     128 </span><span class="lineNoCov">          0 :         fh.bfReserved1 = gf_bs_read_u16(bs);</span>
+<span class="lineNum">     129 </span><span class="lineNoCov">          0 :         fh.bfReserved2 = gf_bs_read_u16(bs);</span>
+<span class="lineNum">     130 </span><span class="lineNoCov">          0 :         fh.bfOffBits = gf_bs_read_u32(bs);</span>
+<span class="lineNum">     131 </span><span class="lineNoCov">          0 :         fh.bfOffBits = ntohl(fh.bfOffBits);</span>
+<span class="lineNum">     132 </span>            : #endif
+<span class="lineNum">     133 </span><span class="lineNoCov">          0 :         gf_bs_read_data(bs, (char *) &amp;fi, 40);</span>
+<span class="lineNum">     134 </span><span class="lineNoCov">          0 :         gf_bs_del(bs);</span>
+<span class="lineNum">     135 </span>            : 
+<span class="lineNum">     136 </span><span class="lineNoCov">          0 :         if ((fi.biCompression != BI_RGB) || (fi.biPlanes!=1)) return GF_NOT_SUPPORTED;</span>
+<span class="lineNum">     137 </span><span class="lineNoCov">          0 :         if ((fi.biBitCount!=24) &amp;&amp; (fi.biBitCount!=32)) return GF_NOT_SUPPORTED;</span>
+<span class="lineNum">     138 </span>            : 
+<span class="lineNum">     139 </span><span class="lineNoCov">          0 :         BPP = (fi.biBitCount==24) ? 3 : 4;</span>
+<span class="lineNum">     140 </span><span class="lineNoCov">          0 :         ctx-&gt;width = fi.biWidth;</span>
+<span class="lineNum">     141 </span><span class="lineNoCov">          0 :         ctx-&gt;height = fi.biHeight;</span>
+<span class="lineNum">     142 </span><span class="lineNoCov">          0 :         ctx-&gt;pixel_format = (fi.biBitCount==24) ? GF_PIXEL_RGB_24 : GF_PIXEL_RGBA;</span>
+<span class="lineNum">     143 </span>            : 
+<span class="lineNum">     144 </span>            :         /*new cfg, reset*/
+<span class="lineNum">     145 </span><span class="lineNoCov">          0 :         if (ctx-&gt;out_size != ctx-&gt;width * ctx-&gt;height * BPP) {</span>
+<span class="lineNum">     146 </span><span class="lineNoCov">          0 :                 ctx-&gt;out_size = ctx-&gt;width * ctx-&gt;height * BPP;</span>
+<span class="lineNum">     147 </span><span class="lineNoCov">          0 :                 *outBufferLength = ctx-&gt;out_size;</span>
+<span class="lineNum">     148 </span><span class="lineNoCov">          0 :                 return GF_BUFFER_TOO_SMALL;</span>
+<span class="lineNum">     149 </span>            :         }
+<span class="lineNum">     150 </span><span class="lineNoCov">          0 :         out_stride = ctx-&gt;width*BPP;</span>
+<span class="lineNum">     151 </span>            :         in_stride = out_stride;
+<span class="lineNum">     152 </span><span class="lineNoCov">          0 :         while (in_stride % 4) in_stride++;</span>
+<span class="lineNum">     153 </span>            : 
+<span class="lineNum">     154 </span>            :         /*read*/
+<span class="lineNum">     155 </span><span class="lineNoCov">          0 :         if (fi.biBitCount==24) {</span>
+<span class="lineNum">     156 </span><span class="lineNoCov">          0 :                 for (i=0; i&lt;ctx-&gt;height; i++) {</span>
+<span class="lineNum">     157 </span><span class="lineNoCov">          0 :                         irow = (ctx-&gt;height-1-i)*out_stride;</span>
+<span class="lineNum">     158 </span><span class="lineNoCov">          0 :                         pix = inBuffer + fh.bfOffBits + i*in_stride;</span>
+<span class="lineNum">     159 </span><span class="lineNoCov">          0 :                         for (j=0; j&lt;out_stride; j+=3) {</span>
+<span class="lineNum">     160 </span><span class="lineNoCov">          0 :                                 outBuffer[j + irow] = pix[2];</span>
+<span class="lineNum">     161 </span><span class="lineNoCov">          0 :                                 outBuffer[j+1 + irow] = pix[1];</span>
+<span class="lineNum">     162 </span><span class="lineNoCov">          0 :                                 outBuffer[j+2 + irow] = pix[0];</span>
+<span class="lineNum">     163 </span><span class="lineNoCov">          0 :                                 pix += 3;</span>
+<span class="lineNum">     164 </span>            :                         }
+<span class="lineNum">     165 </span>            :                 }
+<span class="lineNum">     166 </span>            :         } else {
+<span class="lineNum">     167 </span><span class="lineNoCov">          0 :                 for (i=0; i&lt;ctx-&gt;height; i++) {</span>
+<span class="lineNum">     168 </span><span class="lineNoCov">          0 :                         irow = (ctx-&gt;height-1-i)*out_stride;</span>
+<span class="lineNum">     169 </span><span class="lineNoCov">          0 :                         pix = inBuffer + fh.bfOffBits + i*in_stride;</span>
+<span class="lineNum">     170 </span><span class="lineNoCov">          0 :                         for (j=0; j&lt;out_stride; j+=4) {</span>
+<span class="lineNum">     171 </span><span class="lineNoCov">          0 :                                 outBuffer[j + irow] = pix[2];</span>
+<span class="lineNum">     172 </span><span class="lineNoCov">          0 :                                 outBuffer[j+1 + irow] = pix[1];</span>
+<span class="lineNum">     173 </span><span class="lineNoCov">          0 :                                 outBuffer[j+2 + irow] = pix[0];</span>
+<span class="lineNum">     174 </span><span class="lineNoCov">          0 :                                 outBuffer[j+3 + irow] = pix[3];</span>
+<span class="lineNum">     175 </span><span class="lineNoCov">          0 :                                 pix += 4;</span>
+<span class="lineNum">     176 </span>            :                         }
+<span class="lineNum">     177 </span>            :                 }
+<span class="lineNum">     178 </span>            :         }
+<span class="lineNum">     179 </span><span class="lineNoCov">          0 :         *outBufferLength = ctx-&gt;out_size;</span>
+<span class="lineNum">     180 </span><span class="lineNoCov">          0 :         return GF_OK;</span>
+<a name="181"><span class="lineNum">     181 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     182 </span>            : 
+<span class="lineNum">     183 </span>            : static const char *BMP_GetCodecName(GF_BaseDecoder *dec)
+<span class="lineNum">     184 </span>            : {
+<span class="lineNum">     185 </span><span class="lineNoCov">          0 :         return &quot;BMP Decoder&quot;;</span>
+<a name="186"><span class="lineNum">     186 </span>            : }</a>
+<span class="lineNum">     187 </span>            : 
+<span class="lineNum">     188 </span>            : Bool NewBMPDec(GF_BaseDecoder *ifcd)
+<span class="lineNum">     189 </span>            : {
+<span class="lineNum">     190 </span><span class="lineNoCov">          0 :         IMGDec *wrap = (IMGDec *) ifcd-&gt;privateStack;</span>
+<span class="lineNum">     191 </span><span class="lineNoCov">          0 :         BMPDec *dec = (BMPDec *) gf_malloc(sizeof(BMPDec));</span>
+<span class="lineNum">     192 </span><span class="lineNoCov">          0 :         memset(dec, 0, sizeof(BMPDec));</span>
+<span class="lineNum">     193 </span><span class="lineNoCov">          0 :         wrap-&gt;opaque = dec;</span>
+<span class="lineNum">     194 </span><span class="lineNoCov">          0 :         wrap-&gt;type = DEC_BMP;</span>
+<span class="lineNum">     195 </span>            : 
+<span class="lineNum">     196 </span>            :         /*setup our own interface*/
+<span class="lineNum">     197 </span><span class="lineNoCov">          0 :         ifcd-&gt;AttachStream = BMP_AttachStream;</span>
+<span class="lineNum">     198 </span><span class="lineNoCov">          0 :         ifcd-&gt;DetachStream = BMP_DetachStream;</span>
+<span class="lineNum">     199 </span><span class="lineNoCov">          0 :         ifcd-&gt;GetCapabilities = BMP_GetCapabilities;</span>
+<span class="lineNum">     200 </span><span class="lineNoCov">          0 :         ifcd-&gt;SetCapabilities = BMP_SetCapabilities;</span>
+<span class="lineNum">     201 </span><span class="lineNoCov">          0 :         ifcd-&gt;GetName = BMP_GetCodecName;</span>
+<span class="lineNum">     202 </span><span class="lineNoCov">          0 :         ((GF_MediaDecoder *)ifcd)-&gt;ProcessData = BMP_ProcessData;</span>
+<span class="lineNum">     203 </span><span class="lineNoCov">          0 :         return GF_TRUE;</span>
+<a name="204"><span class="lineNum">     204 </span>            : }</a>
+<span class="lineNum">     205 </span>            : 
+<span class="lineNum">     206 </span>            : void DeleteBMPDec(GF_BaseDecoder *ifcg)
+<span class="lineNum">     207 </span>            : {
+<span class="lineNum">     208 </span><span class="lineNoCov">          0 :         BMPCTX();</span>
+<span class="lineNum">     209 </span><span class="lineNoCov">          0 :         gf_free(ctx);</span>
+<span class="lineNum">     210 </span><span class="lineNoCov">          0 : }</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.12</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

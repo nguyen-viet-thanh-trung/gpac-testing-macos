@@ -1,0 +1,26 @@
+*** shvc logs (GPAC version 0.6.2-DEV-revUNKNOWN-HEAD ) - test date 07/06/2016 10:34:28 ***
+
+
+*** Subtest "Split": executing "MP4Box -noprog -for-test  -mem-track -add /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/external_media/scalable/shvc.265:svcmode=split -new /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/shvc-split.mp4" ***
+[32mHEVC import - frame size 1920 x 800 at 25.000 FPS
+[0m[32mSHVC detected - 3840 x 1600 at 25.000 FPS
+[0m[32mHEVC Import results: 503 samples (2013 NALUs) - Slices: 11 I 117 P 876 B - 1004 SEI - 1 IDR
+[0m[32mStream uses forward prediction - stream CTS offset: 4 frames
+[0m[32mOpenGOP detected - adjusting file brand
+[0m Return Value 11 - re-executing without GNU TIME
+[32mHEVC import - frame size 1920 x 800 at 25.000 FPS
+[0m[32mSHVC detected - 3840 x 1600 at 25.000 FPS
+[0m[32mHEVC Import results: 503 samples (2013 NALUs) - Slices: 11 I 117 P 876 B - 1004 SEI - 1 IDR
+[0m[32mStream uses forward prediction - stream CTS offset: 4 frames
+[0m[32mOpenGOP detected - adjusting file brand
+[0m
+
+*** Subtest "Merge": executing "MP4Box -noprog -for-test  -mem-track -add /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/shvc-split.mp4:svcmode=merge -new /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/shvc-merge.mp4" ***
+[33m[Importer] Unknown input file type for "/Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/shvc-split.mp4"
+[0mError importing /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/shvc-split.mp4:svcmode=merge: Requested URL is not valid or cannot be found
+
+Same Hash for /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/shvc.mp4 and /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/shvc-merge.mp4
+
+*** Subtest "dash": executing "MP4Box -noprog -for-test  -mem-track -dash 1000 /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/shvc-split.mp4 -out /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/shvc.mpd" ***
+DASH Setup Error: Requested URL is not valid or cannot be found
+

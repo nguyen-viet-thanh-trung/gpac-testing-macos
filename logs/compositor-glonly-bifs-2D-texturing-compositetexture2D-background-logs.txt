@@ -1,0 +1,2 @@
+*** compositor-glonly-bifs-2D-texturing-compositetexture2D-background logs (GPAC version 0.6.2-DEV-revUNKNOWN-HEAD ) - test date 07/06/2016 10:25:10 ***
+

@@ -1,0 +1,2 @@
+*** x3d-2D-ArcClose2d logs (GPAC version 0.6.2-DEV-revUNKNOWN-HEAD ) - test date 07/06/2016 10:35:21 ***
+

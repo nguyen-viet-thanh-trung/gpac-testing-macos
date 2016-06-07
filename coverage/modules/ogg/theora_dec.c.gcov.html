@@ -1,0 +1,311 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - modules/ogg/theora_dec.c</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">modules/ogg</a> - theora_dec.c<span style="font-size: 80%;"> (source / <a href="theora_dec.c.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">112</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2016-06-07 10:36:32</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">8</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*</a>
+<span class="lineNum">       2 </span>            :  *                      GPAC - Multimedia Framework C SDK
+<span class="lineNum">       3 </span>            :  *
+<span class="lineNum">       4 </span>            :  *                      Authors: Jean Le Feuvre
+<span class="lineNum">       5 </span>            :  *                      Copyright (c) Telecom ParisTech 2000-2012
+<span class="lineNum">       6 </span>            :  *                                      All rights reserved
+<span class="lineNum">       7 </span>            :  *
+<span class="lineNum">       8 </span>            :  *  This file is part of GPAC / XIPH.org module
+<span class="lineNum">       9 </span>            :  *
+<span class="lineNum">      10 </span>            :  *  GPAC is free software; you can redistribute it and/or modify
+<span class="lineNum">      11 </span>            :  *  it under the terms of the GNU Lesser General Public License as published by
+<span class="lineNum">      12 </span>            :  *  the Free Software Foundation; either version 2, or (at your option)
+<span class="lineNum">      13 </span>            :  *  any later version.
+<span class="lineNum">      14 </span>            :  *
+<span class="lineNum">      15 </span>            :  *  GPAC is distributed in the hope that it will be useful,
+<span class="lineNum">      16 </span>            :  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+<span class="lineNum">      17 </span>            :  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+<span class="lineNum">      18 </span>            :  *  GNU Lesser General Public License for more details.
+<span class="lineNum">      19 </span>            :  *
+<span class="lineNum">      20 </span>            :  *  You should have received a copy of the GNU Lesser General Public
+<span class="lineNum">      21 </span>            :  *  License along with this library; see the file COPYING.  If not, write to
+<span class="lineNum">      22 </span>            :  *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+<span class="lineNum">      23 </span>            :  *
+<span class="lineNum">      24 </span>            :  */
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : 
+<span class="lineNum">      27 </span>            : #include &quot;ogg_in.h&quot;
+<span class="lineNum">      28 </span>            : 
+<span class="lineNum">      29 </span>            : #ifdef GPAC_HAS_THEORA
+<span class="lineNum">      30 </span>            : 
+<span class="lineNum">      31 </span>            : #include &lt;theora/theora.h&gt;
+<span class="lineNum">      32 </span>            : 
+<span class="lineNum">      33 </span>            : typedef struct
+<span class="lineNum">      34 </span>            : {
+<span class="lineNum">      35 </span>            :         theora_info ti;
+<span class="lineNum">      36 </span>            :         theora_state td;
+<span class="lineNum">      37 </span>            :         theora_comment tc;
+<span class="lineNum">      38 </span>            :         ogg_packet op;
+<span class="lineNum">      39 </span>            : 
+<span class="lineNum">      40 </span>            :         u16 ES_ID;
+<span class="lineNum">      41 </span>            :         Bool has_reconfigured;
+<span class="lineNum">      42 </span>            : } TheoraDec;
+<span class="lineNum">      43 </span>            : 
+<a name="44"><span class="lineNum">      44 </span>            : #define THEORACTX() TheoraDec *ctx = (TheoraDec *) ((OGGWraper *)ifcg-&gt;privateStack)-&gt;opaque</a>
+<span class="lineNum">      45 </span>            : 
+<span class="lineNum">      46 </span>            : static GF_Err THEO_AttachStream(GF_BaseDecoder *ifcg, GF_ESD *esd)
+<span class="lineNum">      47 </span>            : {
+<span class="lineNum">      48 </span><span class="lineNoCov">          0 :         ogg_packet oggpacket;</span>
+<span class="lineNum">      49 </span>            :         GF_BitStream *bs;
+<span class="lineNum">      50 </span>            : 
+<span class="lineNum">      51 </span><span class="lineNoCov">          0 :         THEORACTX();</span>
+<span class="lineNum">      52 </span><span class="lineNoCov">          0 :         if (ctx-&gt;ES_ID) return GF_BAD_PARAM;</span>
+<span class="lineNum">      53 </span>            : 
+<span class="lineNum">      54 </span><span class="lineNoCov">          0 :         if (!esd-&gt;decoderConfig-&gt;decoderSpecificInfo) return GF_NON_COMPLIANT_BITSTREAM;</span>
+<span class="lineNum">      55 </span>            : 
+<span class="lineNum">      56 </span><span class="lineNoCov">          0 :         if (esd-&gt;decoderConfig-&gt;objectTypeIndication != GPAC_OTI_MEDIA_OGG) return GF_NON_COMPLIANT_BITSTREAM;</span>
+<span class="lineNum">      57 </span><span class="lineNoCov">          0 :         if ( (esd-&gt;decoderConfig-&gt;decoderSpecificInfo-&gt;dataLength&lt;9) || strncmp(&amp;esd-&gt;decoderConfig-&gt;decoderSpecificInfo-&gt;data[3], &quot;theora&quot;, 6)) return GF_NON_COMPLIANT_BITSTREAM;</span>
+<span class="lineNum">      58 </span>            : 
+<span class="lineNum">      59 </span><span class="lineNoCov">          0 :         oggpacket.granulepos = -1;</span>
+<span class="lineNum">      60 </span><span class="lineNoCov">          0 :         oggpacket.b_o_s = 1;</span>
+<span class="lineNum">      61 </span><span class="lineNoCov">          0 :         oggpacket.e_o_s = 0;</span>
+<span class="lineNum">      62 </span><span class="lineNoCov">          0 :         oggpacket.packetno = 0;</span>
+<span class="lineNum">      63 </span>            : 
+<span class="lineNum">      64 </span><span class="lineNoCov">          0 :         ctx-&gt;ES_ID = esd-&gt;ESID;</span>
+<span class="lineNum">      65 </span>            : 
+<span class="lineNum">      66 </span><span class="lineNoCov">          0 :         theora_info_init(&amp;ctx-&gt;ti);</span>
+<span class="lineNum">      67 </span><span class="lineNoCov">          0 :         theora_comment_init(&amp;ctx-&gt;tc);</span>
+<span class="lineNum">      68 </span>            : 
+<span class="lineNum">      69 </span>            : 
+<span class="lineNum">      70 </span><span class="lineNoCov">          0 :         bs = gf_bs_new(esd-&gt;decoderConfig-&gt;decoderSpecificInfo-&gt;data, esd-&gt;decoderConfig-&gt;decoderSpecificInfo-&gt;dataLength, GF_BITSTREAM_READ);</span>
+<span class="lineNum">      71 </span><span class="lineNoCov">          0 :         while (gf_bs_available(bs)) {</span>
+<span class="lineNum">      72 </span><span class="lineNoCov">          0 :                 oggpacket.bytes = gf_bs_read_u16(bs);</span>
+<span class="lineNum">      73 </span><span class="lineNoCov">          0 :                 oggpacket.packet = gf_malloc(sizeof(char) * oggpacket.bytes);</span>
+<span class="lineNum">      74 </span><span class="lineNoCov">          0 :                 gf_bs_read_data(bs, oggpacket.packet, oggpacket.bytes);</span>
+<span class="lineNum">      75 </span><span class="lineNoCov">          0 :                 if (theora_decode_header(&amp;ctx-&gt;ti, &amp;ctx-&gt;tc, &amp;oggpacket) &lt; 0 ) {</span>
+<span class="lineNum">      76 </span><span class="lineNoCov">          0 :                         gf_free(oggpacket.packet);</span>
+<span class="lineNum">      77 </span><span class="lineNoCov">          0 :                         gf_bs_del(bs);</span>
+<span class="lineNum">      78 </span><span class="lineNoCov">          0 :                         return GF_NON_COMPLIANT_BITSTREAM;</span>
+<span class="lineNum">      79 </span>            :                 }
+<span class="lineNum">      80 </span><span class="lineNoCov">          0 :                 gf_free(oggpacket.packet);</span>
+<span class="lineNum">      81 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">      82 </span><span class="lineNoCov">          0 :         theora_decode_init(&amp;ctx-&gt;td, &amp;ctx-&gt;ti);</span>
+<span class="lineNum">      83 </span><span class="lineNoCov">          0 :         gf_bs_del(bs);</span>
+<span class="lineNum">      84 </span><span class="lineNoCov">          0 :         return GF_OK;</span>
+<a name="85"><span class="lineNum">      85 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">      86 </span>            : 
+<span class="lineNum">      87 </span>            : static GF_Err THEO_DetachStream(GF_BaseDecoder *ifcg, u16 ES_ID)
+<span class="lineNum">      88 </span>            : {
+<span class="lineNum">      89 </span><span class="lineNoCov">          0 :         THEORACTX();</span>
+<span class="lineNum">      90 </span><span class="lineNoCov">          0 :         if (ctx-&gt;ES_ID != ES_ID) return GF_BAD_PARAM;</span>
+<span class="lineNum">      91 </span>            : 
+<span class="lineNum">      92 </span><span class="lineNoCov">          0 :         theora_clear(&amp;ctx-&gt;td);</span>
+<span class="lineNum">      93 </span><span class="lineNoCov">          0 :         theora_info_clear(&amp;ctx-&gt;ti);</span>
+<span class="lineNum">      94 </span><span class="lineNoCov">          0 :         theora_comment_clear(&amp;ctx-&gt;tc);</span>
+<span class="lineNum">      95 </span>            : 
+<span class="lineNum">      96 </span><span class="lineNoCov">          0 :         ctx-&gt;ES_ID = 0;</span>
+<a name="97"><span class="lineNum">      97 </span><span class="lineNoCov">          0 :         return GF_OK;</span></a>
+<span class="lineNum">      98 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">      99 </span>            : static GF_Err THEO_GetCapabilities(GF_BaseDecoder *ifcg, GF_CodecCapability *capability)
+<span class="lineNum">     100 </span>            : {
+<span class="lineNum">     101 </span><span class="lineNoCov">          0 :         THEORACTX();</span>
+<span class="lineNum">     102 </span><span class="lineNoCov">          0 :         switch (capability-&gt;CapCode) {</span>
+<span class="lineNum">     103 </span>            :         case GF_CODEC_WIDTH:
+<span class="lineNum">     104 </span><span class="lineNoCov">          0 :                 capability-&gt;cap.valueInt = ctx-&gt;ti.width;</span>
+<span class="lineNum">     105 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     106 </span>            :         case GF_CODEC_HEIGHT:
+<span class="lineNum">     107 </span><span class="lineNoCov">          0 :                 capability-&gt;cap.valueInt = ctx-&gt;ti.height;</span>
+<span class="lineNum">     108 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     109 </span>            :         case GF_CODEC_STRIDE:
+<span class="lineNum">     110 </span><span class="lineNoCov">          0 :                 capability-&gt;cap.valueInt = ctx-&gt;ti.width;</span>
+<span class="lineNum">     111 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     112 </span>            :         case GF_CODEC_FPS:
+<span class="lineNum">     113 </span><span class="lineNoCov">          0 :                 capability-&gt;cap.valueFloat = (Float) ctx-&gt;ti.fps_numerator;</span>
+<span class="lineNum">     114 </span><span class="lineNoCov">          0 :                 capability-&gt;cap.valueFloat /= ctx-&gt;ti.fps_denominator;</span>
+<span class="lineNum">     115 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     116 </span>            :         case GF_CODEC_PIXEL_FORMAT:
+<span class="lineNum">     117 </span><span class="lineNoCov">          0 :                 capability-&gt;cap.valueInt = GF_PIXEL_YV12;</span>
+<span class="lineNum">     118 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     119 </span>            :         case GF_CODEC_REORDER:
+<span class="lineNum">     120 </span><span class="lineNoCov">          0 :                 capability-&gt;cap.valueInt = 0;</span>
+<span class="lineNum">     121 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     122 </span>            :         case GF_CODEC_RESILIENT:
+<span class="lineNum">     123 </span><span class="lineNoCov">          0 :                 capability-&gt;cap.valueInt = 1;</span>
+<span class="lineNum">     124 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     125 </span>            :         case GF_CODEC_OUTPUT_SIZE:
+<span class="lineNum">     126 </span><span class="lineNoCov">          0 :                 capability-&gt;cap.valueInt = 3*ctx-&gt;ti.width * ctx-&gt;ti.height / 2;</span>
+<span class="lineNum">     127 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     128 </span>            :         case GF_CODEC_BUFFER_MIN:
+<span class="lineNum">     129 </span><span class="lineNoCov">          0 :                 capability-&gt;cap.valueInt = 1;</span>
+<span class="lineNum">     130 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     131 </span>            :         case GF_CODEC_BUFFER_MAX:
+<span class="lineNum">     132 </span><span class="lineNoCov">          0 :                 capability-&gt;cap.valueInt = 4;</span>
+<span class="lineNum">     133 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     134 </span>            :         case GF_CODEC_PADDING_BYTES:
+<span class="lineNum">     135 </span><span class="lineNoCov">          0 :                 capability-&gt;cap.valueInt = 0;</span>
+<span class="lineNum">     136 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     137 </span>            :         default:
+<span class="lineNum">     138 </span><span class="lineNoCov">          0 :                 capability-&gt;cap.valueInt = 0;</span>
+<span class="lineNum">     139 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     140 </span>            :         }
+<span class="lineNum">     141 </span><span class="lineNoCov">          0 :         return GF_OK;</span>
+<a name="142"><span class="lineNum">     142 </span>            : }</a>
+<span class="lineNum">     143 </span>            : 
+<span class="lineNum">     144 </span>            : static GF_Err THEO_SetCapabilities(GF_BaseDecoder *ifcg, GF_CodecCapability capability)
+<span class="lineNum">     145 </span>            : {
+<span class="lineNum">     146 </span>            :         /*return unsupported to avoid confusion by the player (like SR changing ...) */
+<span class="lineNum">     147 </span><span class="lineNoCov">          0 :         return GF_NOT_SUPPORTED;</span>
+<span class="lineNum">     148 </span>            : }
+<a name="149"><span class="lineNum">     149 </span>            : </a>
+<span class="lineNum">     150 </span>            : 
+<span class="lineNum">     151 </span>            : static GF_Err THEO_ProcessData(GF_MediaDecoder *ifcg,
+<span class="lineNum">     152 </span>            :                                char *inBuffer, u32 inBufferLength,
+<span class="lineNum">     153 </span>            :                                u16 ES_ID, u32 *CTS,
+<span class="lineNum">     154 </span>            :                                char *outBuffer, u32 *outBufferLength,
+<span class="lineNum">     155 </span>            :                                u8 PaddingBits, u32 mmlevel)
+<span class="lineNum">     156 </span>            : {
+<span class="lineNum">     157 </span><span class="lineNoCov">          0 :         ogg_packet op;</span>
+<span class="lineNum">     158 </span><span class="lineNoCov">          0 :         yuv_buffer yuv;</span>
+<span class="lineNum">     159 </span>            :         u32 i;
+<span class="lineNum">     160 </span>            :         char *pYO, *pUO, *pVO;
+<span class="lineNum">     161 </span>            :         unsigned char *pYD, *pUD, *pVD;
+<span class="lineNum">     162 </span>            : 
+<span class="lineNum">     163 </span><span class="lineNoCov">          0 :         THEORACTX();</span>
+<span class="lineNum">     164 </span>            :         /*not using scalabilty*/
+<span class="lineNum">     165 </span>            :         assert(ctx-&gt;ES_ID == ES_ID);
+<span class="lineNum">     166 </span>            : 
+<span class="lineNum">     167 </span><span class="lineNoCov">          0 :         op.granulepos = -1;</span>
+<span class="lineNum">     168 </span><span class="lineNoCov">          0 :         op.b_o_s = 0;</span>
+<span class="lineNum">     169 </span><span class="lineNoCov">          0 :         op.e_o_s = 0;</span>
+<span class="lineNum">     170 </span><span class="lineNoCov">          0 :         op.packetno = 0;</span>
+<span class="lineNum">     171 </span><span class="lineNoCov">          0 :         op.packet = inBuffer;</span>
+<span class="lineNum">     172 </span><span class="lineNoCov">          0 :         op.bytes = inBufferLength;</span>
+<span class="lineNum">     173 </span>            : 
+<span class="lineNum">     174 </span>            : 
+<span class="lineNum">     175 </span><span class="lineNoCov">          0 :         *outBufferLength = 0;</span>
+<span class="lineNum">     176 </span>            : 
+<span class="lineNum">     177 </span><span class="lineNoCov">          0 :         if (theora_decode_packetin(&amp;ctx-&gt;td, &amp;op)&lt;0) return GF_NON_COMPLIANT_BITSTREAM;</span>
+<span class="lineNum">     178 </span><span class="lineNoCov">          0 :         if (mmlevel     == GF_CODEC_LEVEL_SEEK) return GF_OK;</span>
+<span class="lineNum">     179 </span><span class="lineNoCov">          0 :         if (theora_decode_YUVout(&amp;ctx-&gt;td, &amp;yuv)&lt;0) return GF_OK;</span>
+<span class="lineNum">     180 </span>            : 
+<span class="lineNum">     181 </span><span class="lineNoCov">          0 :         pYO = yuv.y;</span>
+<span class="lineNum">     182 </span><span class="lineNoCov">          0 :         pUO = yuv.u;</span>
+<span class="lineNum">     183 </span><span class="lineNoCov">          0 :         pVO = yuv.v;</span>
+<span class="lineNum">     184 </span>            :         pYD = outBuffer;
+<span class="lineNum">     185 </span><span class="lineNoCov">          0 :         pUD = outBuffer + ctx-&gt;ti.width * ctx-&gt;ti.height;</span>
+<span class="lineNum">     186 </span><span class="lineNoCov">          0 :         pVD = outBuffer + 5 * ctx-&gt;ti.width * ctx-&gt;ti.height / 4;</span>
+<span class="lineNum">     187 </span>            : 
+<span class="lineNum">     188 </span><span class="lineNoCov">          0 :         for (i=0; i&lt;(u32)yuv.y_height; i++) {</span>
+<span class="lineNum">     189 </span><span class="lineNoCov">          0 :                 memcpy(pYD, pYO, sizeof(char) * yuv.y_width);</span>
+<span class="lineNum">     190 </span><span class="lineNoCov">          0 :                 pYD += ctx-&gt;ti.width;</span>
+<span class="lineNum">     191 </span><span class="lineNoCov">          0 :                 pYO += yuv.y_stride;</span>
+<span class="lineNum">     192 </span><span class="lineNoCov">          0 :                 if (i%2) continue;</span>
+<span class="lineNum">     193 </span>            : 
+<span class="lineNum">     194 </span><span class="lineNoCov">          0 :                 memcpy(pUD, pUO, sizeof(char) * yuv.uv_width);</span>
+<span class="lineNum">     195 </span><span class="lineNoCov">          0 :                 memcpy(pVD, pVO, sizeof(char) * yuv.uv_width);</span>
+<span class="lineNum">     196 </span><span class="lineNoCov">          0 :                 pUD += ctx-&gt;ti.width/2;</span>
+<span class="lineNum">     197 </span><span class="lineNoCov">          0 :                 pVD += ctx-&gt;ti.width/2;</span>
+<span class="lineNum">     198 </span><span class="lineNoCov">          0 :                 pUO += yuv.uv_stride;</span>
+<span class="lineNum">     199 </span><span class="lineNoCov">          0 :                 pVO += yuv.uv_stride;</span>
+<span class="lineNum">     200 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     201 </span><span class="lineNoCov">          0 :         *outBufferLength = 3*ctx-&gt;ti.width*ctx-&gt;ti.height/2;</span>
+<span class="lineNum">     202 </span><span class="lineNoCov">          0 :         return GF_OK;</span>
+<span class="lineNum">     203 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     204 </span>            : 
+<a name="205"><span class="lineNum">     205 </span>            : </a>
+<span class="lineNum">     206 </span>            : 
+<span class="lineNum">     207 </span>            : static const char *THEO_GetCodecName(GF_BaseDecoder *dec)
+<span class="lineNum">     208 </span>            : {
+<span class="lineNum">     209 </span><span class="lineNoCov">          0 :         return &quot;Theora Decoder&quot;;</span>
+<a name="210"><span class="lineNum">     210 </span>            : }</a>
+<span class="lineNum">     211 </span>            : 
+<span class="lineNum">     212 </span>            : u32 NewTheoraDecoder(GF_BaseDecoder *ifcd)
+<span class="lineNum">     213 </span>            : {
+<span class="lineNum">     214 </span>            :         TheoraDec *dec;
+<span class="lineNum">     215 </span><span class="lineNoCov">          0 :         GF_SAFEALLOC(dec, TheoraDec);</span>
+<span class="lineNum">     216 </span><span class="lineNoCov">          0 :         ((OGGWraper *)ifcd-&gt;privateStack)-&gt;opaque = dec;</span>
+<span class="lineNum">     217 </span><span class="lineNoCov">          0 :         ((OGGWraper *)ifcd-&gt;privateStack)-&gt;type = OGG_THEORA;</span>
+<span class="lineNum">     218 </span>            :         /*setup our own interface*/
+<span class="lineNum">     219 </span><span class="lineNoCov">          0 :         ifcd-&gt;AttachStream = THEO_AttachStream;</span>
+<span class="lineNum">     220 </span><span class="lineNoCov">          0 :         ifcd-&gt;DetachStream = THEO_DetachStream;</span>
+<span class="lineNum">     221 </span><span class="lineNoCov">          0 :         ifcd-&gt;GetCapabilities = THEO_GetCapabilities;</span>
+<span class="lineNum">     222 </span><span class="lineNoCov">          0 :         ifcd-&gt;SetCapabilities = THEO_SetCapabilities;</span>
+<span class="lineNum">     223 </span><span class="lineNoCov">          0 :         ((GF_MediaDecoder*)ifcd)-&gt;ProcessData = THEO_ProcessData;</span>
+<span class="lineNum">     224 </span><span class="lineNoCov">          0 :         ifcd-&gt;GetName = THEO_GetCodecName;</span>
+<span class="lineNum">     225 </span><span class="lineNoCov">          0 :         return 1;</span>
+<a name="226"><span class="lineNum">     226 </span>            : }</a>
+<span class="lineNum">     227 </span>            : 
+<span class="lineNum">     228 </span>            : void DeleteTheoraDecoder(GF_BaseDecoder *ifcg)
+<span class="lineNum">     229 </span>            : {
+<span class="lineNum">     230 </span><span class="lineNoCov">          0 :         THEORACTX();</span>
+<span class="lineNum">     231 </span><span class="lineNoCov">          0 :         gf_free(ctx);</span>
+<span class="lineNum">     232 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     233 </span>            : 
+<span class="lineNum">     234 </span>            : #endif
+<span class="lineNum">     235 </span>            : 
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.12</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

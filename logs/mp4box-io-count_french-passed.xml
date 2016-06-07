@@ -1,0 +1,27 @@
+ <test name="mp4box-io-count_french" result="OK" date="07/06/2016 10:29:28">
+
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="41369600" cpu_percent="21%" cpu_elapsed_time="0:00.23" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -info /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/auxiliary_files/count_french.mp3</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43401216" cpu_percent="21%" cpu_elapsed_time="0:00.25" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -add /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/auxiliary_files/count_french.mp3 -new /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/count_french.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="42696704" cpu_percent="11%" cpu_elapsed_time="0:00.48" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -info /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/count_french.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="42467328" cpu_percent="8%" cpu_elapsed_time="0:00.68" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -dts /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/count_french.mp4 -out /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/count_french.2.tmp</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="45793280" cpu_percent="11%" cpu_elapsed_time="0:00.71" cpu_user_time="0.04" cpu_kernel_time="0.04" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -hint /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/count_french.mp4 -out /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/count_french.mp4.hint</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="42500096" cpu_percent="7%" cpu_elapsed_time="0:00.64" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -diso /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/count_french.mp4 -out /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/count_french.1.tmp</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44367872" cpu_percent="32%" cpu_elapsed_time="0:00.24" cpu_user_time="0.03" cpu_kernel_time="0.04" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -drtp /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/count_french.mp4.hint -out /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/count_french.mp4.tmp</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="42663936" cpu_percent="21%" cpu_elapsed_time="0:00.25" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -unhint /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/count_french.mp4.hint</command_line>
+  </stat>
+ </test>

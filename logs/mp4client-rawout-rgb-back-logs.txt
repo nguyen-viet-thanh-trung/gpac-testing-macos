@@ -1,0 +1,2 @@
+*** mp4client-rawout-rgb-back logs (GPAC version 0.6.2-DEV-revUNKNOWN-HEAD ) - test date 07/06/2016 10:33:55 ***
+

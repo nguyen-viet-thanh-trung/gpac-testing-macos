@@ -1,0 +1,235 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - modules/img_in/img_dec.c</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">modules/img_in</a> - img_dec.c<span style="font-size: 80%;"> (source / <a href="img_dec.c.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">8</td>
+            <td class="headerCovTableEntry">48</td>
+            <td class="headerCovTableEntryLo">16.7 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2016-06-07 10:36:32</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntry">6</td>
+            <td class="headerCovTableEntryLo">50.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*</a>
+<span class="lineNum">       2 </span>            :  *                      GPAC - Multimedia Framework C SDK
+<span class="lineNum">       3 </span>            :  *
+<span class="lineNum">       4 </span>            :  *                      Authors: Jean Le Feuvre
+<span class="lineNum">       5 </span>            :  *                      Copyright (c) Telecom ParisTech 2000-2012
+<span class="lineNum">       6 </span>            :  *                                      All rights reserved
+<span class="lineNum">       7 </span>            :  *
+<span class="lineNum">       8 </span>            :  *  This file is part of GPAC / image format module
+<span class="lineNum">       9 </span>            :  *
+<span class="lineNum">      10 </span>            :  *  GPAC is free software; you can redistribute it and/or modify
+<span class="lineNum">      11 </span>            :  *  it under the terms of the GNU Lesser General Public License as published by
+<span class="lineNum">      12 </span>            :  *  the Free Software Foundation; either version 2, or (at your option)
+<span class="lineNum">      13 </span>            :  *  any later version.
+<span class="lineNum">      14 </span>            :  *
+<span class="lineNum">      15 </span>            :  *  GPAC is distributed in the hope that it will be useful,
+<span class="lineNum">      16 </span>            :  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+<span class="lineNum">      17 </span>            :  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+<span class="lineNum">      18 </span>            :  *  GNU Lesser General Public License for more details.
+<span class="lineNum">      19 </span>            :  *
+<span class="lineNum">      20 </span>            :  *  You should have received a copy of the GNU Lesser General Public
+<span class="lineNum">      21 </span>            :  *  License along with this library; see the file COPYING.  If not, write to
+<span class="lineNum">      22 </span>            :  *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+<span class="lineNum">      23 </span>            :  *
+<span class="lineNum">      24 </span>            :  */
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : 
+<span class="lineNum">      27 </span>            : #include &quot;img_in.h&quot;
+<a name="28"><span class="lineNum">      28 </span>            : </a>
+<span class="lineNum">      29 </span>            : 
+<span class="lineNum">      30 </span>            : static u32 DEC_CanHandleStream(GF_BaseDecoder *dec, u32 StreamType, GF_ESD *esd, u8 PL)
+<span class="lineNum">      31 </span>            : {
+<span class="lineNum">      32 </span><span class="lineNoCov">          0 :         if (StreamType != GF_STREAM_VISUAL) return GF_CODEC_NOT_SUPPORTED;</span>
+<span class="lineNum">      33 </span>            :         /*media type query*/
+<span class="lineNum">      34 </span><span class="lineNoCov">          0 :         if (!esd) return GF_CODEC_STREAM_TYPE_SUPPORTED;</span>
+<span class="lineNum">      35 </span>            : 
+<span class="lineNum">      36 </span><span class="lineNoCov">          0 :         switch (esd-&gt;decoderConfig-&gt;objectTypeIndication) {</span>
+<span class="lineNum">      37 </span>            : #ifdef GPAC_HAS_PNG
+<span class="lineNum">      38 </span>            :         case GPAC_OTI_IMAGE_PNG:
+<span class="lineNum">      39 </span><span class="lineNoCov">          0 :                 if (NewPNGDec(dec)) return GF_CODEC_SUPPORTED;</span>
+<span class="lineNum">      40 </span><span class="lineNoCov">          0 :                 return GF_CODEC_NOT_SUPPORTED;</span>
+<span class="lineNum">      41 </span>            : #endif
+<span class="lineNum">      42 </span>            : #ifdef GPAC_HAS_JPEG
+<span class="lineNum">      43 </span>            :         case GPAC_OTI_IMAGE_JPEG:
+<span class="lineNum">      44 </span><span class="lineNoCov">          0 :                 if (NewJPEGDec(dec)) return GF_CODEC_SUPPORTED;</span>
+<span class="lineNum">      45 </span><span class="lineNoCov">          0 :                 return GF_CODEC_NOT_SUPPORTED;</span>
+<span class="lineNum">      46 </span>            : #endif
+<span class="lineNum">      47 </span>            : #ifdef GPAC_HAS_JP2
+<span class="lineNum">      48 </span>            :         case GPAC_OTI_IMAGE_JPEG_2000:
+<span class="lineNum">      49 </span>            :                 if (NewJP2Dec(dec)) return GF_CODEC_SUPPORTED;
+<span class="lineNum">      50 </span>            :                 return GF_CODEC_NOT_SUPPORTED;
+<span class="lineNum">      51 </span>            : #endif
+<span class="lineNum">      52 </span>            :         case GPAC_BMP_OTI:
+<span class="lineNum">      53 </span><span class="lineNoCov">          0 :                 if (NewBMPDec(dec)) return GF_CODEC_SUPPORTED;</span>
+<span class="lineNum">      54 </span><span class="lineNoCov">          0 :                 return GF_CODEC_NOT_SUPPORTED;</span>
+<span class="lineNum">      55 </span>            : 
+<span class="lineNum">      56 </span>            :         default:
+<span class="lineNum">      57 </span>            : #ifdef GPAC_HAS_JP2
+<span class="lineNum">      58 </span>            :         {
+<span class="lineNum">      59 </span>            :                 char *dsi = esd-&gt;decoderConfig-&gt;decoderSpecificInfo ? esd-&gt;decoderConfig-&gt;decoderSpecificInfo-&gt;data : NULL;
+<span class="lineNum">      60 </span>            :                 if (dsi &amp;&amp; (dsi[0]=='m') &amp;&amp; (dsi[1]=='j') &amp;&amp; (dsi[2]=='p') &amp;&amp; (dsi[3]=='2'))
+<span class="lineNum">      61 </span>            :                         if (NewJP2Dec(dec)) return GF_CODEC_SUPPORTED;
+<span class="lineNum">      62 </span>            :                 return GF_CODEC_NOT_SUPPORTED;
+<span class="lineNum">      63 </span>            :         }
+<span class="lineNum">      64 </span>            : #endif
+<span class="lineNum">      65 </span><span class="lineNoCov">          0 :         return GF_CODEC_NOT_SUPPORTED;</span>
+<span class="lineNum">      66 </span>            :         }
+<span class="lineNum">      67 </span>            :         return GF_CODEC_NOT_SUPPORTED;
+<span class="lineNum">      68 </span><span class="lineNoCov">          0 : }</span>
+<a name="69"><span class="lineNum">      69 </span>            : </a>
+<span class="lineNum">      70 </span>            : 
+<span class="lineNum">      71 </span>            : GF_BaseDecoder *NewBaseDecoder()
+<span class="lineNum">      72 </span>            : {
+<span class="lineNum">      73 </span>            :         GF_MediaDecoder *ifce;
+<span class="lineNum">      74 </span>            :         IMGDec *wrap;
+<span class="lineNum">      75 </span><span class="lineNoCov">          0 :         GF_SAFEALLOC(ifce, GF_MediaDecoder);</span>
+<span class="lineNum">      76 </span><span class="lineNoCov">          0 :         if (!ifce) return NULL;</span>
+<span class="lineNum">      77 </span><span class="lineNoCov">          0 :         GF_SAFEALLOC(wrap, IMGDec);</span>
+<span class="lineNum">      78 </span><span class="lineNoCov">          0 :         if (!wrap) {</span>
+<span class="lineNum">      79 </span><span class="lineNoCov">          0 :                 gf_free(ifce);</span>
+<span class="lineNum">      80 </span><span class="lineNoCov">          0 :                 return NULL;</span>
+<span class="lineNum">      81 </span>            :         }
+<span class="lineNum">      82 </span><span class="lineNoCov">          0 :         ifce-&gt;privateStack = wrap;</span>
+<span class="lineNum">      83 </span><span class="lineNoCov">          0 :         ifce-&gt;CanHandleStream = DEC_CanHandleStream;</span>
+<span class="lineNum">      84 </span>            : 
+<span class="lineNum">      85 </span><span class="lineNoCov">          0 :         GF_REGISTER_MODULE_INTERFACE(ifce, GF_MEDIA_DECODER_INTERFACE, &quot;GPAC Image Decoder&quot;, &quot;gpac distribution&quot;)</span>
+<span class="lineNum">      86 </span>            : 
+<span class="lineNum">      87 </span>            :         /*other interfaces will be setup at run time*/
+<span class="lineNum">      88 </span><span class="lineNoCov">          0 :         return (GF_BaseDecoder *)ifce;</span>
+<a name="89"><span class="lineNum">      89 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">      90 </span>            : 
+<span class="lineNum">      91 </span>            : void DeleteBaseDecoder(GF_BaseDecoder *ifcd)
+<span class="lineNum">      92 </span>            : {
+<span class="lineNum">      93 </span>            :         IMGDec *wrap;
+<span class="lineNum">      94 </span><span class="lineNoCov">          0 :         if (!ifcd)</span>
+<span class="lineNum">      95 </span>            :                 return;
+<span class="lineNum">      96 </span><span class="lineNoCov">          0 :         wrap = (IMGDec *)ifcd-&gt;privateStack;</span>
+<span class="lineNum">      97 </span><span class="lineNoCov">          0 :         if (!wrap)</span>
+<span class="lineNum">      98 </span>            :                 return;
+<span class="lineNum">      99 </span><span class="lineNoCov">          0 :         switch (wrap-&gt;type) {</span>
+<span class="lineNum">     100 </span>            :         case DEC_PNG:
+<span class="lineNum">     101 </span><span class="lineNoCov">          0 :                 DeletePNGDec(ifcd);</span>
+<span class="lineNum">     102 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     103 </span>            :         case DEC_JPEG:
+<span class="lineNum">     104 </span><span class="lineNoCov">          0 :                 DeleteJPEGDec(ifcd);</span>
+<span class="lineNum">     105 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     106 </span>            : #ifdef GPAC_HAS_JP2
+<span class="lineNum">     107 </span>            :         case DEC_JP2:
+<span class="lineNum">     108 </span>            :                 DeleteJP2Dec(ifcd);
+<span class="lineNum">     109 </span>            :                 break;
+<span class="lineNum">     110 </span>            : #endif
+<span class="lineNum">     111 </span>            :         case DEC_BMP:
+<span class="lineNum">     112 </span><span class="lineNoCov">          0 :                 DeleteBMPDec(ifcd);</span>
+<span class="lineNum">     113 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     114 </span>            :         default:
+<span class="lineNum">     115 </span>            :                 break;
+<span class="lineNum">     116 </span>            :         }
+<span class="lineNum">     117 </span><span class="lineNoCov">          0 :         gf_free(wrap);</span>
+<span class="lineNum">     118 </span><span class="lineNoCov">          0 :         ifcd-&gt;privateStack = NULL;</span>
+<span class="lineNum">     119 </span><span class="lineNoCov">          0 :         gf_free(ifcd);</span>
+<span class="lineNum">     120 </span><span class="lineNoCov">          0 : }</span>
+<a name="121"><span class="lineNum">     121 </span>            : </a>
+<span class="lineNum">     122 </span>            : GPAC_MODULE_EXPORT
+<span class="lineNum">     123 </span>            : const u32 *QueryInterfaces()
+<span class="lineNum">     124 </span>            : {
+<span class="lineNum">     125 </span>            :         static u32 si [] = {
+<span class="lineNum">     126 </span>            :                 GF_MEDIA_DECODER_INTERFACE,
+<span class="lineNum">     127 </span>            :                 GF_NET_CLIENT_INTERFACE,
+<span class="lineNum">     128 </span>            :                 0
+<span class="lineNum">     129 </span>            :         };
+<span class="lineNum">     130 </span><span class="lineCov">          2 :         return si;</span>
+<span class="lineNum">     131 </span>            : }
+<a name="132"><span class="lineNum">     132 </span>            : </a>
+<span class="lineNum">     133 </span>            : GPAC_MODULE_EXPORT
+<span class="lineNum">     134 </span>            : GF_BaseInterface *LoadInterface(u32 InterfaceType)
+<span class="lineNum">     135 </span>            : {
+<span class="lineNum">     136 </span><span class="lineCov">          1 :         switch (InterfaceType) {</span>
+<span class="lineNum">     137 </span>            :         case GF_MEDIA_DECODER_INTERFACE:
+<span class="lineNum">     138 </span><span class="lineNoCov">          0 :                 return (GF_BaseInterface *)NewBaseDecoder();</span>
+<span class="lineNum">     139 </span>            :         case GF_NET_CLIENT_INTERFACE:
+<span class="lineNum">     140 </span><span class="lineCov">          1 :                 return (GF_BaseInterface *)NewLoaderInterface();</span>
+<span class="lineNum">     141 </span>            :         default:
+<span class="lineNum">     142 </span><span class="lineNoCov">          0 :                 return NULL;</span>
+<span class="lineNum">     143 </span>            :         }
+<span class="lineNum">     144 </span><span class="lineCov">          1 : }</span>
+<a name="145"><span class="lineNum">     145 </span>            : </a>
+<span class="lineNum">     146 </span>            : GPAC_MODULE_EXPORT
+<span class="lineNum">     147 </span>            : void ShutdownInterface(GF_BaseInterface *ifce)
+<span class="lineNum">     148 </span>            : {
+<span class="lineNum">     149 </span><span class="lineCov">          2 :         switch (ifce-&gt;InterfaceType) {</span>
+<span class="lineNum">     150 </span>            :         case GF_MEDIA_DECODER_INTERFACE:
+<span class="lineNum">     151 </span><span class="lineNoCov">          0 :                 DeleteBaseDecoder((GF_BaseDecoder *)ifce);</span>
+<span class="lineNum">     152 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     153 </span>            :         case GF_NET_CLIENT_INTERFACE:
+<span class="lineNum">     154 </span><span class="lineCov">          1 :                 DeleteLoaderInterface(ifce);</span>
+<span class="lineNum">     155 </span><span class="lineCov">          1 :                 break;</span>
+<span class="lineNum">     156 </span>            :         }
+<span class="lineNum">     157 </span><span class="lineCov">          1 : }</span>
+<span class="lineNum">     158 </span>            : 
+<span class="lineNum">     159 </span>            : GPAC_MODULE_STATIC_DECLARATION( img_in )
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.12</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

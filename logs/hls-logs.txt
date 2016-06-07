@@ -1,0 +1,6 @@
+*** hls logs (GPAC version 0.6.2-DEV-revUNKNOWN-HEAD ) - test date 07/06/2016 10:25:38 ***
+
+
+*** Subtest "convert-hls-dash": executing "MP4Box -noprog -for-test  -mem-track -mpd /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/external_media/hls/index.m3u8 -out /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/external_media/hls/file.mpd" ***
+Done converting M3U8 (/Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/external_media/hls/index.m3u8) to MPD (/Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/external_media/hls/file.mpd)
+

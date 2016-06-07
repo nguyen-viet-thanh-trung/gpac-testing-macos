@@ -1,0 +1,9 @@
+ <test name="mp4box-rtp-mpeg4p2-mp3" result="OK" date="07/06/2016 10:33:04">
+
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43089920" cpu_percent="20%" cpu_elapsed_time="0:00.28" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="4" socket_msg_sent="6" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -rtp -run-for=0 -sdp=/Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/session.sdp  -ifce=127.0.0.1 /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/test.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="44859392" cpu_percent="2%" cpu_elapsed_time="0:10.34" cpu_user_time="0.09" cpu_kernel_time="0.19" page_faults="0" file_inputs="0" socket_msg_rec="4" socket_msg_sent="660" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -rtp -run-for=10 -sdp=/Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/session.sdp  -ifce=127.0.0.1 /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/test.mp4</command_line>
+  </stat>
+ </test>

@@ -1,0 +1,38 @@
+*** bifs-2D-texturing-lineargradient-simple logs (GPAC version 0.6.2-DEV-revUNKNOWN-HEAD ) - test date 07/06/2016 10:20:39 ***
+
+
+*** Subtest "BT2MP4": executing "MP4Box -noprog -for-test  -mem-track -mp4 /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-texturing-lineargradient-simple.bt" ***
+[32mBT: MPEG-4 Scene Parsing
+[0m
+	Error: Feature Not Supported
+
+
+*** Subtest "BT2XMT": executing "MP4Box -noprog -for-test  -mem-track -xmt /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-texturing-lineargradient-simple.bt" ***
+[32mBT: MPEG-4 Scene Parsing
+[0mScene loaded - dumping 1 systems streams
+
+
+*** Subtest "MP42BT": executing "MP4Box -noprog -for-test  -mem-track -bt /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-texturing-lineargradient-simple.mp4 -out test2.bt" ***
+Error opening file /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-texturing-lineargradient-simple.mp4: Requested URL is not valid or cannot be found
+
+
+*** Subtest "MP42XMT": executing "MP4Box -noprog -for-test  -mem-track -xmt /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-texturing-lineargradient-simple.mp4 -out test.xmt" ***
+Error opening file /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-texturing-lineargradient-simple.mp4: Requested URL is not valid or cannot be found
+
+Error opening file /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-texturing-lineargradient-simple.mp4: Requested URL is not valid or cannot be found
+
+Error opening file /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-texturing-lineargradient-simple.mp4: Requested URL is not valid or cannot be found
+
+Error opening file /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-texturing-lineargradient-simple.mp4: Requested URL is not valid or cannot be found
+
+
+*** Subtest "XMT2BT": executing "MP4Box -noprog -for-test  -mem-track -bt /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-texturing-lineargradient-simple.xmt -out test1.bt" ***
+[32mXMT: MPEG-4 (XMT) Scene Parsing
+[0mScene loaded - dumping 1 systems streams
+
+
+*** Subtest "XMT2MP4": executing "MP4Box -noprog -for-test  -mem-track -mp4 /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-texturing-lineargradient-simple.xmt -out /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/bifs/bifs-2D-texturing-lineargradient-simple.mp4.tmp" ***
+[32mXMT: MPEG-4 (XMT) Scene Parsing
+[0m
+	Error: Feature Not Supported
+

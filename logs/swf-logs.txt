@@ -1,0 +1,7 @@
+*** swf logs (GPAC version 0.6.2-DEV-revUNKNOWN-HEAD ) - test date 07/06/2016 10:34:34 ***
+
+
+*** Subtest "mp4box-import": executing "MP4Box -noprog -for-test  -mem-track -mp4 /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/swf/cuisine.swf -out /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/cuisine.mp4" ***
+[32mSWF Import - Scene Size 550x400 - 490 frames @ 24 FPS
+[0mSaving to /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/cuisine.mp4: 0.500 secs Interleaving
+

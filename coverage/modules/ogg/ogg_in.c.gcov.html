@@ -1,0 +1,1091 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - modules/ogg/ogg_in.c</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">modules/ogg</a> - ogg_in.c<span style="font-size: 80%;"> (source / <a href="ogg_in.c.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">33</td>
+            <td class="headerCovTableEntry">576</td>
+            <td class="headerCovTableEntryLo">5.7 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2016-06-07 10:36:32</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntry">28</td>
+            <td class="headerCovTableEntryLo">10.7 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*</a>
+<span class="lineNum">       2 </span>            :  *                      GPAC - Multimedia Framework C SDK
+<span class="lineNum">       3 </span>            :  *
+<span class="lineNum">       4 </span>            :  *                      Authors: Jean Le Feuvre
+<span class="lineNum">       5 </span>            :  *                      Copyright (c) Telecom ParisTech 2000-2012
+<span class="lineNum">       6 </span>            :  *                                      All rights reserved
+<span class="lineNum">       7 </span>            :  *
+<span class="lineNum">       8 </span>            :  *  This file is part of GPAC / XIPH.org module
+<span class="lineNum">       9 </span>            :  *
+<span class="lineNum">      10 </span>            :  *  GPAC is free software; you can redistribute it and/or modify
+<span class="lineNum">      11 </span>            :  *  it under the terms of the GNU Lesser General Public License as published by
+<span class="lineNum">      12 </span>            :  *  the Free Software Foundation; either version 2, or (at your option)
+<span class="lineNum">      13 </span>            :  *  any later version.
+<span class="lineNum">      14 </span>            :  *
+<span class="lineNum">      15 </span>            :  *  GPAC is distributed in the hope that it will be useful,
+<span class="lineNum">      16 </span>            :  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+<span class="lineNum">      17 </span>            :  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+<span class="lineNum">      18 </span>            :  *  GNU Lesser General Public License for more details.
+<span class="lineNum">      19 </span>            :  *
+<span class="lineNum">      20 </span>            :  *  You should have received a copy of the GNU Lesser General Public
+<span class="lineNum">      21 </span>            :  *  License along with this library; see the file COPYING.  If not, write to
+<span class="lineNum">      22 </span>            :  *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+<span class="lineNum">      23 </span>            :  *
+<span class="lineNum">      24 </span>            :  */
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : #include &quot;ogg_in.h&quot;
+<span class="lineNum">      27 </span>            : #include &lt;ogg/ogg.h&gt;
+<span class="lineNum">      28 </span>            : 
+<span class="lineNum">      29 </span>            : #if !defined(GPAC_DISABLE_AV_PARSERS) &amp;&amp; !defined(GPAC_DISABLE_OGG)
+<span class="lineNum">      30 </span>            : 
+<span class="lineNum">      31 </span>            : typedef struct
+<span class="lineNum">      32 </span>            : {
+<span class="lineNum">      33 </span>            :         u32 streamType; /*MPEG-4 streamType*/
+<span class="lineNum">      34 </span>            :         u32 num_init_headers;
+<span class="lineNum">      35 </span>            :         u32 sample_rate, bitrate;
+<span class="lineNum">      36 </span>            : 
+<span class="lineNum">      37 </span>            :         u32 theora_kgs;
+<span class="lineNum">      38 </span>            :         Float frame_rate;
+<span class="lineNum">      39 </span>            :         u32 frame_rate_base;
+<span class="lineNum">      40 </span>            : 
+<span class="lineNum">      41 </span>            :         u32 type;
+<span class="lineNum">      42 </span>            : } OGGInfo;
+<span class="lineNum">      43 </span>            : 
+<span class="lineNum">      44 </span>            : typedef struct
+<span class="lineNum">      45 </span>            : {
+<span class="lineNum">      46 </span>            :         ogg_stream_state os;
+<span class="lineNum">      47 </span>            :         u32 serial_no;
+<span class="lineNum">      48 </span>            :         /*DSI for ogg in mp4 - cf constants.h*/
+<span class="lineNum">      49 </span>            :         char *dsi;
+<span class="lineNum">      50 </span>            :         u32 dsi_len;
+<span class="lineNum">      51 </span>            : 
+<span class="lineNum">      52 </span>            :         OGGInfo info;
+<span class="lineNum">      53 </span>            :         Bool got_headers;
+<span class="lineNum">      54 </span>            :         s64 seek_granule, last_granule;
+<span class="lineNum">      55 </span>            : 
+<span class="lineNum">      56 </span>            :         Bool is_running;
+<span class="lineNum">      57 </span>            :         u32 parse_headers;
+<span class="lineNum">      58 </span>            :         LPNETCHANNEL ch;
+<span class="lineNum">      59 </span>            :         u16 ESID;
+<span class="lineNum">      60 </span>            :         Bool eos_detected, map_time;
+<span class="lineNum">      61 </span>            : 
+<span class="lineNum">      62 </span>            :         u32 ogg_ts;
+<span class="lineNum">      63 </span>            : 
+<span class="lineNum">      64 </span>            :         GF_VorbisParser vp;
+<span class="lineNum">      65 </span>            : } OGGStream;
+<span class="lineNum">      66 </span>            : 
+<span class="lineNum">      67 </span>            : typedef struct
+<span class="lineNum">      68 </span>            : {
+<span class="lineNum">      69 </span>            :         GF_ClientService *service;
+<span class="lineNum">      70 </span>            :         GF_Thread *demuxer;
+<span class="lineNum">      71 </span>            : 
+<span class="lineNum">      72 </span>            :         GF_List *streams;
+<span class="lineNum">      73 </span>            : 
+<span class="lineNum">      74 </span>            :         FILE *ogfile;
+<span class="lineNum">      75 </span>            :         u64 file_size;
+<span class="lineNum">      76 </span>            :         Bool is_remote, is_inline;
+<span class="lineNum">      77 </span>            :         u32 nb_playing, kill_demux, do_seek, service_type, init_remain, bos_done;
+<span class="lineNum">      78 </span>            : 
+<span class="lineNum">      79 </span>            :         /*ogg ogfile state*/
+<span class="lineNum">      80 </span>            :         ogg_sync_state oy;
+<span class="lineNum">      81 </span>            : 
+<span class="lineNum">      82 </span>            :         OGGStream *resync_stream;
+<span class="lineNum">      83 </span>            : 
+<span class="lineNum">      84 </span>            :         Bool has_video, has_audio, is_single_media;
+<span class="lineNum">      85 </span>            : 
+<span class="lineNum">      86 </span>            :         Double dur;
+<span class="lineNum">      87 </span>            :         u32 data_buffer_ms;
+<span class="lineNum">      88 </span>            : 
+<span class="lineNum">      89 </span>            :         Bool needs_connection;
+<span class="lineNum">      90 </span>            :         Double start_range, end_range;
+<span class="lineNum">      91 </span>            :         /*file downloader*/
+<span class="lineNum">      92 </span>            :         GF_DownloadSession * dnload;
+<span class="lineNum">      93 </span>            :         Bool is_live;
+<span class="lineNum">      94 </span>            :         u32 tune_in_time;
+<span class="lineNum">      95 </span>            : } OGGReader;
+<a name="96"><span class="lineNum">      96 </span>            : </a>
+<span class="lineNum">      97 </span>            : 
+<span class="lineNum">      98 </span>            : void OGG_EndOfFile(OGGReader *read)
+<span class="lineNum">      99 </span>            : {
+<span class="lineNum">     100 </span>            :         OGGStream *st;
+<span class="lineNum">     101 </span><span class="lineNoCov">          0 :         u32 i=0;</span>
+<span class="lineNum">     102 </span><span class="lineNoCov">          0 :         while ((st = (OGGStream*)gf_list_enum(read-&gt;streams, &amp;i))) {</span>
+<span class="lineNum">     103 </span><span class="lineNoCov">          0 :                 gf_service_send_packet(read-&gt;service, st-&gt;ch, NULL, 0, NULL, GF_EOS);</span>
+<span class="lineNum">     104 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     105 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     106 </span>            : 
+<a name="107"><span class="lineNum">     107 </span>            : #define OGG_BUFFER_SIZE 4096</a>
+<span class="lineNum">     108 </span>            : 
+<span class="lineNum">     109 </span>            : static Bool OGG_ReadPage(OGGReader *read, ogg_page *oggpage)
+<span class="lineNum">     110 </span>            : {
+<span class="lineNum">     111 </span><span class="lineNoCov">          0 :         char buf[OGG_BUFFER_SIZE];</span>
+<span class="lineNum">     112 </span>            :         GF_Err e;
+<span class="lineNum">     113 </span>            : 
+<span class="lineNum">     114 </span>            :         /*remote file, check if we use cache*/
+<span class="lineNum">     115 </span><span class="lineNoCov">          0 :         if (read-&gt;is_remote) {</span>
+<span class="lineNum">     116 </span>            :                 u32 total_size;
+<span class="lineNum">     117 </span>            :                 GF_NetIOStatus status;
+<span class="lineNum">     118 </span><span class="lineNoCov">          0 :                 e = gf_dm_sess_get_stats(read-&gt;dnload, NULL, NULL, &amp;total_size, NULL, NULL, &amp;status);</span>
+<span class="lineNum">     119 </span>            :                 /*not ready*/
+<span class="lineNum">     120 </span><span class="lineNoCov">          0 :                 if ((e&lt;GF_OK) || (status &gt; GF_NETIO_DATA_EXCHANGE)) return GF_FALSE;</span>
+<span class="lineNum">     121 </span><span class="lineNoCov">          0 :                 if (status == GF_NETIO_DATA_EXCHANGE) {</span>
+<span class="lineNum">     122 </span><span class="lineNoCov">          0 :                         if (!total_size &amp;&amp; !read-&gt;is_live) {</span>
+<span class="lineNum">     123 </span><span class="lineNoCov">          0 :                                 read-&gt;is_live = GF_TRUE;</span>
+<span class="lineNum">     124 </span><span class="lineNoCov">          0 :                                 read-&gt;tune_in_time = gf_sys_clock();</span>
+<span class="lineNum">     125 </span><span class="lineNoCov">          0 :                         }</span>
+<span class="lineNum">     126 </span><span class="lineNoCov">          0 :                         else if (!read-&gt;is_live  &amp;&amp; !read-&gt;ogfile) {</span>
+<span class="lineNum">     127 </span><span class="lineNoCov">          0 :                                 const char *szCache = gf_dm_sess_get_cache_name(read-&gt;dnload);</span>
+<span class="lineNum">     128 </span><span class="lineNoCov">          0 :                                 if (!szCache) return GF_FALSE;</span>
+<span class="lineNum">     129 </span><span class="lineNoCov">          0 :                                 read-&gt;ogfile = gf_fopen((char *) szCache, &quot;rb&quot;);</span>
+<span class="lineNum">     130 </span><span class="lineNoCov">          0 :                                 if (!read-&gt;ogfile) return GF_FALSE;</span>
+<span class="lineNum">     131 </span>            :                         }
+<span class="lineNum">     132 </span>            :                 }
+<span class="lineNum">     133 </span>            :         }
+<span class="lineNum">     134 </span>            : 
+<span class="lineNum">     135 </span><span class="lineNoCov">          0 :         while (ogg_sync_pageout(&amp;read-&gt;oy, oggpage ) != 1 ) {</span>
+<span class="lineNum">     136 </span>            :                 char *buffer;
+<span class="lineNum">     137 </span>            :                 u32 bytes;
+<span class="lineNum">     138 </span>            : 
+<span class="lineNum">     139 </span><span class="lineNoCov">          0 :                 if (read-&gt;ogfile) {</span>
+<span class="lineNum">     140 </span><span class="lineNoCov">          0 :                         if (feof(read-&gt;ogfile)) {</span>
+<span class="lineNum">     141 </span><span class="lineNoCov">          0 :                                 OGG_EndOfFile(read);</span>
+<span class="lineNum">     142 </span><span class="lineNoCov">          0 :                                 return GF_FALSE;</span>
+<span class="lineNum">     143 </span>            :                         }
+<span class="lineNum">     144 </span><span class="lineNoCov">          0 :                         bytes = (u32) fread(buf, 1, OGG_BUFFER_SIZE, read-&gt;ogfile);</span>
+<span class="lineNum">     145 </span><span class="lineNoCov">          0 :                 } else {</span>
+<span class="lineNum">     146 </span><span class="lineNoCov">          0 :                         e = gf_dm_sess_fetch_data(read-&gt;dnload, buf, OGG_BUFFER_SIZE, &amp;bytes);</span>
+<span class="lineNum">     147 </span><span class="lineNoCov">          0 :                         if (e) return GF_FALSE;</span>
+<span class="lineNum">     148 </span>            :                 }
+<span class="lineNum">     149 </span><span class="lineNoCov">          0 :                 if (!bytes) return GF_FALSE;</span>
+<span class="lineNum">     150 </span><span class="lineNoCov">          0 :                 buffer = ogg_sync_buffer(&amp;read-&gt;oy, bytes);</span>
+<span class="lineNum">     151 </span><span class="lineNoCov">          0 :                 memcpy(buffer, buf, bytes);</span>
+<span class="lineNum">     152 </span><span class="lineNoCov">          0 :                 ogg_sync_wrote(&amp;read-&gt;oy, bytes);</span>
+<span class="lineNum">     153 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     154 </span><span class="lineNoCov">          0 :         return GF_TRUE;</span>
+<a name="155"><span class="lineNum">     155 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     156 </span>            : 
+<span class="lineNum">     157 </span>            : static OGGStream *OGG_FindStreamForPage(OGGReader *read, ogg_page *oggpage)
+<span class="lineNum">     158 </span>            : {
+<span class="lineNum">     159 </span>            :         u32 i, count;
+<span class="lineNum">     160 </span><span class="lineNoCov">          0 :         count = gf_list_count(read-&gt;streams);</span>
+<span class="lineNum">     161 </span><span class="lineNoCov">          0 :         for (i=0; i&lt;count; i++) {</span>
+<span class="lineNum">     162 </span><span class="lineNoCov">          0 :                 OGGStream *st = (OGGStream*)gf_list_get(read-&gt;streams, i);</span>
+<span class="lineNum">     163 </span><span class="lineNoCov">          0 :                 if (ogg_stream_pagein(&amp;st-&gt;os, oggpage) == 0) return st;</span>
+<span class="lineNum">     164 </span>            :         }
+<span class="lineNum">     165 </span><span class="lineNoCov">          0 :         return NULL;</span>
+<span class="lineNum">     166 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     167 </span>            : 
+<a name="168"><span class="lineNum">     168 </span>            : </a>
+<span class="lineNum">     169 </span>            : 
+<span class="lineNum">     170 </span>            : static GF_ObjectDescriptor *OGG_GetOD(OGGStream *st)
+<span class="lineNum">     171 </span>            : {
+<span class="lineNum">     172 </span>            :         GF_ObjectDescriptor *od;
+<span class="lineNum">     173 </span>            :         GF_ESD *esd;
+<span class="lineNum">     174 </span>            : 
+<span class="lineNum">     175 </span><span class="lineNoCov">          0 :         od = (GF_ObjectDescriptor *) gf_odf_desc_new(GF_ODF_OD_TAG);</span>
+<span class="lineNum">     176 </span><span class="lineNoCov">          0 :         od-&gt;objectDescriptorID = (st-&gt;info.streamType==GF_STREAM_AUDIO) ? 3 : 2;</span>
+<span class="lineNum">     177 </span><span class="lineNoCov">          0 :         esd = gf_odf_desc_esd_new(0);</span>
+<span class="lineNum">     178 </span><span class="lineNoCov">          0 :         esd-&gt;decoderConfig-&gt;streamType = st-&gt;info.streamType;</span>
+<span class="lineNum">     179 </span><span class="lineNoCov">          0 :         esd-&gt;decoderConfig-&gt;objectTypeIndication = GPAC_OTI_MEDIA_OGG;</span>
+<span class="lineNum">     180 </span><span class="lineNoCov">          0 :         esd-&gt;decoderConfig-&gt;avgBitrate = st-&gt;info.bitrate;</span>
+<span class="lineNum">     181 </span><span class="lineNoCov">          0 :         esd-&gt;ESID = st-&gt;ESID;</span>
+<span class="lineNum">     182 </span>            : 
+<span class="lineNum">     183 </span><span class="lineNoCov">          0 :         esd-&gt;slConfig-&gt;useTimestampsFlag = 1;</span>
+<span class="lineNum">     184 </span><span class="lineNoCov">          0 :         esd-&gt;slConfig-&gt;useAccessUnitEndFlag = esd-&gt;slConfig-&gt;useAccessUnitStartFlag = 1;</span>
+<span class="lineNum">     185 </span><span class="lineNoCov">          0 :         esd-&gt;slConfig-&gt;timestampResolution = st-&gt;info.sample_rate ? st-&gt;info.sample_rate : (u32) (1000*st-&gt;info.frame_rate);</span>
+<span class="lineNum">     186 </span><span class="lineNoCov">          0 :         if (st-&gt;info.sample_rate) esd-&gt;slConfig-&gt;hasRandomAccessUnitsOnlyFlag = 1;</span>
+<span class="lineNum">     187 </span><span class="lineNoCov">          0 :         else esd-&gt;slConfig-&gt;useRandomAccessPointFlag = 1;</span>
+<span class="lineNum">     188 </span>            : 
+<span class="lineNum">     189 </span><span class="lineNoCov">          0 :         esd-&gt;decoderConfig-&gt;decoderSpecificInfo-&gt;dataLength = st-&gt;dsi_len;</span>
+<span class="lineNum">     190 </span><span class="lineNoCov">          0 :         esd-&gt;decoderConfig-&gt;decoderSpecificInfo-&gt;data = (char *) gf_malloc(sizeof(char) * st-&gt;dsi_len);</span>
+<span class="lineNum">     191 </span><span class="lineNoCov">          0 :         memcpy(esd-&gt;decoderConfig-&gt;decoderSpecificInfo-&gt;data, st-&gt;dsi, sizeof(char) * st-&gt;dsi_len);</span>
+<span class="lineNum">     192 </span><span class="lineNoCov">          0 :         gf_list_add(od-&gt;ESDescriptors, esd);</span>
+<span class="lineNum">     193 </span><span class="lineNoCov">          0 :         return od;</span>
+<a name="194"><span class="lineNum">     194 </span>            : }</a>
+<span class="lineNum">     195 </span>            : 
+<span class="lineNum">     196 </span>            : u64 OGG_GranuleToTime(OGGInfo *cfg, s64 granule)
+<span class="lineNum">     197 </span>            : {
+<span class="lineNum">     198 </span><span class="lineNoCov">          0 :         if (cfg-&gt;sample_rate) {</span>
+<span class="lineNum">     199 </span><span class="lineNoCov">          0 :                 return granule;</span>
+<span class="lineNum">     200 </span>            :         }
+<span class="lineNum">     201 </span><span class="lineNoCov">          0 :         if (cfg-&gt;frame_rate) {</span>
+<span class="lineNum">     202 </span><span class="lineNoCov">          0 :                 s64 iframe = granule&gt;&gt;cfg-&gt;theora_kgs;</span>
+<span class="lineNum">     203 </span><span class="lineNoCov">          0 :                 s64 pframe = granule - (iframe&lt;&lt;cfg-&gt;theora_kgs);</span>
+<span class="lineNum">     204 </span><span class="lineNoCov">          0 :                 pframe += iframe;</span>
+<span class="lineNum">     205 </span><span class="lineNoCov">          0 :                 pframe *= cfg-&gt;frame_rate_base;</span>
+<span class="lineNum">     206 </span><span class="lineNoCov">          0 :                 return (u64) (pframe / cfg-&gt;frame_rate);</span>
+<span class="lineNum">     207 </span>            :         }
+<span class="lineNum">     208 </span><span class="lineNoCov">          0 :         return 0;</span>
+<a name="209"><span class="lineNum">     209 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     210 </span>            : 
+<span class="lineNum">     211 </span>            : Double OGG_GranuleToMediaTime(OGGInfo *cfg, s64 granule)
+<span class="lineNum">     212 </span>            : {
+<span class="lineNum">     213 </span><span class="lineNoCov">          0 :         Double t = (Double) (s64) OGG_GranuleToTime(cfg, granule);</span>
+<span class="lineNum">     214 </span><span class="lineNoCov">          0 :         if (cfg-&gt;sample_rate) t /= cfg-&gt;sample_rate;</span>
+<span class="lineNum">     215 </span><span class="lineNoCov">          0 :         else t /= cfg-&gt;frame_rate_base;</span>
+<span class="lineNum">     216 </span><span class="lineNoCov">          0 :         return t;</span>
+<span class="lineNum">     217 </span>            : }
+<a name="218"><span class="lineNum">     218 </span>            : </a>
+<span class="lineNum">     219 </span>            : 
+<span class="lineNum">     220 </span>            : static void OGG_GetStreamInfo(ogg_packet *oggpacket, OGGInfo *info)
+<span class="lineNum">     221 </span>            : {
+<span class="lineNum">     222 </span><span class="lineNoCov">          0 :         oggpack_buffer opb;</span>
+<span class="lineNum">     223 </span>            : 
+<span class="lineNum">     224 </span><span class="lineNoCov">          0 :         memset(info, 0, sizeof(OGGInfo));</span>
+<span class="lineNum">     225 </span>            : 
+<span class="lineNum">     226 </span>            :         /*vorbis*/
+<span class="lineNum">     227 </span><span class="lineNoCov">          0 :         if ((oggpacket-&gt;bytes &gt;= 7) &amp;&amp; !strncmp((char *) &amp;oggpacket-&gt;packet[1], &quot;vorbis&quot;, 6)) {</span>
+<span class="lineNum">     228 </span><span class="lineNoCov">          0 :                 info-&gt;streamType = GF_STREAM_AUDIO;</span>
+<span class="lineNum">     229 </span><span class="lineNoCov">          0 :                 oggpack_readinit(&amp;opb, oggpacket-&gt;packet, oggpacket-&gt;bytes);</span>
+<span class="lineNum">     230 </span><span class="lineNoCov">          0 :                 oggpack_adv( &amp;opb, 88);</span>
+<span class="lineNum">     231 </span><span class="lineNoCov">          0 :                 oggpack_adv( &amp;opb, 8);      /*nb chan*/</span>
+<span class="lineNum">     232 </span><span class="lineNoCov">          0 :                 info-&gt;sample_rate = oggpack_read(&amp;opb, 32);</span>
+<span class="lineNum">     233 </span><span class="lineNoCov">          0 :                 oggpack_adv( &amp;opb, 32);     /*max rate*/</span>
+<span class="lineNum">     234 </span><span class="lineNoCov">          0 :                 info-&gt;bitrate = oggpack_read(&amp;opb, 32);</span>
+<span class="lineNum">     235 </span><span class="lineNoCov">          0 :                 info-&gt;num_init_headers = 3;</span>
+<span class="lineNum">     236 </span><span class="lineNoCov">          0 :                 info-&gt;type = OGG_VORBIS;</span>
+<span class="lineNum">     237 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     238 </span>            :         /*speex*/
+<span class="lineNum">     239 </span><span class="lineNoCov">          0 :         else if ((oggpacket-&gt;bytes &gt;= 7) &amp;&amp; !strncmp((char *) &amp;oggpacket-&gt;packet[0], &quot;Speex&quot;, 5)) {</span>
+<span class="lineNum">     240 </span><span class="lineNoCov">          0 :                 info-&gt;streamType = GF_STREAM_AUDIO;</span>
+<span class="lineNum">     241 </span><span class="lineNoCov">          0 :                 oggpack_readinit(&amp;opb, oggpacket-&gt;packet, oggpacket-&gt;bytes);</span>
+<span class="lineNum">     242 </span><span class="lineNoCov">          0 :                 oggpack_adv(&amp;opb, 224);</span>
+<span class="lineNum">     243 </span><span class="lineNoCov">          0 :                 oggpack_adv(&amp;opb, 32);</span>
+<span class="lineNum">     244 </span><span class="lineNoCov">          0 :                 oggpack_adv( &amp;opb, 32);</span>
+<span class="lineNum">     245 </span><span class="lineNoCov">          0 :                 info-&gt;sample_rate = oggpack_read(&amp;opb, 32);</span>
+<span class="lineNum">     246 </span><span class="lineNoCov">          0 :                 info-&gt;type = OGG_SPEEX;</span>
+<span class="lineNum">     247 </span><span class="lineNoCov">          0 :                 info-&gt;num_init_headers = 1;</span>
+<span class="lineNum">     248 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     249 </span>            :         /*flac*/
+<span class="lineNum">     250 </span><span class="lineNoCov">          0 :         else if ((oggpacket-&gt;bytes &gt;= 4) &amp;&amp; !strncmp((char *) &amp;oggpacket-&gt;packet[0], &quot;fLaC&quot;, 4)) {</span>
+<span class="lineNum">     251 </span><span class="lineNoCov">          0 :                 info-&gt;streamType = GF_STREAM_AUDIO;</span>
+<span class="lineNum">     252 </span><span class="lineNoCov">          0 :                 info-&gt;type = 3;</span>
+<span class="lineNum">     253 </span><span class="lineNoCov">          0 :                 info-&gt;num_init_headers = OGG_FLAC;</span>
+<span class="lineNum">     254 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     255 </span>            :         /*theora*/
+<span class="lineNum">     256 </span><span class="lineNoCov">          0 :         else if ((oggpacket-&gt;bytes &gt;= 7) &amp;&amp; !strncmp((char *) &amp;oggpacket-&gt;packet[1], &quot;theora&quot;, 6)) {</span>
+<span class="lineNum">     257 </span>            :                 GF_BitStream *bs;
+<span class="lineNum">     258 </span>            :                 u32 fps_numerator, fps_denominator, keyframe_freq_force;
+<span class="lineNum">     259 </span>            : 
+<span class="lineNum">     260 </span><span class="lineNoCov">          0 :                 info-&gt;streamType = GF_STREAM_VISUAL;</span>
+<span class="lineNum">     261 </span><span class="lineNoCov">          0 :                 info-&gt;type = OGG_THEORA;</span>
+<span class="lineNum">     262 </span><span class="lineNoCov">          0 :                 bs = gf_bs_new((char *) oggpacket-&gt;packet, oggpacket-&gt;bytes, GF_BITSTREAM_READ);</span>
+<span class="lineNum">     263 </span><span class="lineNoCov">          0 :                 gf_bs_read_int(bs, 56);</span>
+<span class="lineNum">     264 </span><span class="lineNoCov">          0 :                 gf_bs_read_int(bs, 8); /* major version num */</span>
+<span class="lineNum">     265 </span><span class="lineNoCov">          0 :                 gf_bs_read_int(bs, 8); /* minor version num */</span>
+<span class="lineNum">     266 </span><span class="lineNoCov">          0 :                 gf_bs_read_int(bs, 8); /* subminor version num */</span>
+<span class="lineNum">     267 </span><span class="lineNoCov">          0 :                 gf_bs_read_int(bs, 16) /*&lt;&lt; 4*/; /* width */</span>
+<span class="lineNum">     268 </span><span class="lineNoCov">          0 :                 gf_bs_read_int(bs, 16) /*&lt;&lt; 4*/; /* height */</span>
+<span class="lineNum">     269 </span><span class="lineNoCov">          0 :                 gf_bs_read_int(bs, 24); /* frame width */</span>
+<span class="lineNum">     270 </span><span class="lineNoCov">          0 :                 gf_bs_read_int(bs, 24); /* frame height */</span>
+<span class="lineNum">     271 </span><span class="lineNoCov">          0 :                 gf_bs_read_int(bs, 8); /* x offset */</span>
+<span class="lineNum">     272 </span><span class="lineNoCov">          0 :                 gf_bs_read_int(bs, 8); /* y offset */</span>
+<span class="lineNum">     273 </span><span class="lineNoCov">          0 :                 fps_numerator = gf_bs_read_u32(bs);</span>
+<span class="lineNum">     274 </span><span class="lineNoCov">          0 :                 fps_denominator = gf_bs_read_u32(bs);</span>
+<span class="lineNum">     275 </span><span class="lineNoCov">          0 :                 gf_bs_read_int(bs, 24); /* aspect_numerator */</span>
+<span class="lineNum">     276 </span><span class="lineNoCov">          0 :                 gf_bs_read_int(bs, 24); /* aspect_denominator */</span>
+<span class="lineNum">     277 </span><span class="lineNoCov">          0 :                 gf_bs_read_int(bs, 8); /* colorspace */</span>
+<span class="lineNum">     278 </span><span class="lineNoCov">          0 :                 gf_bs_read_int(bs, 24);/* bitrate */</span>
+<span class="lineNum">     279 </span><span class="lineNoCov">          0 :                 gf_bs_read_int(bs, 6); /* quality */</span>
+<span class="lineNum">     280 </span>            : 
+<span class="lineNum">     281 </span><span class="lineNoCov">          0 :                 keyframe_freq_force = 1 &lt;&lt; gf_bs_read_int(bs, 5);</span>
+<span class="lineNum">     282 </span><span class="lineNoCov">          0 :                 info-&gt;theora_kgs = 0;</span>
+<span class="lineNum">     283 </span><span class="lineNoCov">          0 :                 keyframe_freq_force--;</span>
+<span class="lineNum">     284 </span><span class="lineNoCov">          0 :                 while (keyframe_freq_force) {</span>
+<span class="lineNum">     285 </span><span class="lineNoCov">          0 :                         info-&gt;theora_kgs ++;</span>
+<span class="lineNum">     286 </span><span class="lineNoCov">          0 :                         keyframe_freq_force &gt;&gt;= 1;</span>
+<span class="lineNum">     287 </span><span class="lineNoCov">          0 :                 }</span>
+<span class="lineNum">     288 </span><span class="lineNoCov">          0 :                 info-&gt;frame_rate = ((Float)fps_numerator) / fps_denominator;</span>
+<span class="lineNum">     289 </span><span class="lineNoCov">          0 :                 info-&gt;num_init_headers = 3;</span>
+<span class="lineNum">     290 </span><span class="lineNoCov">          0 :                 gf_bs_del(bs);</span>
+<span class="lineNum">     291 </span><span class="lineNoCov">          0 :                 info-&gt;frame_rate_base = fps_denominator;</span>
+<span class="lineNum">     292 </span><span class="lineNoCov">          0 :         }</span>
+<a name="293"><span class="lineNum">     293 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     294 </span>            : 
+<span class="lineNum">     295 </span>            : static void OGG_ResetupStream(OGGReader *read, OGGStream *st, ogg_page *oggpage)
+<span class="lineNum">     296 </span>            : {
+<span class="lineNum">     297 </span><span class="lineNoCov">          0 :         ogg_stream_clear(&amp;st-&gt;os);</span>
+<span class="lineNum">     298 </span><span class="lineNoCov">          0 :         ogg_stream_init(&amp;st-&gt;os, st-&gt;serial_no);</span>
+<span class="lineNum">     299 </span><span class="lineNoCov">          0 :         ogg_stream_pagein(&amp;st-&gt;os, oggpage);</span>
+<span class="lineNum">     300 </span><span class="lineNoCov">          0 :         st-&gt;parse_headers = st-&gt;info.num_init_headers;</span>
+<span class="lineNum">     301 </span>            : 
+<span class="lineNum">     302 </span><span class="lineNoCov">          0 :         if (st-&gt;info.sample_rate) {</span>
+<span class="lineNum">     303 </span><span class="lineNoCov">          0 :                 st-&gt;seek_granule = (s64) (read-&gt;start_range * st-&gt;info.sample_rate);</span>
+<span class="lineNum">     304 </span><span class="lineNoCov">          0 :         } else if (st-&gt;info.frame_rate) {</span>
+<span class="lineNum">     305 </span><span class="lineNoCov">          0 :                 s64 seek = (s64) (read-&gt;start_range * st-&gt;info.frame_rate) - 1;</span>
+<span class="lineNum">     306 </span><span class="lineNoCov">          0 :                 if (seek&lt;0) seek=0;</span>
+<span class="lineNum">     307 </span><span class="lineNoCov">          0 :                 st-&gt;seek_granule = (seek)&lt;&lt;st-&gt;info.theora_kgs;</span>
+<span class="lineNum">     308 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     309 </span><span class="lineNoCov">          0 :         st-&gt;last_granule = -1;</span>
+<a name="310"><span class="lineNum">     310 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     311 </span>            : 
+<span class="lineNum">     312 </span>            : static void OGG_NewStream(OGGReader *read, ogg_page *oggpage)
+<span class="lineNum">     313 </span>            : {
+<span class="lineNum">     314 </span><span class="lineNoCov">          0 :         ogg_packet oggpacket;</span>
+<span class="lineNum">     315 </span>            :         u32 serial_no, i;
+<span class="lineNum">     316 </span>            :         OGGStream *st;
+<span class="lineNum">     317 </span>            : 
+<span class="lineNum">     318 </span>            :         /*reannounce of stream (caroussel in live streams) - until now I don't think icecast uses this*/
+<span class="lineNum">     319 </span><span class="lineNoCov">          0 :         serial_no = ogg_page_serialno(oggpage);</span>
+<span class="lineNum">     320 </span><span class="lineNoCov">          0 :         i=0;</span>
+<span class="lineNum">     321 </span><span class="lineNoCov">          0 :         while ((st = (OGGStream*)gf_list_enum(read-&gt;streams, &amp;i))) {</span>
+<span class="lineNum">     322 </span><span class="lineNoCov">          0 :                 if (st-&gt;serial_no==serial_no) {</span>
+<span class="lineNum">     323 </span><span class="lineNoCov">          0 :                         OGG_ResetupStream(read, st, oggpage);</span>
+<span class="lineNum">     324 </span><span class="lineNoCov">          0 :                         return;</span>
+<span class="lineNum">     325 </span>            :                 }
+<span class="lineNum">     326 </span>            :         }
+<span class="lineNum">     327 </span>            : 
+<span class="lineNum">     328 </span>            :         /*look if we have the same stream defined (eg, reuse first stream dead with same header page)*/
+<span class="lineNum">     329 </span><span class="lineNoCov">          0 :         i=0;</span>
+<span class="lineNum">     330 </span><span class="lineNoCov">          0 :         while ((st = (OGGStream*)gf_list_enum(read-&gt;streams, &amp;i))) {</span>
+<span class="lineNum">     331 </span><span class="lineNoCov">          0 :                 if (st-&gt;eos_detected) {</span>
+<span class="lineNum">     332 </span><span class="lineNoCov">          0 :                         ogg_stream_state os;</span>
+<span class="lineNum">     333 </span><span class="lineNoCov">          0 :                         ogg_stream_init(&amp;os, serial_no);</span>
+<span class="lineNum">     334 </span><span class="lineNoCov">          0 :                         ogg_stream_pagein(&amp;os, oggpage);</span>
+<span class="lineNum">     335 </span><span class="lineNoCov">          0 :                         ogg_stream_packetpeek(&amp;os, &amp;oggpacket);</span>
+<span class="lineNum">     336 </span><span class="lineNoCov">          0 :                         if (st-&gt;dsi &amp;&amp; !memcmp(st-&gt;dsi, oggpacket.packet, oggpacket.bytes)) {</span>
+<span class="lineNum">     337 </span><span class="lineNoCov">          0 :                                 ogg_stream_clear(&amp;os);</span>
+<span class="lineNum">     338 </span><span class="lineNoCov">          0 :                                 st-&gt;serial_no = serial_no;</span>
+<span class="lineNum">     339 </span><span class="lineNoCov">          0 :                                 OGG_ResetupStream(read, st, oggpage);</span>
+<span class="lineNum">     340 </span><span class="lineNoCov">          0 :                                 return;</span>
+<span class="lineNum">     341 </span>            :                         }
+<span class="lineNum">     342 </span><span class="lineNoCov">          0 :                         ogg_stream_clear(&amp;os);</span>
+<span class="lineNum">     343 </span>            :                         /*nope streams are different, signal eos on this one*/
+<span class="lineNum">     344 </span><span class="lineNoCov">          0 :                         gf_service_send_packet(read-&gt;service, st-&gt;ch, NULL, 0, NULL, GF_EOS);</span>
+<span class="lineNum">     345 </span><span class="lineNoCov">          0 :                 }</span>
+<span class="lineNum">     346 </span>            :         }
+<span class="lineNum">     347 </span>            : 
+<span class="lineNum">     348 </span><span class="lineNoCov">          0 :         GF_SAFEALLOC(st, OGGStream);</span>
+<span class="lineNum">     349 </span><span class="lineNoCov">          0 :         if (!st) {</span>
+<span class="lineNum">     350 </span><span class="lineNoCov">          0 :                 GF_LOG(GF_LOG_ERROR, GF_LOG_CONTAINER, (&quot;[OGG] Failed to allocate stream for demux\n&quot;));</span>
+<span class="lineNum">     351 </span><span class="lineNoCov">          0 :                 return;</span>
+<span class="lineNum">     352 </span>            :         }
+<span class="lineNum">     353 </span><span class="lineNoCov">          0 :         st-&gt;serial_no = serial_no;</span>
+<span class="lineNum">     354 </span><span class="lineNoCov">          0 :         ogg_stream_init(&amp;st-&gt;os, st-&gt;serial_no);</span>
+<span class="lineNum">     355 </span><span class="lineNoCov">          0 :         ogg_stream_pagein(&amp;st-&gt;os, oggpage);</span>
+<span class="lineNum">     356 </span>            : 
+<span class="lineNum">     357 </span><span class="lineNoCov">          0 :         ogg_stream_packetpeek(&amp;st-&gt;os, &amp;oggpacket);</span>
+<span class="lineNum">     358 </span><span class="lineNoCov">          0 :         OGG_GetStreamInfo(&amp;oggpacket, &amp;st-&gt;info);</span>
+<span class="lineNum">     359 </span>            : 
+<span class="lineNum">     360 </span>            :         /*check we don't discard audio or visual streams*/
+<span class="lineNum">     361 </span><span class="lineNoCov">          0 :         if ( ((read-&gt;service_type==1) &amp;&amp; (st-&gt;info.streamType==GF_STREAM_AUDIO))</span>
+<span class="lineNum">     362 </span>            :                 || ((read-&gt;service_type==2) &amp;&amp; (st-&gt;info.streamType==GF_STREAM_VISUAL)) )
+<span class="lineNum">     363 </span>            :         {
+<span class="lineNum">     364 </span><span class="lineNoCov">          0 :                 ogg_stream_clear(&amp;st-&gt;os);</span>
+<span class="lineNum">     365 </span><span class="lineNoCov">          0 :                 gf_free(st);</span>
+<span class="lineNum">     366 </span><span class="lineNoCov">          0 :                 return;</span>
+<span class="lineNum">     367 </span>            :         }
+<span class="lineNum">     368 </span>            : 
+<span class="lineNum">     369 </span><span class="lineNoCov">          0 :         gf_list_add(read-&gt;streams, st);</span>
+<span class="lineNum">     370 </span><span class="lineNoCov">          0 :         st-&gt;ESID = 2 + gf_list_count(read-&gt;streams);</span>
+<span class="lineNum">     371 </span><span class="lineNoCov">          0 :         st-&gt;parse_headers = st-&gt;info.num_init_headers;</span>
+<span class="lineNum">     372 </span><span class="lineNoCov">          0 :         if (st-&gt;parse_headers) read-&gt;init_remain++;</span>
+<span class="lineNum">     373 </span>            : 
+<span class="lineNum">     374 </span><span class="lineNoCov">          0 :         if (st-&gt;info.sample_rate) {</span>
+<span class="lineNum">     375 </span><span class="lineNoCov">          0 :                 st-&gt;seek_granule = (s64) (read-&gt;start_range * st-&gt;info.sample_rate);</span>
+<span class="lineNum">     376 </span><span class="lineNoCov">          0 :         } else if (st-&gt;info.frame_rate) {</span>
+<span class="lineNum">     377 </span><span class="lineNoCov">          0 :                 s64 seek = (s64) (read-&gt;start_range * st-&gt;info.frame_rate) - 1;</span>
+<span class="lineNum">     378 </span><span class="lineNoCov">          0 :                 if (seek&lt;0) seek=0;</span>
+<span class="lineNum">     379 </span><span class="lineNoCov">          0 :                 st-&gt;seek_granule = (seek)&lt;&lt;st-&gt;info.theora_kgs;</span>
+<span class="lineNum">     380 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     381 </span><span class="lineNoCov">          0 :         st-&gt;last_granule = -1;</span>
+<span class="lineNum">     382 </span>            : 
+<span class="lineNum">     383 </span><span class="lineNoCov">          0 :         if (st-&gt;info.streamType==GF_STREAM_VISUAL) {</span>
+<span class="lineNum">     384 </span><span class="lineNoCov">          0 :                 read-&gt;has_video = GF_TRUE;</span>
+<span class="lineNum">     385 </span><span class="lineNoCov">          0 :         } else {</span>
+<span class="lineNum">     386 </span><span class="lineNoCov">          0 :                 read-&gt;has_audio = GF_TRUE;</span>
+<span class="lineNum">     387 </span>            :         }
+<span class="lineNum">     388 </span><span class="lineNoCov">          0 :         if (st-&gt;got_headers &amp;&amp; read-&gt;is_inline) gf_service_declare_media(read-&gt;service, (GF_Descriptor*) OGG_GetOD(st), GF_FALSE);</span>
+<a name="389"><span class="lineNum">     389 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     390 </span>            : 
+<span class="lineNum">     391 </span>            : void OGG_SignalEndOfStream(OGGReader *read, OGGStream *st)
+<span class="lineNum">     392 </span>            : {
+<span class="lineNum">     393 </span><span class="lineNoCov">          0 :         if (st-&gt;eos_detected) {</span>
+<span class="lineNum">     394 </span><span class="lineNoCov">          0 :                 gf_service_send_packet(read-&gt;service, st-&gt;ch, NULL, 0, NULL, GF_EOS);</span>
+<span class="lineNum">     395 </span><span class="lineNoCov">          0 :                 ogg_stream_clear(&amp;st-&gt;os);</span>
+<span class="lineNum">     396 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     397 </span><span class="lineNoCov">          0 : }</span>
+<a name="398"><span class="lineNum">     398 </span>            : </a>
+<span class="lineNum">     399 </span>            : /*GFINLINE*/
+<span class="lineNum">     400 </span>            : void OGG_SendPackets(OGGReader *read, OGGStream *st, ogg_packet *oggpacket)
+<span class="lineNum">     401 </span>            : {
+<span class="lineNum">     402 </span><span class="lineNoCov">          0 :         GF_SLHeader slh;</span>
+<span class="lineNum">     403 </span><span class="lineNoCov">          0 :         memset(&amp;slh, 0, sizeof(GF_SLHeader));</span>
+<span class="lineNum">     404 </span><span class="lineNoCov">          0 :         if (st-&gt;info.type==OGG_VORBIS) {</span>
+<span class="lineNum">     405 </span><span class="lineNoCov">          0 :                 slh.accessUnitEndFlag = slh.accessUnitStartFlag = 1;</span>
+<span class="lineNum">     406 </span><span class="lineNoCov">          0 :                 slh.randomAccessPointFlag = 1;</span>
+<span class="lineNum">     407 </span><span class="lineNoCov">          0 :                 slh.compositionTimeStampFlag = 1;</span>
+<span class="lineNum">     408 </span><span class="lineNoCov">          0 :                 slh.compositionTimeStamp = st-&gt;ogg_ts;</span>
+<span class="lineNum">     409 </span><span class="lineNoCov">          0 :                 gf_service_send_packet(read-&gt;service, st-&gt;ch, (char *) oggpacket-&gt;packet, oggpacket-&gt;bytes, &amp;slh, GF_OK);</span>
+<span class="lineNum">     410 </span><span class="lineNoCov">          0 :                 st-&gt;ogg_ts += gf_vorbis_check_frame(&amp;st-&gt;vp, (char *) oggpacket-&gt;packet, oggpacket-&gt;bytes);</span>
+<span class="lineNum">     411 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     412 </span><span class="lineNoCov">          0 :         else if (st-&gt;info.type==OGG_THEORA) {</span>
+<span class="lineNum">     413 </span><span class="lineNoCov">          0 :                 oggpack_buffer opb;</span>
+<span class="lineNum">     414 </span><span class="lineNoCov">          0 :                 oggpackB_readinit(&amp;opb, oggpacket-&gt;packet, oggpacket-&gt;bytes);</span>
+<span class="lineNum">     415 </span>            :                 /*new frame*/
+<span class="lineNum">     416 </span><span class="lineNoCov">          0 :                 if (oggpackB_read(&amp;opb, 1) == 0) {</span>
+<span class="lineNum">     417 </span><span class="lineNoCov">          0 :                         slh.accessUnitStartFlag = slh.accessUnitEndFlag = 1;</span>
+<span class="lineNum">     418 </span>            :                         /*add packet*/
+<span class="lineNum">     419 </span><span class="lineNoCov">          0 :                         slh.randomAccessPointFlag = oggpackB_read(&amp;opb, 1) ? 0 : 1;</span>
+<span class="lineNum">     420 </span><span class="lineNoCov">          0 :                         slh.compositionTimeStampFlag = 1;</span>
+<span class="lineNum">     421 </span><span class="lineNoCov">          0 :                         slh.compositionTimeStamp = st-&gt;ogg_ts;</span>
+<span class="lineNum">     422 </span><span class="lineNoCov">          0 :                         gf_service_send_packet(read-&gt;service, st-&gt;ch, (char *) oggpacket-&gt;packet, oggpacket-&gt;bytes, &amp;slh, GF_OK);</span>
+<span class="lineNum">     423 </span><span class="lineNoCov">          0 :                         st-&gt;ogg_ts += 1000;</span>
+<span class="lineNum">     424 </span><span class="lineNoCov">          0 :                 }</span>
+<span class="lineNum">     425 </span><span class="lineNoCov">          0 :         }</span>
+<a name="426"><span class="lineNum">     426 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     427 </span>            : 
+<span class="lineNum">     428 </span>            : void OGG_Process(OGGReader *read)
+<span class="lineNum">     429 </span>            : {
+<span class="lineNum">     430 </span>            :         OGGStream *st;
+<span class="lineNum">     431 </span><span class="lineNoCov">          0 :         ogg_packet oggpacket;</span>
+<span class="lineNum">     432 </span>            :         ogg_page oggpage;
+<span class="lineNum">     433 </span>            : 
+<span class="lineNum">     434 </span><span class="lineNoCov">          0 :         if (read-&gt;resync_stream) {</span>
+<span class="lineNum">     435 </span>            :                 st = read-&gt;resync_stream;
+<span class="lineNum">     436 </span><span class="lineNoCov">          0 :                 read-&gt;resync_stream = NULL;</span>
+<span class="lineNum">     437 </span><span class="lineNoCov">          0 :                 goto process_stream;</span>
+<span class="lineNum">     438 </span>            :         }
+<span class="lineNum">     439 </span>            : 
+<span class="lineNum">     440 </span><span class="lineNoCov">          0 :         if (!OGG_ReadPage(read, &amp;oggpage)) {</span>
+<span class="lineNum">     441 </span><span class="lineNoCov">          0 :                 return;</span>
+<span class="lineNum">     442 </span>            :         }
+<span class="lineNum">     443 </span>            : 
+<span class="lineNum">     444 </span><span class="lineNoCov">          0 :         if (ogg_page_bos(&amp;oggpage)) {</span>
+<span class="lineNum">     445 </span><span class="lineNoCov">          0 :                 OGG_NewStream(read, &amp;oggpage);</span>
+<span class="lineNum">     446 </span><span class="lineNoCov">          0 :                 return;</span>
+<span class="lineNum">     447 </span>            :         }
+<span class="lineNum">     448 </span>            : 
+<span class="lineNum">     449 </span><span class="lineNoCov">          0 :         st = OGG_FindStreamForPage(read, &amp;oggpage);</span>
+<span class="lineNum">     450 </span><span class="lineNoCov">          0 :         if (!st) {</span>
+<span class="lineNum">     451 </span><span class="lineNoCov">          0 :                 if (!read-&gt;bos_done &amp;&amp; read-&gt;is_live) {</span>
+<span class="lineNum">     452 </span><span class="lineNoCov">          0 :                         u32 now = gf_sys_clock();</span>
+<span class="lineNum">     453 </span><span class="lineNoCov">          0 :                         if (now-read-&gt;tune_in_time &gt; 1000) {</span>
+<span class="lineNum">     454 </span><span class="lineNoCov">          0 :                                 GF_LOG(GF_LOG_INFO, GF_LOG_CONTAINER, (&quot;[OGG]: Waiting for tune in...\n&quot;));</span>
+<span class="lineNum">     455 </span><span class="lineNoCov">          0 :                                 read-&gt;tune_in_time = now;</span>
+<span class="lineNum">     456 </span><span class="lineNoCov">          0 :                         }</span>
+<span class="lineNum">     457 </span>            :                 }
+<span class="lineNum">     458 </span><span class="lineNoCov">          0 :                 return;</span>
+<span class="lineNum">     459 </span>            :         }
+<span class="lineNum">     460 </span>            : 
+<span class="lineNum">     461 </span><span class="lineNoCov">          0 :         if (ogg_page_eos(&amp;oggpage))</span>
+<span class="lineNum">     462 </span><span class="lineNoCov">          0 :                 st-&gt;eos_detected = GF_TRUE;</span>
+<span class="lineNum">     463 </span>            : 
+<span class="lineNum">     464 </span><span class="lineNoCov">          0 :         if (st-&gt;parse_headers &amp;&amp; !st-&gt;got_headers) {</span>
+<span class="lineNum">     465 </span><span class="lineNoCov">          0 :                 while (ogg_stream_packetout(&amp;st-&gt;os, &amp;oggpacket ) &gt; 0 ) {</span>
+<span class="lineNum">     466 </span>            :                         GF_BitStream *bs;
+<span class="lineNum">     467 </span><span class="lineNoCov">          0 :                         if (st-&gt;info.type==OGG_VORBIS)</span>
+<span class="lineNum">     468 </span><span class="lineNoCov">          0 :                                 gf_vorbis_parse_header(&amp;st-&gt;vp, (char *) oggpacket.packet, oggpacket.bytes);</span>
+<span class="lineNum">     469 </span>            : 
+<span class="lineNum">     470 </span><span class="lineNoCov">          0 :                         bs = gf_bs_new(NULL, 0, GF_BITSTREAM_WRITE);</span>
+<span class="lineNum">     471 </span><span class="lineNoCov">          0 :                         if (st-&gt;dsi) {</span>
+<span class="lineNum">     472 </span><span class="lineNoCov">          0 :                                 gf_bs_write_data(bs, st-&gt;dsi, st-&gt;dsi_len);</span>
+<span class="lineNum">     473 </span><span class="lineNoCov">          0 :                                 gf_free(st-&gt;dsi);</span>
+<span class="lineNum">     474 </span><span class="lineNoCov">          0 :                                 st-&gt;dsi = NULL;</span>
+<span class="lineNum">     475 </span><span class="lineNoCov">          0 :                                 st-&gt;dsi_len=0;</span>
+<span class="lineNum">     476 </span><span class="lineNoCov">          0 :                         }</span>
+<span class="lineNum">     477 </span><span class="lineNoCov">          0 :                         gf_bs_write_u16(bs, oggpacket.bytes);</span>
+<span class="lineNum">     478 </span><span class="lineNoCov">          0 :                         gf_bs_write_data(bs, (char *) oggpacket.packet, oggpacket.bytes);</span>
+<span class="lineNum">     479 </span><span class="lineNoCov">          0 :                         gf_bs_get_content(bs, (char **)&amp;st-&gt;dsi, &amp;st-&gt;dsi_len);</span>
+<span class="lineNum">     480 </span><span class="lineNoCov">          0 :                         gf_bs_del(bs);</span>
+<span class="lineNum">     481 </span><span class="lineNoCov">          0 :                         st-&gt;parse_headers--;</span>
+<span class="lineNum">     482 </span><span class="lineNoCov">          0 :                         if (!st-&gt;parse_headers) {</span>
+<span class="lineNum">     483 </span><span class="lineNoCov">          0 :                                 st-&gt;got_headers = GF_TRUE;</span>
+<span class="lineNum">     484 </span><span class="lineNoCov">          0 :                                 if (read-&gt;is_inline)</span>
+<span class="lineNum">     485 </span><span class="lineNoCov">          0 :                                         gf_service_declare_media(read-&gt;service, (GF_Descriptor*) OGG_GetOD(st), GF_FALSE);</span>
+<span class="lineNum">     486 </span>            :                                 break;
+<span class="lineNum">     487 </span>            :                         }
+<span class="lineNum">     488 </span>            :                 }
+<span class="lineNum">     489 </span><span class="lineNoCov">          0 :                 if (!st-&gt;got_headers) return;</span>
+<span class="lineNum">     490 </span>            :                 assert(read-&gt;init_remain);
+<span class="lineNum">     491 </span><span class="lineNoCov">          0 :                 read-&gt;init_remain--;</span>
+<span class="lineNum">     492 </span><span class="lineNoCov">          0 :                 if (!read-&gt;init_remain) read-&gt;bos_done = 1;</span>
+<span class="lineNum">     493 </span><span class="lineNoCov">          0 :                 return;</span>
+<span class="lineNum">     494 </span>            :         }
+<span class="lineNum">     495 </span>            :         /*from here we should have passed all headers*/
+<span class="lineNum">     496 </span><span class="lineNoCov">          0 :         if (read-&gt;init_remain) return;</span>
+<span class="lineNum">     497 </span>            : 
+<span class="lineNum">     498 </span>            : process_stream:
+<span class="lineNum">     499 </span>            :         /*live insertion (not supported yet, just a reminder)*/
+<span class="lineNum">     500 </span><span class="lineNoCov">          0 :         if (!st-&gt;ch) {</span>
+<span class="lineNum">     501 </span><span class="lineNoCov">          0 :                 read-&gt;resync_stream = st;</span>
+<span class="lineNum">     502 </span><span class="lineNoCov">          0 :                 return;</span>
+<span class="lineNum">     503 </span>            :         }
+<span class="lineNum">     504 </span>            : 
+<span class="lineNum">     505 </span><span class="lineNoCov">          0 :         while (ogg_stream_packetout(&amp;st-&gt;os, &amp;oggpacket ) &gt; 0 ) {</span>
+<span class="lineNum">     506 </span><span class="lineNoCov">          0 :                 if (oggpacket.granulepos != -1) {</span>
+<span class="lineNum">     507 </span><span class="lineNoCov">          0 :                         st-&gt;last_granule = oggpacket.granulepos;</span>
+<span class="lineNum">     508 </span><span class="lineNoCov">          0 :                 }</span>
+<span class="lineNum">     509 </span>            :                 /*stream reinit, don't resend headers*/
+<span class="lineNum">     510 </span><span class="lineNoCov">          0 :                 if (st-&gt;parse_headers) st-&gt;parse_headers--;</span>
+<span class="lineNum">     511 </span><span class="lineNoCov">          0 :                 else if (st-&gt;map_time) {</span>
+<span class="lineNum">     512 </span>            :                         Double t;
+<span class="lineNum">     513 </span><span class="lineNoCov">          0 :                         if (read-&gt;start_range &amp;&amp; (oggpacket.granulepos==-1)) continue;</span>
+<span class="lineNum">     514 </span><span class="lineNoCov">          0 :                         t = OGG_GranuleToMediaTime(&amp;st-&gt;info, st-&gt;last_granule);</span>
+<span class="lineNum">     515 </span><span class="lineNoCov">          0 :                         if (t&gt;=read-&gt;start_range) {</span>
+<span class="lineNum">     516 </span><span class="lineNoCov">          0 :                                 GF_NetworkCommand map;</span>
+<span class="lineNum">     517 </span><span class="lineNoCov">          0 :                                 map.command_type = GF_NET_CHAN_MAP_TIME;</span>
+<span class="lineNum">     518 </span><span class="lineNoCov">          0 :                                 map.map_time.on_channel = st-&gt;ch;</span>
+<span class="lineNum">     519 </span><span class="lineNoCov">          0 :                                 map.map_time.reset_buffers = (read-&gt;start_range&gt;0.2) ? GF_TRUE : GF_FALSE;</span>
+<span class="lineNum">     520 </span><span class="lineNoCov">          0 :                                 map.map_time.timestamp = st-&gt;ogg_ts = 0;</span>
+<span class="lineNum">     521 </span><span class="lineNoCov">          0 :                                 map.map_time.media_time = t;</span>
+<span class="lineNum">     522 </span><span class="lineNoCov">          0 :                                 gf_service_command(read-&gt;service, &amp;map, GF_OK);</span>
+<span class="lineNum">     523 </span><span class="lineNoCov">          0 :                                 st-&gt;map_time = GF_FALSE;</span>
+<span class="lineNum">     524 </span><span class="lineNoCov">          0 :                                 OGG_SendPackets(read, st, &amp;oggpacket);</span>
+<span class="lineNum">     525 </span><span class="lineNoCov">          0 :                         }</span>
+<span class="lineNum">     526 </span>            :                 }
+<span class="lineNum">     527 </span>            :                 else {
+<span class="lineNum">     528 </span><span class="lineNoCov">          0 :                         OGG_SendPackets(read, st, &amp;oggpacket);</span>
+<span class="lineNum">     529 </span>            :                 }
+<span class="lineNum">     530 </span>            :         }
+<a name="531"><span class="lineNum">     531 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     532 </span>            : 
+<span class="lineNum">     533 </span>            : static u32 OggDemux(void *par)
+<span class="lineNum">     534 </span>            : {
+<span class="lineNum">     535 </span><span class="lineNoCov">          0 :         GF_NetworkCommand com;</span>
+<span class="lineNum">     536 </span>            :         Bool go;
+<span class="lineNum">     537 </span>            :         u32 i, count;
+<span class="lineNum">     538 </span>            :         OGGStream *st;
+<span class="lineNum">     539 </span><span class="lineNoCov">          0 :         OGGReader *read = (OGGReader *) par;</span>
+<span class="lineNum">     540 </span>            : 
+<span class="lineNum">     541 </span><span class="lineNoCov">          0 :         read-&gt;bos_done = 0;</span>
+<span class="lineNum">     542 </span><span class="lineNoCov">          0 :         memset(&amp;com, 0, sizeof(GF_NetworkCommand));</span>
+<span class="lineNum">     543 </span><span class="lineNoCov">          0 :         com.command_type = GF_NET_CHAN_BUFFER_QUERY;</span>
+<span class="lineNum">     544 </span>            : 
+<span class="lineNum">     545 </span><span class="lineNoCov">          0 :         if (read-&gt;needs_connection) {</span>
+<span class="lineNum">     546 </span><span class="lineNoCov">          0 :                 read-&gt;needs_connection = GF_FALSE;</span>
+<span class="lineNum">     547 </span><span class="lineNoCov">          0 :                 gf_service_connect_ack(read-&gt;service, NULL, GF_OK);</span>
+<span class="lineNum">     548 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     549 </span>            : 
+<span class="lineNum">     550 </span><span class="lineNoCov">          0 :         ogg_sync_init(&amp;read-&gt;oy);</span>
+<span class="lineNum">     551 </span>            : 
+<span class="lineNum">     552 </span>            : 
+<span class="lineNum">     553 </span><span class="lineNoCov">          0 :         while (!read-&gt;kill_demux) {</span>
+<span class="lineNum">     554 </span><span class="lineNoCov">          0 :                 OGG_Process(read);</span>
+<span class="lineNum">     555 </span>            : 
+<span class="lineNum">     556 </span><span class="lineNoCov">          0 :                 if (!read-&gt;bos_done) continue;</span>
+<span class="lineNum">     557 </span>            : 
+<span class="lineNum">     558 </span>            :                 /*wait for stream connection*/
+<span class="lineNum">     559 </span><span class="lineNoCov">          0 :                 while (!read-&gt;kill_demux &amp;&amp; !read-&gt;nb_playing) {</span>
+<span class="lineNum">     560 </span><span class="lineNoCov">          0 :                         gf_sleep(20);</span>
+<span class="lineNum">     561 </span><span class="lineNoCov">          0 :                 }</span>
+<span class="lineNum">     562 </span>            : 
+<span class="lineNum">     563 </span>            :                 /*(re)starting, seek*/
+<span class="lineNum">     564 </span><span class="lineNoCov">          0 :                 if (read-&gt;do_seek) {</span>
+<span class="lineNum">     565 </span><span class="lineNoCov">          0 :                         read-&gt;do_seek = 0;</span>
+<span class="lineNum">     566 </span><span class="lineNoCov">          0 :                         ogg_sync_clear(&amp;read-&gt;oy);</span>
+<span class="lineNum">     567 </span><span class="lineNoCov">          0 :                         ogg_sync_init(&amp;read-&gt;oy);</span>
+<span class="lineNum">     568 </span>            : //                      OGG_SendStreams(read);
+<span class="lineNum">     569 </span>            : 
+<span class="lineNum">     570 </span><span class="lineNoCov">          0 :                         if (read-&gt;ogfile) {</span>
+<span class="lineNum">     571 </span>            :                                 u32 seek_to = 0;
+<span class="lineNum">     572 </span><span class="lineNoCov">          0 :                                 read-&gt;resync_stream = NULL;</span>
+<span class="lineNum">     573 </span><span class="lineNoCov">          0 :                                 if (read-&gt;dur) seek_to = (u32) (read-&gt;file_size * (read-&gt;start_range/read-&gt;dur) * 0.6f);</span>
+<span class="lineNum">     574 </span><span class="lineNoCov">          0 :                                 if ((s32) seek_to &gt; gf_ftell(read-&gt;ogfile) ) {</span>
+<span class="lineNum">     575 </span><span class="lineNoCov">          0 :                                         gf_fseek(read-&gt;ogfile, seek_to, SEEK_SET);</span>
+<span class="lineNum">     576 </span><span class="lineNoCov">          0 :                                 } else {</span>
+<span class="lineNum">     577 </span><span class="lineNoCov">          0 :                                         gf_fseek(read-&gt;ogfile, 0, SEEK_SET);</span>
+<span class="lineNum">     578 </span>            :                                 }
+<span class="lineNum">     579 </span>            :                         }
+<span class="lineNum">     580 </span>            :                 }
+<span class="lineNum">     581 </span>            : 
+<span class="lineNum">     582 </span>            : 
+<span class="lineNum">     583 </span>            :                 /*sleep untill the buffer occupancy is too low - note that this work because all streams in this
+<span class="lineNum">     584 </span>            :                 demuxer are synchronized*/
+<span class="lineNum">     585 </span><span class="lineNoCov">          0 :                 go = read-&gt;nb_playing;</span>
+<span class="lineNum">     586 </span><span class="lineNoCov">          0 :                 while (go &amp;&amp; !read-&gt;kill_demux) {</span>
+<span class="lineNum">     587 </span><span class="lineNoCov">          0 :                         count = gf_list_count(read-&gt;streams);</span>
+<span class="lineNum">     588 </span><span class="lineNoCov">          0 :                         for (i=0; i&lt;count; i++) {</span>
+<span class="lineNum">     589 </span><span class="lineNoCov">          0 :                                 st = (OGGStream*)gf_list_get(read-&gt;streams, i);</span>
+<span class="lineNum">     590 </span><span class="lineNoCov">          0 :                                 if (!st-&gt;ch) continue;</span>
+<span class="lineNum">     591 </span><span class="lineNoCov">          0 :                                 com.base.on_channel = st-&gt;ch;</span>
+<span class="lineNum">     592 </span><span class="lineNoCov">          0 :                                 gf_service_command(read-&gt;service, &amp;com, GF_OK);</span>
+<span class="lineNum">     593 </span><span class="lineNoCov">          0 :                                 if (com.buffer.occupancy &lt; read-&gt;data_buffer_ms) {</span>
+<span class="lineNum">     594 </span><span class="lineNoCov">          0 :                                         GF_LOG(GF_LOG_DEBUG, GF_LOG_CONTAINER, (&quot;[OGG] channel %d needs fill (%d ms data, %d max buffer)\n&quot;, st-&gt;ESID, com.buffer.occupancy, read-&gt;data_buffer_ms));</span>
+<span class="lineNum">     595 </span>            :                                         go = GF_FALSE;
+<span class="lineNum">     596 </span><span class="lineNoCov">          0 :                                         break;</span>
+<span class="lineNum">     597 </span>            :                                 }
+<span class="lineNum">     598 </span>            :                         }
+<span class="lineNum">     599 </span><span class="lineNoCov">          0 :                         if (!i || !read-&gt;nb_playing) break;</span>
+<span class="lineNum">     600 </span><span class="lineNoCov">          0 :                         gf_sleep(0);</span>
+<span class="lineNum">     601 </span><span class="lineNoCov">          0 :                 }</span>
+<span class="lineNum">     602 </span>            :         }
+<span class="lineNum">     603 </span><span class="lineNoCov">          0 :         ogg_sync_clear(&amp;read-&gt;oy);</span>
+<span class="lineNum">     604 </span><span class="lineNoCov">          0 :         read-&gt;kill_demux=2;</span>
+<span class="lineNum">     605 </span><span class="lineNoCov">          0 :         return 0;</span>
+<span class="lineNum">     606 </span><span class="lineNoCov">          0 : }</span>
+<a name="607"><span class="lineNum">     607 </span>            : </a>
+<span class="lineNum">     608 </span>            : /*get streams &amp; duration*/
+<span class="lineNum">     609 </span>            : Bool OGG_CheckFile(OGGReader *read)
+<span class="lineNum">     610 </span>            : {
+<span class="lineNum">     611 </span>            :         OGGInfo info, the_info;
+<span class="lineNum">     612 </span>            :         ogg_page oggpage;
+<span class="lineNum">     613 </span><span class="lineNoCov">          0 :         ogg_packet oggpacket;</span>
+<span class="lineNum">     614 </span><span class="lineNoCov">          0 :         ogg_stream_state os, the_os;</span>
+<span class="lineNum">     615 </span>            :         u64 max_gran;
+<span class="lineNum">     616 </span>            :         Bool has_stream = GF_FALSE;
+<span class="lineNum">     617 </span><span class="lineNoCov">          0 :         gf_fseek(read-&gt;ogfile, 0, SEEK_SET);</span>
+<span class="lineNum">     618 </span>            : 
+<span class="lineNum">     619 </span><span class="lineNoCov">          0 :         ogg_sync_init(&amp;read-&gt;oy);</span>
+<span class="lineNum">     620 </span><span class="lineNoCov">          0 :         memset(&amp;the_info, 0, sizeof(OGGInfo));</span>
+<span class="lineNum">     621 </span>            :         max_gran = 0;
+<span class="lineNum">     622 </span><span class="lineNoCov">          0 :         while (1) {</span>
+<span class="lineNum">     623 </span><span class="lineNoCov">          0 :                 if (!OGG_ReadPage(read, &amp;oggpage)) break;</span>
+<span class="lineNum">     624 </span>            : 
+<span class="lineNum">     625 </span><span class="lineNoCov">          0 :                 if (ogg_page_bos(&amp;oggpage)) {</span>
+<span class="lineNum">     626 </span><span class="lineNoCov">          0 :                         ogg_stream_init(&amp;os, ogg_page_serialno(&amp;oggpage));</span>
+<span class="lineNum">     627 </span><span class="lineNoCov">          0 :                         if (ogg_stream_pagein(&amp;os, &amp;oggpage) &gt;= 0 ) {</span>
+<span class="lineNum">     628 </span><span class="lineNoCov">          0 :                                 ogg_stream_packetpeek(&amp;os, &amp;oggpacket);</span>
+<span class="lineNum">     629 </span><span class="lineNoCov">          0 :                                 if (ogg_stream_pagein(&amp;os, &amp;oggpage) &gt;= 0 ) {</span>
+<span class="lineNum">     630 </span><span class="lineNoCov">          0 :                                         ogg_stream_packetpeek(&amp;os, &amp;oggpacket);</span>
+<span class="lineNum">     631 </span><span class="lineNoCov">          0 :                                         OGG_GetStreamInfo(&amp;oggpacket, &amp;info);</span>
+<span class="lineNum">     632 </span><span class="lineNoCov">          0 :                                 }</span>
+<span class="lineNum">     633 </span><span class="lineNoCov">          0 :                                 if (!has_stream) {</span>
+<span class="lineNum">     634 </span>            :                                         has_stream = GF_TRUE;
+<span class="lineNum">     635 </span><span class="lineNoCov">          0 :                                         ogg_stream_init(&amp;the_os, ogg_page_serialno(&amp;oggpage));</span>
+<span class="lineNum">     636 </span><span class="lineNoCov">          0 :                                         the_info = info;</span>
+<span class="lineNum">     637 </span><span class="lineNoCov">          0 :                                 }</span>
+<span class="lineNum">     638 </span>            :                         }
+<span class="lineNum">     639 </span><span class="lineNoCov">          0 :                         ogg_stream_clear(&amp;os);</span>
+<span class="lineNum">     640 </span><span class="lineNoCov">          0 :                         continue;</span>
+<span class="lineNum">     641 </span>            :                 }
+<span class="lineNum">     642 </span><span class="lineNoCov">          0 :                 if (has_stream &amp;&amp; (ogg_stream_pagein(&amp;the_os, &amp;oggpage) &gt;= 0) ) {</span>
+<span class="lineNum">     643 </span><span class="lineNoCov">          0 :                         while (ogg_stream_packetout(&amp;the_os, &amp;oggpacket ) &gt; 0 ) {</span>
+<span class="lineNum">     644 </span><span class="lineNoCov">          0 :                                 if ((oggpacket.granulepos&gt;=0) &amp;&amp; ((u64) oggpacket.granulepos&gt;max_gran) ) {</span>
+<span class="lineNum">     645 </span>            :                                         max_gran = oggpacket.granulepos;
+<span class="lineNum">     646 </span><span class="lineNoCov">          0 :                                 }</span>
+<span class="lineNum">     647 </span>            :                         }
+<span class="lineNum">     648 </span>            :                 }
+<span class="lineNum">     649 </span>            :         }
+<span class="lineNum">     650 </span><span class="lineNoCov">          0 :         ogg_sync_clear(&amp;read-&gt;oy);</span>
+<span class="lineNum">     651 </span><span class="lineNoCov">          0 :         read-&gt;file_size = gf_ftell(read-&gt;ogfile);</span>
+<span class="lineNum">     652 </span><span class="lineNoCov">          0 :         gf_fseek(read-&gt;ogfile, 0, SEEK_SET);</span>
+<span class="lineNum">     653 </span><span class="lineNoCov">          0 :         read-&gt;dur = 0;</span>
+<span class="lineNum">     654 </span><span class="lineNoCov">          0 :         if (has_stream) {</span>
+<span class="lineNum">     655 </span><span class="lineNoCov">          0 :                 ogg_stream_clear(&amp;the_os);</span>
+<span class="lineNum">     656 </span><span class="lineNoCov">          0 :                 read-&gt;dur = (Double) (s64) OGG_GranuleToTime(&amp;the_info, max_gran);</span>
+<span class="lineNum">     657 </span><span class="lineNoCov">          0 :                 if (the_info.sample_rate) read-&gt;dur /= the_info.sample_rate;</span>
+<span class="lineNum">     658 </span><span class="lineNoCov">          0 :                 else read-&gt;dur /= the_info.frame_rate_base;</span>
+<span class="lineNum">     659 </span>            :         }
+<span class="lineNum">     660 </span>            :         return has_stream;
+<span class="lineNum">     661 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     662 </span>            : 
+<span class="lineNum">     663 </span>            : static const char * OGG_MIMES_AUDIO[] = {
+<span class="lineNum">     664 </span>            :         &quot;audio/ogg&quot;, &quot;audio/x-ogg&quot;, &quot;audio/x-vorbis+ogg&quot;, NULL
+<span class="lineNum">     665 </span>            : };
+<span class="lineNum">     666 </span>            : 
+<span class="lineNum">     667 </span>            : static const char * OGG_MIMES_AUDIO_EXT = &quot;oga spx&quot;;
+<span class="lineNum">     668 </span>            : 
+<span class="lineNum">     669 </span>            : static const char * OGG_MIMES_AUDIO_DESC = &quot;Xiph.org OGG Music&quot;;
+<span class="lineNum">     670 </span>            : 
+<span class="lineNum">     671 </span>            : static const char * OGG_MIMES_VIDEO[] = {
+<span class="lineNum">     672 </span>            :         &quot;application/ogg&quot;, &quot;application/x-ogg&quot;, &quot;video/ogg&quot;, &quot;video/x-ogg&quot;, &quot;video/x-ogm+ogg&quot;, NULL
+<span class="lineNum">     673 </span>            : };
+<span class="lineNum">     674 </span>            : 
+<span class="lineNum">     675 </span>            : static const char * OGG_MIMES_VIDEO_DESC = &quot;Xiph.org OGG Movie&quot;;
+<span class="lineNum">     676 </span>            : 
+<a name="677"><span class="lineNum">     677 </span>            : static const char * OGG_MIMES_VIDEO_EXT = &quot;ogg ogv oggm&quot;;</a>
+<span class="lineNum">     678 </span>            : 
+<span class="lineNum">     679 </span>            : static u32 OGG_RegisterMimeTypes(const GF_InputService *plug) {
+<span class="lineNum">     680 </span>            :         u32 i, c;
+<span class="lineNum">     681 </span><span class="lineCov">          8 :         for (i = 0 ; OGG_MIMES_AUDIO[i]; i++)</span>
+<span class="lineNum">     682 </span><span class="lineCov">          3 :                 gf_service_register_mime(plug, OGG_MIMES_AUDIO[i], OGG_MIMES_AUDIO_EXT, OGG_MIMES_AUDIO_DESC);</span>
+<span class="lineNum">     683 </span>            :         c = i;
+<span class="lineNum">     684 </span><span class="lineCov">         12 :         for (i = 0 ; OGG_MIMES_VIDEO[i]; i++)</span>
+<span class="lineNum">     685 </span><span class="lineCov">          5 :                 gf_service_register_mime(plug, OGG_MIMES_VIDEO[i], OGG_MIMES_VIDEO_EXT, OGG_MIMES_VIDEO_DESC);</span>
+<span class="lineNum">     686 </span><span class="lineCov">          1 :         return c+i;</span>
+<a name="687"><span class="lineNum">     687 </span>            : }</a>
+<span class="lineNum">     688 </span>            : 
+<span class="lineNum">     689 </span>            : static Bool OGG_CanHandleURL(GF_InputService *plug, const char *url)
+<span class="lineNum">     690 </span>            : {
+<span class="lineNum">     691 </span>            :         char *sExt;
+<span class="lineNum">     692 </span>            :         u32 i;
+<span class="lineNum">     693 </span><span class="lineNoCov">          0 :         sExt = strrchr(url, '.');</span>
+<span class="lineNum">     694 </span><span class="lineNoCov">          0 :         for (i = 0 ; OGG_MIMES_AUDIO[i]; i++) {</span>
+<span class="lineNum">     695 </span><span class="lineNoCov">          0 :                 if (gf_service_check_mime_register(plug, OGG_MIMES_AUDIO[i], OGG_MIMES_AUDIO_EXT, OGG_MIMES_AUDIO_DESC, sExt))</span>
+<span class="lineNum">     696 </span><span class="lineNoCov">          0 :                         return GF_TRUE;</span>
+<span class="lineNum">     697 </span>            :         }
+<span class="lineNum">     698 </span><span class="lineNoCov">          0 :         for (i = 0 ; OGG_MIMES_VIDEO[i]; i++) {</span>
+<span class="lineNum">     699 </span><span class="lineNoCov">          0 :                 if (gf_service_check_mime_register(plug, OGG_MIMES_VIDEO[i], OGG_MIMES_VIDEO_EXT, OGG_MIMES_VIDEO_DESC, sExt))</span>
+<span class="lineNum">     700 </span><span class="lineNoCov">          0 :                         return GF_TRUE;</span>
+<span class="lineNum">     701 </span>            :         }
+<span class="lineNum">     702 </span><span class="lineNoCov">          0 :         return GF_FALSE;</span>
+<a name="703"><span class="lineNum">     703 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     704 </span>            : 
+<span class="lineNum">     705 </span>            : static Bool ogg_is_local(const char *url)
+<span class="lineNum">     706 </span>            : {
+<span class="lineNum">     707 </span><span class="lineNoCov">          0 :         if (!strnicmp(url, &quot;file://&quot;, 7)) return GF_TRUE;</span>
+<span class="lineNum">     708 </span><span class="lineNoCov">          0 :         if (strstr(url, &quot;://&quot;)) return GF_FALSE;</span>
+<span class="lineNum">     709 </span><span class="lineNoCov">          0 :         return GF_TRUE;</span>
+<a name="710"><span class="lineNum">     710 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     711 </span>            : 
+<span class="lineNum">     712 </span>            : void OGG_NetIO(void *cbk, GF_NETIO_Parameter *param)
+<span class="lineNum">     713 </span>            : {
+<span class="lineNum">     714 </span><span class="lineNoCov">          0 :         OGGReader *read = (OGGReader *) cbk;</span>
+<span class="lineNum">     715 </span>            : 
+<span class="lineNum">     716 </span><span class="lineNoCov">          0 :         gf_service_download_update_stats(read-&gt;dnload);</span>
+<span class="lineNum">     717 </span>            : 
+<span class="lineNum">     718 </span>            :         /*done*/
+<span class="lineNum">     719 </span><span class="lineNoCov">          0 :         if ((param-&gt;msg_type==GF_NETIO_DATA_TRANSFERED) &amp;&amp; read-&gt;ogfile) {</span>
+<span class="lineNum">     720 </span><span class="lineNoCov">          0 :                 read-&gt;is_remote = GF_FALSE;</span>
+<span class="lineNum">     721 </span>            :                 /*reload file*/
+<span class="lineNum">     722 </span><span class="lineNoCov">          0 :                 OGG_CheckFile(read);</span>
+<span class="lineNum">     723 </span><span class="lineNoCov">          0 :                 return;</span>
+<span class="lineNum">     724 </span>            :         }
+<span class="lineNum">     725 </span><span class="lineNoCov">          0 :         if (param-&gt;error &amp;&amp; read-&gt;needs_connection) {</span>
+<span class="lineNum">     726 </span><span class="lineNoCov">          0 :                 read-&gt;needs_connection = GF_FALSE;</span>
+<span class="lineNum">     727 </span><span class="lineNoCov">          0 :                 read-&gt;kill_demux = 2;</span>
+<span class="lineNum">     728 </span><span class="lineNoCov">          0 :                 gf_service_connect_ack(read-&gt;service, NULL, param-&gt;error);</span>
+<span class="lineNum">     729 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     730 </span>            :         /*we never receive data from here since the downloader is not threaded*/
+<a name="731"><span class="lineNum">     731 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     732 </span>            : 
+<span class="lineNum">     733 </span>            : void OGG_DownloadFile(GF_InputService *plug, char *url)
+<span class="lineNum">     734 </span>            : {
+<span class="lineNum">     735 </span><span class="lineNoCov">          0 :         OGGReader *read = (OGGReader*) plug-&gt;priv;</span>
+<span class="lineNum">     736 </span>            : 
+<span class="lineNum">     737 </span><span class="lineNoCov">          0 :         read-&gt;dnload = gf_service_download_new(read-&gt;service, url, GF_NETIO_SESSION_NOT_THREADED, OGG_NetIO, read);</span>
+<span class="lineNum">     738 </span><span class="lineNoCov">          0 :         if (!read-&gt;dnload) {</span>
+<span class="lineNum">     739 </span><span class="lineNoCov">          0 :                 read-&gt;kill_demux=2;</span>
+<span class="lineNum">     740 </span><span class="lineNoCov">          0 :                 read-&gt;needs_connection = GF_FALSE;</span>
+<span class="lineNum">     741 </span><span class="lineNoCov">          0 :                 gf_service_connect_ack(read-&gt;service, NULL, GF_NOT_SUPPORTED);</span>
+<span class="lineNum">     742 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     743 </span>            :         /*service confirm is done once fetched, but start the demuxer thread*/
+<span class="lineNum">     744 </span><span class="lineNoCov">          0 :         gf_th_run(read-&gt;demuxer, OggDemux, read);</span>
+<span class="lineNum">     745 </span><span class="lineNoCov">          0 : }</span>
+<a name="746"><span class="lineNum">     746 </span>            : </a>
+<span class="lineNum">     747 </span>            : 
+<span class="lineNum">     748 </span>            : static GF_Err OGG_ConnectService(GF_InputService *plug, GF_ClientService *serv, const char *url)
+<span class="lineNum">     749 </span>            : {
+<span class="lineNum">     750 </span><span class="lineNoCov">          0 :         char szURL[2048];</span>
+<span class="lineNum">     751 </span>            :         char *ext;
+<span class="lineNum">     752 </span>            :         GF_Err reply=GF_OK;
+<span class="lineNum">     753 </span><span class="lineNoCov">          0 :         OGGReader *read = (OGGReader*)plug-&gt;priv;</span>
+<span class="lineNum">     754 </span><span class="lineNoCov">          0 :         read-&gt;service = serv;</span>
+<span class="lineNum">     755 </span>            : 
+<span class="lineNum">     756 </span><span class="lineNoCov">          0 :         if (read-&gt;dnload) gf_service_download_del(read-&gt;dnload);</span>
+<span class="lineNum">     757 </span><span class="lineNoCov">          0 :         read-&gt;dnload = NULL;</span>
+<span class="lineNum">     758 </span>            : 
+<span class="lineNum">     759 </span><span class="lineNoCov">          0 :         read-&gt;service_type = 0;</span>
+<span class="lineNum">     760 </span><span class="lineNoCov">          0 :         strcpy(szURL, url);</span>
+<span class="lineNum">     761 </span><span class="lineNoCov">          0 :         ext = strrchr(szURL, '#');</span>
+<span class="lineNum">     762 </span><span class="lineNoCov">          0 :         if (ext) {</span>
+<span class="lineNum">     763 </span><span class="lineNoCov">          0 :                 if (!strcmp(ext, &quot;#video&quot;)) read-&gt;service_type = 1;</span>
+<span class="lineNum">     764 </span><span class="lineNoCov">          0 :                 else if (!strcmp(ext, &quot;#audio&quot;)) read-&gt;service_type = 2;</span>
+<span class="lineNum">     765 </span><span class="lineNoCov">          0 :                 ext[0] = 0;</span>
+<span class="lineNum">     766 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     767 </span>            : 
+<span class="lineNum">     768 </span>            :         /*remote fetch*/
+<span class="lineNum">     769 </span><span class="lineNoCov">          0 :         read-&gt;is_remote = !ogg_is_local(szURL);</span>
+<span class="lineNum">     770 </span><span class="lineNoCov">          0 :         if (read-&gt;is_remote) {</span>
+<span class="lineNum">     771 </span><span class="lineNoCov">          0 :                 read-&gt;needs_connection = GF_TRUE;</span>
+<span class="lineNum">     772 </span><span class="lineNoCov">          0 :                 OGG_DownloadFile(plug, szURL);</span>
+<span class="lineNum">     773 </span><span class="lineNoCov">          0 :                 return GF_OK;</span>
+<span class="lineNum">     774 </span>            :         } else {
+<span class="lineNum">     775 </span><span class="lineNoCov">          0 :                 read-&gt;ogfile = gf_fopen(szURL, &quot;rb&quot;);</span>
+<span class="lineNum">     776 </span><span class="lineNoCov">          0 :                 if (!read-&gt;ogfile) {</span>
+<span class="lineNum">     777 </span>            :                         reply = GF_URL_ERROR;
+<span class="lineNum">     778 </span><span class="lineNoCov">          0 :                 } else {</span>
+<span class="lineNum">     779 </span>            :                         /*init ogg file in local mode*/
+<span class="lineNum">     780 </span><span class="lineNoCov">          0 :                         if (!OGG_CheckFile(read)) {</span>
+<span class="lineNum">     781 </span><span class="lineNoCov">          0 :                                 gf_fclose(read-&gt;ogfile);</span>
+<span class="lineNum">     782 </span>            :                                 reply = GF_NON_COMPLIANT_BITSTREAM;
+<span class="lineNum">     783 </span>            :                         } else {
+<span class="lineNum">     784 </span><span class="lineNoCov">          0 :                                 read-&gt;needs_connection = GF_TRUE;</span>
+<span class="lineNum">     785 </span>            :                                 /*start the demuxer thread*/
+<span class="lineNum">     786 </span><span class="lineNoCov">          0 :                                 gf_th_run(read-&gt;demuxer, OggDemux, read);</span>
+<span class="lineNum">     787 </span><span class="lineNoCov">          0 :                                 return GF_OK;</span>
+<span class="lineNum">     788 </span>            :                         }
+<span class="lineNum">     789 </span>            :                 }
+<span class="lineNum">     790 </span>            :         }
+<span class="lineNum">     791 </span>            :         /*error*/
+<span class="lineNum">     792 </span><span class="lineNoCov">          0 :         read-&gt;kill_demux=2;</span>
+<span class="lineNum">     793 </span><span class="lineNoCov">          0 :         gf_service_connect_ack(serv, NULL, reply);</span>
+<span class="lineNum">     794 </span><span class="lineNoCov">          0 :         return GF_OK;</span>
+<a name="795"><span class="lineNum">     795 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     796 </span>            : 
+<span class="lineNum">     797 </span>            : static GF_Err OGG_CloseService(GF_InputService *plug)
+<span class="lineNum">     798 </span>            : {
+<span class="lineNum">     799 </span><span class="lineNoCov">          0 :         OGGReader *read = (OGGReader*)plug-&gt;priv;</span>
+<span class="lineNum">     800 </span><span class="lineNoCov">          0 :         if (!read-&gt;kill_demux) {</span>
+<span class="lineNum">     801 </span><span class="lineNoCov">          0 :                 read-&gt;kill_demux = 1;</span>
+<span class="lineNum">     802 </span><span class="lineNoCov">          0 :                 while (read-&gt;kill_demux!=2) gf_sleep(2);</span>
+<span class="lineNum">     803 </span>            :         }
+<span class="lineNum">     804 </span>            : 
+<span class="lineNum">     805 </span><span class="lineNoCov">          0 :         if (read-&gt;ogfile) gf_fclose(read-&gt;ogfile);</span>
+<span class="lineNum">     806 </span><span class="lineNoCov">          0 :         read-&gt;ogfile = NULL;</span>
+<span class="lineNum">     807 </span><span class="lineNoCov">          0 :         if (read-&gt;dnload) gf_service_download_del(read-&gt;dnload);</span>
+<span class="lineNum">     808 </span><span class="lineNoCov">          0 :         read-&gt;dnload = NULL;</span>
+<span class="lineNum">     809 </span><span class="lineNoCov">          0 :         gf_service_disconnect_ack(read-&gt;service, NULL, GF_OK);</span>
+<span class="lineNum">     810 </span><span class="lineNoCov">          0 :         return GF_OK;</span>
+<a name="811"><span class="lineNum">     811 </span>            : }</a>
+<span class="lineNum">     812 </span>            : 
+<span class="lineNum">     813 </span>            : static GF_Descriptor *OGG_GetServiceDesc(GF_InputService *plug, u32 expect_type, const char *sub_url)
+<span class="lineNum">     814 </span>            : {
+<span class="lineNum">     815 </span>            :         u32 i;
+<span class="lineNum">     816 </span>            :         GF_ObjectDescriptor *od;
+<span class="lineNum">     817 </span>            :         OGGStream *st;
+<span class="lineNum">     818 </span><span class="lineNoCov">          0 :         OGGReader *read = (OGGReader*)plug-&gt;priv;</span>
+<span class="lineNum">     819 </span>            :         /*since we don't handle multitrack in ogg yes, we don't need to check sub_url, only use expected type*/
+<span class="lineNum">     820 </span>            : 
+<span class="lineNum">     821 </span>            :         /*single object*/
+<span class="lineNum">     822 </span><span class="lineNoCov">          0 :         if ((expect_type==GF_MEDIA_OBJECT_AUDIO) || (expect_type==GF_MEDIA_OBJECT_VIDEO)) {</span>
+<span class="lineNum">     823 </span><span class="lineNoCov">          0 :                 if ((expect_type==GF_MEDIA_OBJECT_AUDIO) &amp;&amp; !read-&gt;has_audio) return NULL;</span>
+<span class="lineNum">     824 </span><span class="lineNoCov">          0 :                 if ((expect_type==GF_MEDIA_OBJECT_VIDEO) &amp;&amp; !read-&gt;has_video) return NULL;</span>
+<span class="lineNum">     825 </span><span class="lineNoCov">          0 :                 i=0;</span>
+<span class="lineNum">     826 </span><span class="lineNoCov">          0 :                 while ((st = (OGGStream*)gf_list_enum(read-&gt;streams, &amp;i))) {</span>
+<span class="lineNum">     827 </span><span class="lineNoCov">          0 :                         if ((expect_type==GF_MEDIA_OBJECT_AUDIO) &amp;&amp; (st-&gt;info.streamType!=GF_STREAM_AUDIO)) continue;</span>
+<span class="lineNum">     828 </span><span class="lineNoCov">          0 :                         if ((expect_type==GF_MEDIA_OBJECT_VIDEO) &amp;&amp; (st-&gt;info.streamType!=GF_STREAM_VISUAL)) continue;</span>
+<span class="lineNum">     829 </span>            : 
+<span class="lineNum">     830 </span><span class="lineNoCov">          0 :                         od = OGG_GetOD(st);</span>
+<span class="lineNum">     831 </span><span class="lineNoCov">          0 :                         read-&gt;is_single_media = GF_TRUE;</span>
+<span class="lineNum">     832 </span><span class="lineNoCov">          0 :                         return (GF_Descriptor *) od;</span>
+<span class="lineNum">     833 </span>            :                 }
+<span class="lineNum">     834 </span>            :                 /*not supported yet - we need to know what's in the ogg stream for that*/
+<span class="lineNum">     835 </span>            :         }
+<span class="lineNum">     836 </span><span class="lineNoCov">          0 :         read-&gt;is_inline = GF_TRUE;</span>
+<span class="lineNum">     837 </span><span class="lineNoCov">          0 :         return NULL;</span>
+<a name="838"><span class="lineNum">     838 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     839 </span>            : 
+<span class="lineNum">     840 </span>            : static GF_Err OGG_ConnectChannel(GF_InputService *plug, LPNETCHANNEL channel, const char *url, Bool upstream)
+<span class="lineNum">     841 </span>            : {
+<span class="lineNum">     842 </span>            :         u32 ES_ID, i;
+<span class="lineNum">     843 </span>            :         GF_Err e;
+<span class="lineNum">     844 </span>            :         OGGStream *st;
+<span class="lineNum">     845 </span><span class="lineNoCov">          0 :         OGGReader *read = (OGGReader*)plug-&gt;priv;</span>
+<span class="lineNum">     846 </span>            : 
+<span class="lineNum">     847 </span><span class="lineNoCov">          0 :         ES_ID=0;</span>
+<span class="lineNum">     848 </span>            :         e = GF_STREAM_NOT_FOUND;
+<span class="lineNum">     849 </span><span class="lineNoCov">          0 :         if (strstr(url, &quot;ES_ID&quot;)) {</span>
+<span class="lineNum">     850 </span><span class="lineNoCov">          0 :                 sscanf(url, &quot;ES_ID=%u&quot;, &amp;ES_ID);</span>
+<span class="lineNum">     851 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     852 </span>            :         /*URL setup*/
+<span class="lineNum">     853 </span>            : //      else if (!read-&gt;es_ch &amp;&amp; OGG_CanHandleURL(plug, url)) ES_ID = 3;
+<span class="lineNum">     854 </span>            : 
+<span class="lineNum">     855 </span><span class="lineNoCov">          0 :         i=0;</span>
+<span class="lineNum">     856 </span><span class="lineNoCov">          0 :         while ((st = (OGGStream*)gf_list_enum(read-&gt;streams, &amp;i))) {</span>
+<span class="lineNum">     857 </span><span class="lineNoCov">          0 :                 if (st-&gt;ESID==ES_ID) {</span>
+<span class="lineNum">     858 </span><span class="lineNoCov">          0 :                         st-&gt;ch = channel;</span>
+<span class="lineNum">     859 </span>            :                         e = GF_OK;
+<span class="lineNum">     860 </span><span class="lineNoCov">          0 :                         break;</span>
+<span class="lineNum">     861 </span>            :                 }
+<span class="lineNum">     862 </span>            :         }
+<span class="lineNum">     863 </span><span class="lineNoCov">          0 :         gf_service_connect_ack(read-&gt;service, channel, e);</span>
+<span class="lineNum">     864 </span><span class="lineNoCov">          0 :         return e;</span>
+<a name="865"><span class="lineNum">     865 </span>            : }</a>
+<span class="lineNum">     866 </span>            : 
+<span class="lineNum">     867 </span>            : static GF_Err OGG_DisconnectChannel(GF_InputService *plug, LPNETCHANNEL channel)
+<span class="lineNum">     868 </span>            : {
+<span class="lineNum">     869 </span>            :         GF_Err e;
+<span class="lineNum">     870 </span>            :         OGGStream *st;
+<span class="lineNum">     871 </span><span class="lineNoCov">          0 :         u32 i=0;</span>
+<span class="lineNum">     872 </span><span class="lineNoCov">          0 :         OGGReader *read = (OGGReader*)plug-&gt;priv;</span>
+<span class="lineNum">     873 </span>            : 
+<span class="lineNum">     874 </span>            :         e = GF_STREAM_NOT_FOUND;
+<span class="lineNum">     875 </span><span class="lineNoCov">          0 :         while ((st = (OGGStream*)gf_list_enum(read-&gt;streams, &amp;i))) {</span>
+<span class="lineNum">     876 </span><span class="lineNoCov">          0 :                 if (st-&gt;ch==channel) {</span>
+<span class="lineNum">     877 </span><span class="lineNoCov">          0 :                         st-&gt;ch = NULL;</span>
+<span class="lineNum">     878 </span>            :                         e = GF_OK;
+<span class="lineNum">     879 </span><span class="lineNoCov">          0 :                         break;</span>
+<span class="lineNum">     880 </span>            :                 }
+<span class="lineNum">     881 </span>            :         }
+<span class="lineNum">     882 </span><span class="lineNoCov">          0 :         gf_service_disconnect_ack(read-&gt;service, channel, e);</span>
+<span class="lineNum">     883 </span><span class="lineNoCov">          0 :         return GF_OK;</span>
+<a name="884"><span class="lineNum">     884 </span>            : }</a>
+<span class="lineNum">     885 </span>            : 
+<span class="lineNum">     886 </span>            : static GF_Err OGG_ServiceCommand(GF_InputService *plug, GF_NetworkCommand *com)
+<span class="lineNum">     887 </span>            : {
+<span class="lineNum">     888 </span>            :         OGGStream *st;
+<span class="lineNum">     889 </span>            :         u32 i;
+<span class="lineNum">     890 </span><span class="lineNoCov">          0 :         OGGReader *read = (OGGReader*)plug-&gt;priv;</span>
+<span class="lineNum">     891 </span>            : 
+<span class="lineNum">     892 </span><span class="lineNoCov">          0 :         if (!com-&gt;base.on_channel) {</span>
+<span class="lineNum">     893 </span>            :                 /*if live session we may cache*/
+<span class="lineNum">     894 </span><span class="lineNoCov">          0 :                 if (read-&gt;is_live &amp;&amp; (com-&gt;command_type==GF_NET_IS_CACHABLE)) return GF_OK;</span>
+<span class="lineNum">     895 </span><span class="lineNoCov">          0 :                 return GF_NOT_SUPPORTED;</span>
+<span class="lineNum">     896 </span>            :         }
+<span class="lineNum">     897 </span><span class="lineNoCov">          0 :         switch (com-&gt;command_type) {</span>
+<span class="lineNum">     898 </span>            :         case GF_NET_CHAN_SET_PULL:
+<span class="lineNum">     899 </span>            :                 /*no way to demux streams independently, and we keep OD as dynamic ogfile to handle
+<span class="lineNum">     900 </span>            :                 chained streams*/
+<span class="lineNum">     901 </span><span class="lineNoCov">          0 :                 return GF_NOT_SUPPORTED;</span>
+<span class="lineNum">     902 </span>            :         case GF_NET_CHAN_INTERACTIVE:
+<span class="lineNum">     903 </span>            :                 //live: return GF_NOT_SUPPORTED;
+<span class="lineNum">     904 </span><span class="lineNoCov">          0 :                 return GF_OK;</span>
+<span class="lineNum">     905 </span>            :         case GF_NET_CHAN_BUFFER:
+<span class="lineNum">     906 </span><span class="lineNoCov">          0 :                 com-&gt;buffer.min = com-&gt;buffer.max = 0;</span>
+<span class="lineNum">     907 </span><span class="lineNoCov">          0 :                 if (read-&gt;is_live) com-&gt;buffer.max = read-&gt;data_buffer_ms;</span>
+<span class="lineNum">     908 </span><span class="lineNoCov">          0 :                 return GF_OK;</span>
+<span class="lineNum">     909 </span>            :         case GF_NET_CHAN_SET_PADDING:
+<span class="lineNum">     910 </span><span class="lineNoCov">          0 :                 return GF_NOT_SUPPORTED;</span>
+<span class="lineNum">     911 </span>            : 
+<span class="lineNum">     912 </span>            :         case GF_NET_CHAN_DURATION:
+<span class="lineNum">     913 </span><span class="lineNoCov">          0 :                 com-&gt;duration.duration = read-&gt;dur;</span>
+<span class="lineNum">     914 </span><span class="lineNoCov">          0 :                 return GF_OK;</span>
+<span class="lineNum">     915 </span>            :         case GF_NET_CHAN_PLAY:
+<span class="lineNum">     916 </span><span class="lineNoCov">          0 :                 read-&gt;start_range = com-&gt;play.start_range;</span>
+<span class="lineNum">     917 </span><span class="lineNoCov">          0 :                 read-&gt;end_range = com-&gt;play.end_range;</span>
+<span class="lineNum">     918 </span><span class="lineNoCov">          0 :                 i=0;</span>
+<span class="lineNum">     919 </span><span class="lineNoCov">          0 :                 while ((st = (OGGStream*)gf_list_enum(read-&gt;streams, &amp;i))) {</span>
+<span class="lineNum">     920 </span><span class="lineNoCov">          0 :                         if (st-&gt;ch == com-&gt;base.on_channel) {</span>
+<span class="lineNum">     921 </span><span class="lineNoCov">          0 :                                 st-&gt;is_running = GF_TRUE;</span>
+<span class="lineNum">     922 </span><span class="lineNoCov">          0 :                                 st-&gt;map_time = read-&gt;dur ? GF_TRUE : GF_FALSE;</span>
+<span class="lineNum">     923 </span><span class="lineNoCov">          0 :                                 if (!read-&gt;nb_playing) read-&gt;do_seek = 1;</span>
+<span class="lineNum">     924 </span><span class="lineNoCov">          0 :                                 read-&gt;nb_playing ++;</span>
+<span class="lineNum">     925 </span><span class="lineNoCov">          0 :                                 break;</span>
+<span class="lineNum">     926 </span>            :                         }
+<span class="lineNum">     927 </span>            :                 }
+<span class="lineNum">     928 </span>            :                 /*recfg duration in case*/
+<span class="lineNum">     929 </span><span class="lineNoCov">          0 :                 if (!read-&gt;is_remote &amp;&amp; read-&gt;dur) {</span>
+<span class="lineNum">     930 </span><span class="lineNoCov">          0 :                         GF_NetworkCommand rcfg;</span>
+<span class="lineNum">     931 </span><span class="lineNoCov">          0 :                         rcfg.base.on_channel = NULL;</span>
+<span class="lineNum">     932 </span><span class="lineNoCov">          0 :                         rcfg.base.command_type = GF_NET_CHAN_DURATION;</span>
+<span class="lineNum">     933 </span><span class="lineNoCov">          0 :                         rcfg.duration.duration = read-&gt;dur;</span>
+<span class="lineNum">     934 </span><span class="lineNoCov">          0 :                         gf_service_command(read-&gt;service, &amp;rcfg, GF_OK);</span>
+<span class="lineNum">     935 </span><span class="lineNoCov">          0 :                 }</span>
+<span class="lineNum">     936 </span><span class="lineNoCov">          0 :                 return GF_OK;</span>
+<span class="lineNum">     937 </span>            :         case GF_NET_CHAN_STOP:
+<span class="lineNum">     938 </span><span class="lineNoCov">          0 :                 i=0;</span>
+<span class="lineNum">     939 </span><span class="lineNoCov">          0 :                 while ((st = (OGGStream*)gf_list_enum(read-&gt;streams, &amp;i))) {</span>
+<span class="lineNum">     940 </span><span class="lineNoCov">          0 :                         if (st-&gt;ch == com-&gt;base.on_channel) {</span>
+<span class="lineNum">     941 </span><span class="lineNoCov">          0 :                                 st-&gt;is_running = GF_FALSE;</span>
+<span class="lineNum">     942 </span><span class="lineNoCov">          0 :                                 read-&gt;nb_playing --;</span>
+<span class="lineNum">     943 </span><span class="lineNoCov">          0 :                                 break;</span>
+<span class="lineNum">     944 </span>            :                         }
+<span class="lineNum">     945 </span>            :                 }
+<span class="lineNum">     946 </span><span class="lineNoCov">          0 :                 return GF_OK;</span>
+<span class="lineNum">     947 </span>            :         default:
+<span class="lineNum">     948 </span><span class="lineNoCov">          0 :                 return GF_OK;</span>
+<span class="lineNum">     949 </span>            :         }
+<a name="950"><span class="lineNum">     950 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     951 </span>            : 
+<span class="lineNum">     952 </span>            : static Bool OGG_CanHandleURLInService(GF_InputService *plug, const char *url)
+<span class="lineNum">     953 </span>            : {
+<span class="lineNum">     954 </span><span class="lineNoCov">          0 :         char szURL[2048], *sep;</span>
+<span class="lineNum">     955 </span><span class="lineNoCov">          0 :         OGGReader *read = (OGGReader *)plug-&gt;priv;</span>
+<span class="lineNum">     956 </span><span class="lineNoCov">          0 :         const char *this_url = gf_service_get_url(read-&gt;service);</span>
+<span class="lineNum">     957 </span><span class="lineNoCov">          0 :         if (!this_url || !url) return GF_FALSE;</span>
+<span class="lineNum">     958 </span>            : 
+<span class="lineNum">     959 </span><span class="lineNoCov">          0 :         strcpy(szURL, this_url);</span>
+<span class="lineNum">     960 </span><span class="lineNoCov">          0 :         sep = strrchr(szURL, '#');</span>
+<span class="lineNum">     961 </span><span class="lineNoCov">          0 :         if (sep) sep[0] = 0;</span>
+<span class="lineNum">     962 </span>            : 
+<span class="lineNum">     963 </span><span class="lineNoCov">          0 :         if ((url[0] != '#') &amp;&amp; strnicmp(szURL, url, sizeof(char)*strlen(szURL))) return GF_FALSE;</span>
+<span class="lineNum">     964 </span><span class="lineNoCov">          0 :         sep = strrchr(url, '#');</span>
+<span class="lineNum">     965 </span><span class="lineNoCov">          0 :         if (!stricmp(sep, &quot;#video&quot;) &amp;&amp; (read-&gt;has_video)) return GF_TRUE;</span>
+<span class="lineNum">     966 </span><span class="lineNoCov">          0 :         if (!stricmp(sep, &quot;#audio&quot;) &amp;&amp; (read-&gt;has_audio)) return GF_TRUE;</span>
+<span class="lineNum">     967 </span><span class="lineNoCov">          0 :         return GF_FALSE;</span>
+<a name="968"><span class="lineNum">     968 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     969 </span>            : 
+<span class="lineNum">     970 </span>            : GF_InputService *OGG_LoadDemux()
+<span class="lineNum">     971 </span>            : {
+<span class="lineNum">     972 </span>            :         OGGReader *reader;
+<span class="lineNum">     973 </span><span class="lineCov">          1 :         GF_InputService *plug = (GF_InputService*)gf_malloc(sizeof(GF_InputService));</span>
+<span class="lineNum">     974 </span><span class="lineCov">          1 :         memset(plug, 0, sizeof(GF_InputService));</span>
+<span class="lineNum">     975 </span><span class="lineCov">          1 :         GF_REGISTER_MODULE_INTERFACE(plug, GF_NET_CLIENT_INTERFACE, &quot;GPAC OGG Reader&quot;, &quot;gpac distribution&quot;)</span>
+<span class="lineNum">     976 </span><span class="lineCov">          1 :         plug-&gt;RegisterMimeTypes = OGG_RegisterMimeTypes;</span>
+<span class="lineNum">     977 </span><span class="lineCov">          1 :         plug-&gt;CanHandleURL = OGG_CanHandleURL;</span>
+<span class="lineNum">     978 </span><span class="lineCov">          1 :         plug-&gt;ConnectService = OGG_ConnectService;</span>
+<span class="lineNum">     979 </span><span class="lineCov">          1 :         plug-&gt;CloseService = OGG_CloseService;</span>
+<span class="lineNum">     980 </span><span class="lineCov">          1 :         plug-&gt;GetServiceDescriptor = OGG_GetServiceDesc;</span>
+<span class="lineNum">     981 </span><span class="lineCov">          1 :         plug-&gt;ConnectChannel = OGG_ConnectChannel;</span>
+<span class="lineNum">     982 </span><span class="lineCov">          1 :         plug-&gt;DisconnectChannel = OGG_DisconnectChannel;</span>
+<span class="lineNum">     983 </span><span class="lineCov">          1 :         plug-&gt;ServiceCommand = OGG_ServiceCommand;</span>
+<span class="lineNum">     984 </span><span class="lineCov">          1 :         plug-&gt;CanHandleURLInService = OGG_CanHandleURLInService;</span>
+<span class="lineNum">     985 </span>            : 
+<span class="lineNum">     986 </span><span class="lineCov">          1 :         reader = (OGGReader*)gf_malloc(sizeof(OGGReader));</span>
+<span class="lineNum">     987 </span><span class="lineCov">          1 :         memset(reader, 0, sizeof(OGGReader));</span>
+<span class="lineNum">     988 </span><span class="lineCov">          1 :         reader-&gt;streams = gf_list_new();</span>
+<span class="lineNum">     989 </span><span class="lineCov">          1 :         reader-&gt;demuxer = gf_th_new(&quot;OGGDemux&quot;);</span>
+<span class="lineNum">     990 </span><span class="lineCov">          1 :         reader-&gt;data_buffer_ms = 1000;</span>
+<span class="lineNum">     991 </span>            : 
+<span class="lineNum">     992 </span><span class="lineCov">          1 :         plug-&gt;priv = reader;</span>
+<span class="lineNum">     993 </span><span class="lineCov">          1 :         return plug;</span>
+<a name="994"><span class="lineNum">     994 </span>            : }</a>
+<span class="lineNum">     995 </span>            : 
+<span class="lineNum">     996 </span>            : void OGG_DeleteDemux(void *ifce)
+<span class="lineNum">     997 </span>            : {
+<span class="lineNum">     998 </span><span class="lineCov">          1 :         GF_InputService *plug = (GF_InputService *) ifce;</span>
+<span class="lineNum">     999 </span><span class="lineCov">          1 :         OGGReader *read = (OGGReader*)plug-&gt;priv;</span>
+<span class="lineNum">    1000 </span><span class="lineCov">          1 :         gf_th_del(read-&gt;demuxer);</span>
+<span class="lineNum">    1001 </span>            : 
+<span class="lineNum">    1002 </span>            :         /*just in case something went wrong*/
+<span class="lineNum">    1003 </span><span class="lineCov">          3 :         while (gf_list_count(read-&gt;streams)) {</span>
+<span class="lineNum">    1004 </span><span class="lineCov">          1 :                 OGGStream *st = (OGGStream*)gf_list_get(read-&gt;streams, 0);</span>
+<span class="lineNum">    1005 </span><span class="lineNoCov">          0 :                 gf_list_rem(read-&gt;streams, 0);</span>
+<span class="lineNum">    1006 </span><span class="lineNoCov">          0 :                 ogg_stream_clear(&amp;st-&gt;os);</span>
+<span class="lineNum">    1007 </span><span class="lineNoCov">          0 :                 if (st-&gt;dsi) gf_free(st-&gt;dsi);</span>
+<span class="lineNum">    1008 </span><span class="lineNoCov">          0 :                 gf_free(st);</span>
+<span class="lineNum">    1009 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">    1010 </span><span class="lineCov">          1 :         gf_list_del(read-&gt;streams);</span>
+<span class="lineNum">    1011 </span><span class="lineCov">          1 :         gf_free(read);</span>
+<span class="lineNum">    1012 </span><span class="lineCov">          1 :         gf_free(plug);</span>
+<span class="lineNum">    1013 </span><span class="lineCov">          1 : }</span>
+<span class="lineNum">    1014 </span>            : 
+<span class="lineNum">    1015 </span>            : #endif /* !defined(GPAC_DISABLE_AV_PARSERS) &amp;&amp; !defined(GPAC_DISABLE_OGG)*/
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.12</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

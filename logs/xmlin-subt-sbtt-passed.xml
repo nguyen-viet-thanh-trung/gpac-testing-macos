@@ -1,0 +1,21 @@
+ <test name="xmlin-subt-sbtt" result="OK" date="07/06/2016 10:35:42">
+
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43565056" cpu_percent="10%" cpu_elapsed_time="0:00.49" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -add /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/media/xmlin4/subt-sbtt.nhml -new /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/subt-sbtt.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="42729472" cpu_percent="19%" cpu_elapsed_time="0:00.26" cpu_user_time="0.01" cpu_kernel_time="0.03" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -info /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/subt-sbtt.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="42582016" cpu_percent="16%" cpu_elapsed_time="0:00.34" cpu_user_time="0.01" cpu_kernel_time="0.04" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -raw 1 /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/subt-sbtt.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="42434560" cpu_percent="15%" cpu_elapsed_time="0:00.38" cpu_user_time="0.02" cpu_kernel_time="0.04" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -raws 1 /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/subt-sbtt.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="42532864" cpu_percent="23%" cpu_elapsed_time="0:00.26" cpu_user_time="0.02" cpu_kernel_time="0.04" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -nhml 1 /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/subt-sbtt.mp4</command_line>
+  </stat>
+  <stat subtest="" execution_status="OK" return_status="0" mem_total_avg="0" mem_resident_avg="0" mem_resident_max="43548672" cpu_percent="23%" cpu_elapsed_time="0:00.25" cpu_user_time="0.01" cpu_kernel_time="0.04" page_faults="0" file_inputs="0" socket_msg_rec="0" socket_msg_sent="0" return_value="0">
+   <command_line>MP4Box -noprog -for-test  -mem-track -add /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/subt-sbtt_track1.nhml -new /Users/travis/build/nguyen-viet-thanh-trung/gpac/tests/results/temp/subt-sbtt_track1.mp4</command_line>
+  </stat>
+ </test>
